@@ -1,9 +1,11 @@
-import 'dart:typed_data';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:rodarwebos/pages/responsavel/tela_responsavel.dart';
 import 'package:rodarwebos/widgets/assinatura/assinatura.dart';
 import 'package:signature/signature.dart';
 
@@ -14,11 +16,10 @@ class Imagem extends StatefulWidget {
 
 class _ImagemState extends State<Imagem> {
   final SignatureController _controller = SignatureController(
-    penStrokeWidth: 4,
-    penColor: Colors.black,
-    // exportBackgroundColor: Colors.transparent,
-    exportBackgroundColor: Colors.white
-  );
+      penStrokeWidth: 4,
+      penColor: Colors.black,
+      // exportBackgroundColor: Colors.transparent,
+      exportBackgroundColor: Colors.white);
   Uint8List? data;
 
   Future<void> _criarImagem(context) async {
@@ -49,7 +50,6 @@ class _ImagemState extends State<Imagem> {
     return Container(
       height: 600, // Defina a altura desejada para o widget Imagem
       child: Scaffold(
-        
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: ListView(
@@ -79,10 +79,18 @@ class _ImagemState extends State<Imagem> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            setState(() {
-              _controller.clear();
-              data = null;
-            });
+            _controller.clear();
+
+            Fluttertoast.showToast(
+              msg: 'Assinatura limpa com sucesso',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+            );
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => TelaResponsavel()),
+            );
           },
           child: Icon(Icons.clear),
         ),

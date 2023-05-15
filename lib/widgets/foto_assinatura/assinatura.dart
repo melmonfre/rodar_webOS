@@ -36,7 +36,7 @@ class _AssinaturaState extends State<Assinatura> {
               Uint8List? data = await widget._controller.toPngBytes();
               Navigator.pop(context, data);
             },
-            child: Text('Concluir'),
+            child: Text('Salvar'),
           ),
         ],
       ),
