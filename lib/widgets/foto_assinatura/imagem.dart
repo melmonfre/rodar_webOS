@@ -82,7 +82,7 @@ class _ImagemState extends State<Imagem> {
             _controller.clear();
 
             Fluttertoast.showToast(
-              msg: 'Assinatura limpa com sucesso',
+              msg: 'Assinatura salva com sucesso',
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
             );
