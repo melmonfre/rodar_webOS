@@ -6,7 +6,7 @@ import 'package:gallery_saver/gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rodarwebos/pages/responsavel/tela_responsavel.dart';
-import 'package:rodarwebos/widgets/assinatura/assinatura.dart';
+import 'package:rodarwebos/widgets/foto_assinatura/assinatura.dart';
 import 'package:signature/signature.dart';
 
 class Imagem extends StatefulWidget {

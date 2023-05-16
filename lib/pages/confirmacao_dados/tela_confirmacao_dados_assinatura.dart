@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rodarwebos/pages/assinatura/home_assinatura.dart';
 import 'package:rodarwebos/widgets/foto_assinatura/imagem.dart';
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
 

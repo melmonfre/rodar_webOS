@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:rodarwebos/pages/assinatura/home_assinatura.dart';
+import 'package:rodarwebos/pages/tela_inicial/tela_inicial.dart';
 import 'package:rodarwebos/widgets/foto_assinatura/imagem.dart';
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
+import 'package:rodarwebos/widgets/responsavel/container_responsavel.dart';
 
 class TelaResponsavel extends StatefulWidget {
   @override
@@ -43,7 +44,14 @@ class _TelaResponsavelState extends State<TelaResponsavel> {
                 
 
               ),
-              
+              ContainerResponsavel(onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TelaInicial(),
+                    ),
+                  );
+                },)
             ],
           ),
         ),
