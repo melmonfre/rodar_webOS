@@ -24,7 +24,7 @@ class _AcessoriosState extends State<Acessorios> {
             Navigator.pop(context);
           },
         ),
-        title: Text('Acessorios'),
+        title: Text('Acessórios'),
       ),
       body: SingleChildScrollView(
         child: Padding(

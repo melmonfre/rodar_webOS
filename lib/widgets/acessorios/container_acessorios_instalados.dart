@@ -14,6 +14,8 @@ class _ContainerAcessoriosInstaladosState
   var variaveis = VariaveisAcessorios();
   String? localInstalacao = '';
 
+  bool isLocalInstalacaoValid = true;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -56,17 +58,19 @@ class _ContainerAcessoriosInstaladosState
                 decoration: InputDecoration(
                   labelText: 'Local de instalação',
                   border: OutlineInputBorder(),
+                  errorText: isLocalInstalacaoValid ? null : 'Campo obrigatório',
                 ),
                 onChanged: (value) {
                   setState(() {
                     localInstalacao = value;
+                    isLocalInstalacaoValid = value.isNotEmpty;
                   });
                 },
               ),
               SizedBox(height: 18.0),
               BotaoProximo(
                 onPressed: () {
-                  if (localInstalacao != null) {
+                  if (isLocalInstalacaoValid) {
                     variaveis.localInstalacao = localInstalacao;
                     Navigator.push(
                       context,
