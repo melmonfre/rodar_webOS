@@ -5,11 +5,9 @@ import 'package:rodarwebos/widgets/inputs/input_text.dart';
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
 
 class ContainerConclusao extends StatefulWidget {
-  // final String titulo;
   final VoidCallback onPressed;
 
   const ContainerConclusao({
-    // required this.titulo,
     required this.onPressed,
   });
 
@@ -21,6 +19,34 @@ class _ContainerConclusaoState extends State<ContainerConclusao> {
   var variaveis = VariaveisResumo();
   String motivoDivergencia = '';
 
+  String dataConclusao = '';
+  String observacoes = '';
+  String hodometro = '';
+
+  bool validateInputs() {
+    if (dataConclusao.isEmpty || observacoes.isEmpty || hodometro.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Aviso'),
+            content: Text('Por favor, preencha todos os campos antes de prosseguir.'),
+            actions: [
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+      return false;
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -30,10 +56,6 @@ class _ContainerConclusaoState extends State<ContainerConclusao> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Container(
-              //   alignment: Alignment.center,
-
-              // ),
               SizedBox(height: 20.0),
               Container(
                 decoration: BoxDecoration(
@@ -49,15 +71,40 @@ class _ContainerConclusaoState extends State<ContainerConclusao> {
                     SizedBox(
                       height: 14.0,
                     ),
-                    InputText(labelText: 'Data de conclusão da OS'),
-                    InputText(labelText: 'Observações'),
-                    InputText(labelText: 'Hodômetro'),
+                    InputText(
+                      labelText: 'Data de conclusão da OS',
+                      onChanged: (value) {
+                        setState(() {
+                          dataConclusao = value;
+                        });
+                      },
+                    ),
+                    InputText(
+                      labelText: 'Observações',
+                      onChanged: (value) {
+                        setState(() {
+                          observacoes = value;
+                        });
+                      },
+                    ),
+                    InputText(
+                      labelText: 'Hodômetro',
+                      onChanged: (value) {
+                        setState(() {
+                          hodometro = value;
+                        });
+                      },
+                    ),
                     SizedBox(height: 5.0),
                     Container(
                       alignment: Alignment.center,
                       padding: EdgeInsets.all(16.0),
                       child: BotaoProximo(
-                        onPressed: widget.onPressed,
+                        onPressed: () {
+                          if (validateInputs()) {
+                            widget.onPressed();
+                          }
+                        },
                       ),
                     ),
                   ],
