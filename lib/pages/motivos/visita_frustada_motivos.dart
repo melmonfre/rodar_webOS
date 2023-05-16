@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:rodarwebos/pages/tela_inicial/tela_inicial.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:rodarwebos/widgets/inputs/input_motivos.dart';
 import 'package:rodarwebos/widgets/inputs/input_text.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
 
 class VisitaFrustadaMotivo extends StatefulWidget {
@@ -65,19 +68,27 @@ class _VisitaFrustadaMotivoState extends State<VisitaFrustadaMotivo> {
                         ),
                       ),
                     ),
-                    InputMotivos(labelText: 'Qual o motivo da diferença de deslocamento?'),
+                    InputMotivos(
+                        labelText:
+                            'Qual o motivo da diferença de deslocamento?'),
                     SizedBox(height: 5.0),
                     Container(
                       alignment: Alignment.center,
                       padding: EdgeInsets.all(16.0),
                       child: BotaoProximo(
                         onPressed: () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //       builder: (context) =>
-                          //           VisitaFrustadaMotivo()),
-                          // );
+                          Fluttertoast.showToast(
+                            msg: 'Enviado com sucesso',
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                          );
+
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => TelaInicial()),
+                            (route) => false,
+                          );
                         },
                       ),
                     ),
