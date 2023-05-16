@@ -10,6 +10,10 @@ import 'package:rodarwebos/widgets/foto_assinatura/assinatura.dart';
 import 'package:signature/signature.dart';
 
 class Imagem extends StatefulWidget {
+  final VoidCallback onPressed;
+
+  Imagem({required this.onPressed});
+
   @override
   _ImagemState createState() => _ImagemState();
 }
@@ -24,7 +28,8 @@ class _ImagemState extends State<Imagem> {
 
   Future<void> _criarImagem(context) async {
     Uint8List result = await Navigator.of(context).push(
-      MaterialPageRoute(builder: (BuildContext context) => Assinatura(_controller)),
+      MaterialPageRoute(
+          builder: (BuildContext context) => Assinatura(_controller)),
     );
     setState(() {
       data = result;
@@ -43,6 +48,16 @@ class _ImagemState extends State<Imagem> {
         print('salvo');
       });
     }
+  }
+
+  void _limparAssinatura() {
+    _controller.clear();
+
+    Fluttertoast.showToast(
+      msg: 'Assinatura salva com sucesso',
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+    );
   }
 
   @override
@@ -79,18 +94,8 @@ class _ImagemState extends State<Imagem> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            _controller.clear();
-
-            Fluttertoast.showToast(
-              msg: 'Assinatura salva com sucesso',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-            );
-
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => TelaResponsavel()),
-            );
+            _limparAssinatura();
+            widget.onPressed();
           },
           child: Icon(Icons.clear),
         ),

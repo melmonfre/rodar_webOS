@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rodarwebos/pages/coletar_assinatura_responsavel/tela_coleta_assinatura_responsavel.dart';
 import 'package:rodarwebos/pages/tela_inicial/tela_inicial.dart';
 import 'package:rodarwebos/widgets/botoes/botao_coletar_assinatura_responsavel.dart';
 import 'package:rodarwebos/widgets/botoes/botao_enviar.dart';
@@ -126,7 +127,7 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                   Text('Não'),
                 ],
               ),
-                            if (responsavelAusente)
+              if (responsavelAusente)
                 InputText(labelText: 'Informar motivo da ausência'),
               SizedBox(height: 5.0),
               SizedBox(height: 10.0),
@@ -161,27 +162,18 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                       )
                     : ColetarAssinaturaResponsavel(
                         onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: Text('Enviado com sucesso'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => TelaInicial(),
-                                        ),
-                                      );
-                                    },
-                                    child: Text('OK'),
-                                  ),
-                                ],
+                          
+                            
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      TelaColetarAssinaturaResponsavel(),
+                                ),
                               );
-                            },
-                          );
+                            
+                           
+                          
                         },
                       ),
               ),
@@ -192,5 +184,3 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
     );
   }
 }
-
-               

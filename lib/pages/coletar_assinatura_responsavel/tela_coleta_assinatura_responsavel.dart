@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/responsavel/tela_responsavel.dart';
+import 'package:rodarwebos/pages/tela_inicial/tela_inicial.dart';
 import 'package:rodarwebos/widgets/foto_assinatura/imagem.dart';
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
 
-class TelaConclusaoDadosAssinatura extends StatefulWidget {
+class TelaColetarAssinaturaResponsavel extends StatefulWidget {
   @override
-  _TelaConclusaoDadosAssinaturaState createState() => _TelaConclusaoDadosAssinaturaState();
+  _TelaColetarAssinaturaResponsavelState createState() => _TelaColetarAssinaturaResponsavelState();
 }
 
-class _TelaConclusaoDadosAssinaturaState extends State<TelaConclusaoDadosAssinatura> {
+class _TelaColetarAssinaturaResponsavelState extends State<TelaColetarAssinaturaResponsavel> {
   var variaveis = VariaveisResumo();
 
   @override
@@ -22,7 +23,7 @@ class _TelaConclusaoDadosAssinaturaState extends State<TelaConclusaoDadosAssinat
             Navigator.pop(context);
           },
         ),
-        title: Text('Conclusão'),
+        title: Text('Coletar assinatura do responsável'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -47,7 +48,7 @@ class _TelaConclusaoDadosAssinaturaState extends State<TelaConclusaoDadosAssinat
                 onPressed: () {
                   Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => TelaResponsavel()),
+              MaterialPageRoute(builder: (context) => TelaInicial()),
             );
                 },
               )
