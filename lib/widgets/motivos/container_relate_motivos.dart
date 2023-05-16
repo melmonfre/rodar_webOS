@@ -20,6 +20,21 @@ class _ContainerRelateMotivosState extends State<ContainerRelateMotivos> {
   bool isInterferenciaEletrica = false;
   bool isRastreadorSemFuncionar = false;
 
+  bool _hasSelectedCheckbox() {
+  return isInconclusivo ||
+      isProblemaPosChave ||
+      isMalContatoChicote ||
+      isEquipamentoUmidade ||
+      isConectoresFolga ||
+      isEquipamentoSemEnergia ||
+      isBateriaNaoSegura ||
+      isProblemaAntenaGPS ||
+      isFioAterramentoSolto ||
+      isInterferenciaEletrica ||
+      isRastreadorSemFuncionar;
+}
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -145,13 +160,40 @@ class _ContainerRelateMotivosState extends State<ContainerRelateMotivos> {
               ),
               SizedBox(height: 10.0),
               BotaoProximo(onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => TelaConclusao()),
-                );
-              }),
+                if (!_hasSelectedCheckbox()) {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Aviso'),
+                          content: Text(
+                              'Selecione pelo menos um motivo antes de prosseguir'),
+                          actions: [
+                            TextButton(
+                                child: Text('OK'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                })
+                          ],
+                        );
+                      });
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => TelaConclusao()),
+                  );
+                }
+              },),
             ]),
+            
           ),
-        ));
+          
+        ) 
+        
+        
+        
+        );
+
+        
   }
 }
