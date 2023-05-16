@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/tela_inicial/tela_inicial.dart';
+import 'package:rodarwebos/widgets/botoes/botao_enviar.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:rodarwebos/widgets/inputs/input_motivos.dart';
 import 'package:rodarwebos/widgets/inputs/input_text.dart';
@@ -75,7 +76,7 @@ class _VisitaFrustadaMotivoState extends State<VisitaFrustadaMotivo> {
                     Container(
                       alignment: Alignment.center,
                       padding: EdgeInsets.all(16.0),
-                      child: BotaoProximo(
+                      child: BotaoEnviar(
                         onPressed: () {
                           Fluttertoast.showToast(
                             msg: 'Enviado com sucesso',
