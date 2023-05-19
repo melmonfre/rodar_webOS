@@ -61,7 +61,7 @@ class DBProvider {
 	localinst	TEXT,
 	equipamento	INTEGER,
 	PRIMARY KEY(id AUTOINCREMENT)
-);
+);,
     """;
   String get equipamento => """
   CREATE TABLE equipamento (
