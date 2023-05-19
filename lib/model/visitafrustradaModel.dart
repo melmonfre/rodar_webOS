@@ -7,6 +7,7 @@ class desloc{
   final String motivo;
   final String localgps;
   final String etapa;
+  final int osid;
   const desloc({
     required this.id,
     required this.base64,
@@ -16,5 +17,13 @@ class desloc{
     required this.motivo,
     required this.localgps,
     required this.etapa,
+    required this.osid,
   });
+
+  Map<String, dynamic> tomap(){
+    return{
+
+    };
+
+  }
 }

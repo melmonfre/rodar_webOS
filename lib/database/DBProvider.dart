@@ -40,6 +40,7 @@ class DBProvider {
 	logo	TEXT,
 	token	TEXT,
 	empresa	INTEGER,
+	osid	INTEGER,
 	PRIMARY KEY(id AUTOINCREMENT)
 
 )
@@ -50,6 +51,7 @@ class DBProvider {
 	cod	TEXT,
 	nome	TEXT,
 	logo	TEXT,
+	osid	INTEGER,
 	PRIMARY KEY(id AUTOINCREMENT)
 );
     """;
@@ -60,6 +62,7 @@ class DBProvider {
 	eqretirado	TEXT,
 	localinst	TEXT,
 	equipamento	INTEGER,
+	osid	INTEGER,
 	PRIMARY KEY(id AUTOINCREMENT)
 );,
     """;
@@ -71,6 +74,7 @@ class DBProvider {
 	doc	TEXT,
 	status	TEXT,
 	acessorios	INTEGER,
+	osid	INTEGER,
 	PRIMARY KEY(id AUTOINCREMENT)
 );
     """;
@@ -78,6 +82,7 @@ class DBProvider {
   CREATE TABLE acessorio (
 	id	INTEGER,
 	descricao	TEXT,
+	osid	INTEGER,
 	PRIMARY KEY(id AUTOINCREMENT)
 	);
     """;
@@ -88,6 +93,7 @@ class DBProvider {
 	desloc	REAL,
 	motivodiv	TEXT,
 	etapa	TEXT,
+	osid	INTEGER,
 	PRIMARY KEY(id AUTOINCREMENT)
 );
     """;
@@ -96,7 +102,7 @@ class DBProvider {
 	id	INTEGER,
 	base64	TEXT,
 	etapa	TEXT,
-	idos	INTEGER,
+	osid	INTEGER,
 	PRIMARY KEY(id AUTOINCREMENT)
 );
     """;
@@ -108,6 +114,7 @@ class DBProvider {
 	situdepois	INTEGER,
 	obsantes	TEXT,
 	obsdepois	TEXT,
+	osid	INTEGER,
 	PRIMARY KEY(id AUTOINCREMENT)
 );
     """;
@@ -121,6 +128,7 @@ class DBProvider {
 	motivo	TEXT,
 	localgps	TEXT,
 	etapa	TEXT,
+	osid	INTEGER,
 	PRIMARY KEY(id AUTOINCREMENT)
 );
     """;
