@@ -4,11 +4,13 @@ class InputText extends StatefulWidget {
   final String labelText;
   final Function(String)? onChanged;
   final bool showInfoIcon;
+  final bool enabled;
 
   const InputText({
     required this.labelText,
     this.onChanged,
     this.showInfoIcon = false,
+    this.enabled = true
   });
 
   @override
@@ -43,6 +45,7 @@ class _InputTextState extends State<InputText> {
                     ),
                   ),
                   onChanged: widget.onChanged,
+                  enabled: widget.enabled,
                 ),
               ),
               if (widget.showInfoIcon)

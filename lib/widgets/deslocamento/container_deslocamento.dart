@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
+import 'package:rodarwebos/widgets/deslocamento/variaveis_container_deslocamento.dart';
 import 'package:rodarwebos/widgets/inputs/input_motivos.dart';
 import 'package:rodarwebos/widgets/inputs/input_text.dart';
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
+
+import '../../pages/check_out/tela_check_out.dart';
 
 class ContainerDeslocamento extends StatefulWidget {
   final String titulo;
@@ -18,8 +21,19 @@ class ContainerDeslocamento extends StatefulWidget {
 }
 
 class _ContainerDeslocamentoState extends State<ContainerDeslocamento> {
-  var variaveis = VariaveisResumo();
+  var variaveis = VariaveisDeslocamento();
   String motivoDivergencia = '';
+  double? disCalc;
+  double? valor;
+  double? pedagio;
+
+  @override
+  void initState() {
+    super.initState();
+    disCalc = null;
+    valor = null;
+    pedagio = null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +78,14 @@ class _ContainerDeslocamentoState extends State<ContainerDeslocamento> {
                         ),
                       ),
                     ),
-                    InputText(labelText: 'Distância calculada (KM)'),
+                    InputText(
+                      labelText: 'Distância calculada (KM)',
+                      onChanged: (value) {
+                        setState(() {
+                          disCalc = double.tryParse(value) ?? 0.0;
+                        });
+                      },
+                    ),
                     InputText(
                       labelText:
                           'Informe caso a distância seja divergente (KM)',
@@ -85,21 +106,67 @@ class _ContainerDeslocamentoState extends State<ContainerDeslocamento> {
                           });
                         },
                       ),
-                    InputText(labelText: 'Latitude'),
-                    InputText(labelText: 'Longitude'),
+                    InputText(
+                      labelText: 'Latitude',
+                      enabled: false,
+                    ),
+                    InputText(
+                      labelText: 'Longitude',
+                      enabled: false,
+                    ),
                     InputText(
                       labelText: 'Valor (R\$)',
                       showInfoIcon: true,
+                      onChanged: (value) {
+                        setState(() {
+                          valor = double.tryParse(value) ?? 0.0;
+                        });
+                      },
                     ),
-                    InputText(labelText: 'Pedágio (R\$)'),
+                    InputText(
+                      labelText: 'Pedágio (R\$)',
+                      onChanged: (value) {
+                        setState(() {
+                          pedagio = double.tryParse(value) ?? 0.0;
+                        });
+                      },
+                    ),
                     SizedBox(height: 5.0),
                     Container(
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.all(16.0),
-                      child: BotaoProximo(
-                        onPressed: widget.onPressed,
-                      ),
-                    ),
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.all(16.0),
+                        child: BotaoProximo(
+                          onPressed: () {
+                            if (disCalc != null &&
+                                valor != null &&
+                                pedagio != null) {
+                              variaveis.disCalc = disCalc;
+                              variaveis.valor = valor;
+                              variaveis.pedagio = pedagio;
+                              
+                              widget.onPressed();
+                            } else {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Text('Erro'),
+                                    content: Text(
+                                        'Por favor, preencha todos os campos obrigatórios.'),
+                                    actions: [
+                                      TextButton(
+                                        child: Text('OK'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
+                          },
+                        ),),
                   ],
                 ),
               ),
