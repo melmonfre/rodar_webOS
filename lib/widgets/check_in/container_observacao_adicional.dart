@@ -15,6 +15,7 @@ class ContainerObservacaoAdicional extends StatefulWidget {
 class _ContainerObservacaoAdicionalState
     extends State<ContainerObservacaoAdicional> {
   String selectedButton = '';
+  TextEditingController observacaoController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +81,7 @@ class _ContainerObservacaoAdicionalState
               ),
               SizedBox(height: 16.0),
               TextField(
+                controller: observacaoController,
                 decoration: InputDecoration(
                   labelText: 'Observação...',
                   border: OutlineInputBorder(),
@@ -87,7 +89,32 @@ class _ContainerObservacaoAdicionalState
               ),
               SizedBox(height: 16.0),
               BotaoProximo(
-                onPressed: widget.onPressed,
+                onPressed: () {
+                  if (selectedButton.isNotEmpty &&
+                      observacaoController.text.isNotEmpty) {
+                    // Os campos estão preenchidos, chama a função onPressed
+                    widget.onPressed();
+                  } else {
+                    // Exibe um diálogo de alerta ao usuário
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Campos não preenchidos'),
+                          content: Text('Por favor, preencha todos os campos de observação adicional.'),
+                          actions: <Widget>[
+                            TextButton(
+                              child: Text('Fechar'),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                },
               )
             ],
           ),
