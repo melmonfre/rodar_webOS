@@ -58,25 +58,20 @@ class _ContainerAcessoriosInstaladosState
                 decoration: InputDecoration(
                   labelText: 'Local de instalação',
                   border: OutlineInputBorder(),
-                  errorText: isLocalInstalacaoValid ? null : 'Campo obrigatório',
+                  errorText:
+                      isLocalInstalacaoValid ? null : 'Campo obrigatório',
                 ),
                 onChanged: (value) {
                   setState(() {
                     localInstalacao = value;
-                    isLocalInstalacaoValid = value.isNotEmpty;
+                    // isLocalInstalacaoValid = value.isNotEmpty;
                   });
                 },
               ),
               SizedBox(height: 18.0),
               BotaoProximo(
                 onPressed: () {
-                  if (isLocalInstalacaoValid) {
-                    variaveis.localInstalacao = localInstalacao;
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => FotoHodometro()),
-                    );
-                  } else {
+                  if (localInstalacao == null || localInstalacao!.isEmpty) {
                     showDialog(
                       context: context,
                       builder: (context) {
@@ -94,6 +89,12 @@ class _ContainerAcessoriosInstaladosState
                           ],
                         );
                       },
+                    );
+                  } else {
+                    variaveis.localInstalacao = localInstalacao!;
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => FotoHodometro()),
                     );
                   }
                 },
