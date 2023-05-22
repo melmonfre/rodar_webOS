@@ -3,7 +3,7 @@ import 'package:rodarwebos/Constantes/Tokenconst.dart';
 import 'package:rodarwebos/Constantes/Urlconst.dart';
 
 class getToken{
-Future<String> obter() async {
+ obter() async {
   String token = "";
   var retorno;
   var url = Uri.parse('${Urlconst().url}token/codigo/${tokenconst().token}');
