@@ -3,9 +3,22 @@ import 'package:rodarwebos/pages/tela_inicial/tela_inicial.dart';
 import 'package:rodarwebos/widgets/drawer/drawer.dart';
 import 'package:rodarwebos/widgets/menu_inicial/containers/todos_containers.dart';
 
-void main() => runApp(MyApp());
+import 'link/linkexterno.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  LinkHandler linkHandler = LinkHandler();
+  await linkHandler.initUniLinks();
+
+  runApp(MyApp(linkHandler: linkHandler));
+}
 
 class MyApp extends StatefulWidget {
+  final LinkHandler linkHandler;
+
+  const MyApp({Key? key, required this.linkHandler}) : super(key: key);
+
   @override
   _MyAppState createState() => _MyAppState();
 }
