@@ -5,6 +5,7 @@ import 'package:rodarwebos/pages/motivos/tela_relate_motivos.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:rodarwebos/widgets/check_in/container_check_in.dart';
 import 'package:rodarwebos/widgets/check_in/container_observacao_adicional.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CheckOutTela extends StatefulWidget {
   @override
@@ -14,7 +15,27 @@ class CheckOutTela extends StatefulWidget {
 class _CheckOutTelaState extends State<CheckOutTela> {
   SelectedOptions selectedOptions =
       SelectedOptions(); // Instância da classe SelectedOptions
+  Future<void> salvaopcoes() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    setState(() {
+      selectedOptions.luzesPainelInstrumento = opcs.getString("luzesPainelInstrumento")!;
+      selectedOptions.arCondicionado= opcs.getString("arCondicionado")!;
+      selectedOptions.arQuenteVentilacao = opcs.getString("arQuenteVentilacao")!;
+      selectedOptions.radioCdDvdMp3 = opcs.getString("radioCdDvdMp3")!;
+      selectedOptions.buzinas = opcs.getString("buzinas")!;
+      selectedOptions.tetoPainelQuebraSol = opcs.getString("tetoPainelQuebraSol")!;
+      selectedOptions.partidaFuncMotor = opcs.getString("partidaFuncMotor")!;
+      selectedOptions.vidrosEletricos = opcs.getString("vidrosEletricos")!;
+      selectedOptions.alarme = opcs.getString("alarme")!;
+      selectedOptions.condicoesIntalacaoEletrico = opcs.getString("condicoesIntalacaoEletrico")!;
+    });
+  }
 
+  @override
+  void initState() {
+    salvaopcoes();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
