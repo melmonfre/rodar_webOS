@@ -4,6 +4,7 @@ import 'package:flutter/services.dart' show PlatformException;
 
 
 
+
 class LinkHandler {
   String? linkExterno;
 
