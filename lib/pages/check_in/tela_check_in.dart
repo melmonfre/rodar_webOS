@@ -4,6 +4,7 @@ import 'package:rodarwebos/pages/equipamentos/tela_equipamento.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:rodarwebos/widgets/check_in/container_check_in.dart';
 import 'package:rodarwebos/widgets/check_in/container_observacao_adicional.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CheckInTela extends StatefulWidget {
   @override
@@ -13,7 +14,6 @@ class CheckInTela extends StatefulWidget {
 class _CheckInTelaState extends State<CheckInTela> {
   SelectedOptions selectedOptions =
       SelectedOptions(); // Instância da classe SelectedOptions
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -122,6 +122,7 @@ class _CheckInTelaState extends State<CheckInTela> {
             onPressed: () {
               printSelectedOptions();
               checkNavigation();
+              salvaopcoes();
               
             },
           ),
@@ -132,6 +133,7 @@ class _CheckInTelaState extends State<CheckInTela> {
   }
 
   void printSelectedOptions() {
+
     print(
         'Luzes Painel Instrumento: ${selectedOptions.luzesPainelInstrumento}');
     print('Ar Condicionado: ${selectedOptions.arCondicionado}');
@@ -147,7 +149,23 @@ class _CheckInTelaState extends State<CheckInTela> {
     // Imprima outras opções selecionadas
   }
 
+  Future<void> salvaopcoes() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    setState(() {
+      opcs.setString("luzesPainelInstrumento",selectedOptions.luzesPainelInstrumento);
+      opcs.setString("arCondicionado",selectedOptions.arCondicionado);
+      opcs.setString("arQuenteVentilacao",selectedOptions.arQuenteVentilacao);
+      opcs.setString("radioCdDvdMp3",selectedOptions.radioCdDvdMp3);
+      opcs.setString("buzinas",selectedOptions.buzinas);
+      opcs.setString("tetoPainelQuebraSol",selectedOptions.tetoPainelQuebraSol);
+      opcs.setString("partidaFuncMotor", selectedOptions.partidaFuncMotor);
+      opcs.setString("vidrosEletricos",selectedOptions.vidrosEletricos);
+      opcs.setString("alarme",selectedOptions.alarme);
+      opcs.setString("condicoesIntalacaoEletrico",selectedOptions.condicoesIntalacaoEletrico);
+    });
+  }
   void checkNavigation() {
+
     if (selectedOptions.luzesPainelInstrumento.isEmpty ||
         selectedOptions.arCondicionado.isEmpty ||
         selectedOptions.arQuenteVentilacao.isEmpty ||
