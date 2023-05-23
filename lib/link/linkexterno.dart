@@ -3,14 +3,6 @@ import 'package:uni_links/uni_links.dart';
 import 'package:flutter/services.dart' show PlatformException;
 
 
-// class LinkExterno extends StatelessWidget {
-//   const LinkExterno({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container();
-//   }
-// }
 
 class LinkHandler {
   String? linkExterno;
