@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 
 class ContainerCheckOut extends StatefulWidget {
   final String title;
+  final String value;
   final ValueChanged<String> onOptionSelected;
 
-  ContainerCheckOut({required this.title, required this.onOptionSelected});
+  ContainerCheckOut({required this.title, required this.onOptionSelected, required this.value});
 
   @override
   _ContainerCheckOutState createState() => _ContainerCheckOutState();
@@ -38,6 +39,15 @@ class _ContainerCheckOutState extends State<ContainerCheckOut> {
                 fontSize: 16.0,
               ),
               textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 10.0),
+            Text(
+              'Situação no check-in: ${widget.value}',
+              style: TextStyle(
+                fontWeight: FontWeight.normal,
+                fontSize: 14.0,
+              ),
+              textAlign: TextAlign.start,
             ),
             SizedBox(height: 5.0),
             StatefulBuilder(

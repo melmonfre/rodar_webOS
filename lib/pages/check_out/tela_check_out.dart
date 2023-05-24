@@ -7,6 +7,8 @@ import 'package:rodarwebos/widgets/check_in/container_check_in.dart';
 import 'package:rodarwebos/widgets/check_in/container_observacao_adicional.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../widgets/check_out/container_check_out.dart';
+
 class CheckOutTela extends StatefulWidget {
   @override
   _CheckOutTelaState createState() => _CheckOutTelaState();
@@ -51,8 +53,9 @@ class _CheckOutTelaState extends State<CheckOutTela> {
       ),
       body: ListView(
         children: [
-          ContainerCheckIn(
+          ContainerCheckOut(
             title: 'Luzes Painel Instrumento',
+            value: selectedOptions.luzesPainelInstrumento,
             onOptionSelected: (option) {
               setState(() {
                 selectedOptions.luzesPainelInstrumento =
@@ -60,8 +63,9 @@ class _CheckOutTelaState extends State<CheckOutTela> {
               });
             },
           ),
-          ContainerCheckIn(
+          ContainerCheckOut(
             title: 'Ar Condicionado',
+            value: selectedOptions.arCondicionado,
             onOptionSelected: (option) {
               setState(() {
                 selectedOptions.arCondicionado =
@@ -69,8 +73,9 @@ class _CheckOutTelaState extends State<CheckOutTela> {
               });
             },
           ),
-          ContainerCheckIn(
+          ContainerCheckOut(
             title: 'Ar quente / Ventilação',
+            value: selectedOptions.arQuenteVentilacao,
             onOptionSelected: (option) {
               setState(() {
                 selectedOptions.arQuenteVentilacao =
@@ -78,8 +83,9 @@ class _CheckOutTelaState extends State<CheckOutTela> {
               });
             },
           ),
-          ContainerCheckIn(
+          ContainerCheckOut(
             title: 'Rádio / CD / DVD / MP3',
+            value: selectedOptions.radioCdDvdMp3,
             onOptionSelected: (option) {
               setState(() {
                 selectedOptions.radioCdDvdMp3 =
@@ -87,8 +93,9 @@ class _CheckOutTelaState extends State<CheckOutTela> {
               });
             },
           ),
-          ContainerCheckIn(
+          ContainerCheckOut(
             title: 'Buzinas',
+            value: selectedOptions.buzinas,
             onOptionSelected: (option) {
               setState(() {
                 selectedOptions.buzinas =
@@ -96,8 +103,9 @@ class _CheckOutTelaState extends State<CheckOutTela> {
               });
             },
           ),
-          ContainerCheckIn(
+          ContainerCheckOut(
             title: 'Teto / Painel / Quebra-sol',
+            value: selectedOptions.tetoPainelQuebraSol,
             onOptionSelected: (option) {
               setState(() {
                 selectedOptions.tetoPainelQuebraSol =
@@ -105,8 +113,9 @@ class _CheckOutTelaState extends State<CheckOutTela> {
               });
             },
           ),
-          ContainerCheckIn(
+          ContainerCheckOut(
             title: 'Partida e func. do motor',
+            value: selectedOptions.partidaFuncMotor,
             onOptionSelected: (option) {
               setState(() {
                 selectedOptions.partidaFuncMotor =
@@ -114,8 +123,9 @@ class _CheckOutTelaState extends State<CheckOutTela> {
               });
             },
           ),
-          ContainerCheckIn(
+          ContainerCheckOut(
             title: 'Vidros elétricos',
+            value: selectedOptions.vidrosEletricos,
             onOptionSelected: (option) {
               setState(() {
                 selectedOptions.vidrosEletricos =
@@ -123,16 +133,18 @@ class _CheckOutTelaState extends State<CheckOutTela> {
               });
             },
           ),
-          ContainerCheckIn(
+          ContainerCheckOut(
             title: 'Alarme',
+            value: selectedOptions.alarme,
             onOptionSelected: (option) {
               setState(() {
                 selectedOptions.alarme = option; // Atualize o valor selecionado
               });
             },
           ),
-          ContainerCheckIn(
+          ContainerCheckOut(
             title: 'Condições instalação elétrica',
+            value: selectedOptions.condicoesIntalacaoEletrico,
             onOptionSelected: (option) {
               setState(() {
                 selectedOptions.condicoesIntalacaoEletrico =
