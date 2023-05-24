@@ -90,8 +90,7 @@ class _ContainerObservacaoAdicionalState
               SizedBox(height: 16.0),
               BotaoProximo(
                 onPressed: () {
-                  if (selectedButton.isNotEmpty &&
-                      observacaoController.text.isNotEmpty) {
+                  if (selectedButton.isNotEmpty) {
                     // Os campos estão preenchidos, chama a função onPressed
                     widget.onPressed();
                   } else {
