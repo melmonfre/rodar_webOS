@@ -88,7 +88,7 @@ class _ContainerDeslocamentoState extends State<ContainerDeslocamento> {
                     ),
                     InputText(
                       labelText:
-                          'Informe caso a distância seja divergente (KM)',
+                          'Distância percorrida (KM)',
                       onChanged: (value) {
                         setState(() {
                           motivoDivergencia = value;
