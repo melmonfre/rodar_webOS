@@ -22,6 +22,9 @@ class ContainerResponsavel extends StatefulWidget {
 class _ContainerResponsavelState extends State<ContainerResponsavel> {
   var variaveis = VariaveisResumo();
   String motivoDivergencia = '';
+  String? nome;
+  String? email;
+  String? telefone;
 
   String contatoSelecionado = '';
   bool responsavelAusente = false;
@@ -89,9 +92,27 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                 ),
               ),
               SizedBox(height: 10.0),
-              InputText(labelText: 'Nome'),
-              InputText(labelText: 'Email'),
-              InputText(labelText: 'Telefone'),
+              InputText(
+                  labelText: 'Nome',
+                  onChanged: (value) {
+                    setState(() {
+                      nome = value;
+                    });
+                  }),
+              InputText(labelText: 'Email',
+              onChanged: (value){
+                setState(() {
+                  email =value;
+                });
+              },
+              ),
+              InputText(labelText: 'Telefone',
+              onChanged: (value){
+                setState(() {
+                  telefone = value;
+                });
+              },
+              ),
               SizedBox(height: 10.0),
               Center(
                 child: Text(
@@ -162,18 +183,37 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                       )
                     : ColetarAssinaturaResponsavel(
                         onPressed: () {
-                          
-                            
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      TelaColetarAssinaturaResponsavel(),
-                                ),
-                              );
-                            
-                           
-                          
+                          if (nome != null || 
+                              email != null ||
+                              telefone != null
+                          ) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    TelaColetarAssinaturaResponsavel(),
+                              ),
+                            );
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text('Erro'),
+                                  content: Text(
+                                      'Por favor, preencha todos os campos obrigatórios.'),
+                                  actions: [
+                                    TextButton(
+                                      child: Text('OK'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
                         },
                       ),
               ),

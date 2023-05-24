@@ -4,14 +4,12 @@ class InputText extends StatefulWidget {
   final String labelText;
   final Function(String)? onChanged;
   final bool showInfoIcon;
-  final TextInputType keyboard;
   final bool enabled;
 
   const InputText(
       {required this.labelText,
       this.onChanged,
       this.showInfoIcon = false,
-      this.keyboard = TextInputType.number,
       this.enabled = true});
 
   @override
