@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
 
-class InputText extends StatefulWidget {
+class InputNumber extends StatefulWidget {
   final String labelText;
   final Function(String)? onChanged;
   final bool showInfoIcon;
-  final TextInputType keyboard;
   final bool enabled;
 
-  const InputText(
-      {required this.labelText,
-      this.onChanged,
-      this.showInfoIcon = false,
-      this.keyboard = TextInputType.number,
-      this.enabled = true});
+  const InputNumber({
+    required this.labelText,
+    this.onChanged,
+    this.showInfoIcon = false,
+    this.enabled = true,
+  });
 
   @override
-  _InputTextState createState() => _InputTextState();
+  _InputNumberState createState() => _InputNumberState();
 }
 
-class _InputTextState extends State<InputText> {
+class _InputNumberState extends State<InputNumber> {
   bool showInfoText = false;
 
   @override
@@ -32,6 +31,7 @@ class _InputTextState extends State<InputText> {
             children: [
               Expanded(
                 child: TextField(
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderSide: BorderSide(
@@ -60,18 +60,6 @@ class _InputTextState extends State<InputText> {
                 ),
             ],
           ),
-          if (widget.showInfoIcon && showInfoText)
-            Padding(
-              padding: EdgeInsets.fromLTRB(8.0, 10.0, 3.0, 0.0),
-              child: Text(
-                'O cálculo do valor é feito automaticamente pelo sistema e desconta a sua área de abrangência:\n\n'
-                'Distância Informada = 1.00\n'
-                'Área de abrangência (ida e volta) = 2 x 0 = 0.00\n'
-                'Valor Km = R\$0.00\n'
-                'Distância = 1 - (2 x 0) = 1.00\n'
-                'Valor = 1 x 0 = R\$0.00',
-              ),
-            ),
         ],
       ),
     );

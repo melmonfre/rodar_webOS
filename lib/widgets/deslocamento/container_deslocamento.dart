@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:rodarwebos/widgets/deslocamento/variaveis_container_deslocamento.dart';
 import 'package:rodarwebos/widgets/inputs/input_motivos.dart';
+import 'package:rodarwebos/widgets/inputs/input_number.dart';
 import 'package:rodarwebos/widgets/inputs/input_text.dart';
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
 
@@ -78,17 +79,17 @@ class _ContainerDeslocamentoState extends State<ContainerDeslocamento> {
                         ),
                       ),
                     ),
-                    InputText(
+                    InputNumber(
                       labelText: 'Distância calculada (KM)',
+                      
                       onChanged: (value) {
                         setState(() {
                           disCalc = double.tryParse(value) ?? 0.0;
                         });
                       },
                     ),
-                    InputText(
-                      labelText:
-                          'Distância percorrida (KM)',
+                    InputNumber(
+                      labelText: 'Distância percorrida (KM)',
                       onChanged: (value) {
                         setState(() {
                           motivoDivergencia = value;
@@ -114,7 +115,7 @@ class _ContainerDeslocamentoState extends State<ContainerDeslocamento> {
                       labelText: 'Longitude',
                       enabled: false,
                     ),
-                    InputText(
+                    InputNumber(
                       labelText: 'Valor (R\$)',
                       showInfoIcon: true,
                       onChanged: (value) {
@@ -123,7 +124,7 @@ class _ContainerDeslocamentoState extends State<ContainerDeslocamento> {
                         });
                       },
                     ),
-                    InputText(
+                    InputNumber(
                       labelText: 'Pedágio (R\$)',
                       onChanged: (value) {
                         setState(() {
@@ -133,40 +134,41 @@ class _ContainerDeslocamentoState extends State<ContainerDeslocamento> {
                     ),
                     SizedBox(height: 5.0),
                     Container(
-                        alignment: Alignment.center,
-                        padding: EdgeInsets.all(16.0),
-                        child: BotaoProximo(
-                          onPressed: () {
-                            if (disCalc != null &&
-                                valor != null &&
-                                pedagio != null) {
-                              variaveis.disCalc = disCalc;
-                              variaveis.valor = valor;
-                              variaveis.pedagio = pedagio;
-                              
-                              widget.onPressed();
-                            } else {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: Text('Erro'),
-                                    content: Text(
-                                        'Por favor, preencha todos os campos obrigatórios.'),
-                                    actions: [
-                                      TextButton(
-                                        child: Text('OK'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            }
-                          },
-                        ),),
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.all(16.0),
+                      child: BotaoProximo(
+                        onPressed: () {
+                          if (disCalc != null &&
+                              valor != null &&
+                              pedagio != null) {
+                            variaveis.disCalc = disCalc;
+                            variaveis.valor = valor;
+                            variaveis.pedagio = pedagio;
+
+                            widget.onPressed();
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text('Erro'),
+                                  content: Text(
+                                      'Por favor, preencha todos os campos obrigatórios.'),
+                                  actions: [
+                                    TextButton(
+                                      child: Text('OK'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
+                        },
+                      ),
+                    ),
                   ],
                 ),
               ),
