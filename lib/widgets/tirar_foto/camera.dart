@@ -40,8 +40,8 @@ class _CameraButtonState extends State<CameraButton> {
   }
 
   String _truncateFileName(String fileName) {
-    const maxLength = 15;
-    const lineBreakAt = 10;
+    const maxLength = 10;
+    const lineBreakAt = 5;
 
     if (fileName.length <= maxLength) {
       return fileName;
@@ -72,30 +72,30 @@ class _CameraButtonState extends State<CameraButton> {
             width: 60,
             fit: BoxFit.cover,
           ),
-          SizedBox(width: 20),
+          SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   '',
-                  style: TextStyle(fontSize: 12),
+                  style: TextStyle(fontSize: 11),
                 ),
                 Text(
                   _truncateFileName(imageName),
-                  style: TextStyle(fontSize: 12),
-                  maxLines: 2,
+                  style: TextStyle(fontSize: 11),
+                  maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
           ),
-          SizedBox(width: 2),
+          SizedBox(width: 1),
           Text(
             imageSize,
-            style: TextStyle(fontSize: 12),
+            style: TextStyle(fontSize: 11),
           ),
-          SizedBox(width: 10),
+          SizedBox(width: 5),
           BotaoCancelar(
             onPressed: () => _clearPicture(index),
             index: index,
@@ -199,7 +199,7 @@ class _CameraButtonState extends State<CameraButton> {
                 return Column(
                   children: [
                     _buildThumbnail(index),
-                    SizedBox(height: 16), // Espaçamento entre os itens
+                    SizedBox(height: 12), // Espaçamento entre os itens
                   ],
                 );
               },
