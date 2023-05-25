@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rodarwebos/pages/login/tela_login.dart';
 import 'package:rodarwebos/pages/tela_inicial/tela_inicial.dart';
 import 'package:rodarwebos/widgets/drawer/drawer.dart';
 import 'package:rodarwebos/widgets/menu_inicial/containers/todos_containers.dart';
@@ -30,7 +31,8 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         colorSchemeSeed: Color(0xFF26738E), // Define a cor da AppBar
       ),
-      home: TelaInicial(),
+      // home: TelaInicial(),
+      home: login('token'),
     );
   }
 }
