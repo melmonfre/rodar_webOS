@@ -13,7 +13,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   LinkHandler linkHandler = LinkHandler();
-  await linkHandler.initUniLinks();
+  await linkHandler.initUrlLaunch();
   HttpOverrides.global = MyHttpOverrides();
   runApp(MyApp(linkHandler: linkHandler));
 }
@@ -35,7 +35,7 @@ class _MyAppState extends State<MyApp> {
         colorSchemeSeed: Color(0xFF26738E), // Define a cor da AppBar
       ),
       // home: TelaInicial(),
-      home: login('token'),
+      home: loginTeste('token'),
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:rodarwebos/pages/motivos/tela_relate_motivos.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:rodarwebos/widgets/check_in/container_check_in.dart';
 import 'package:rodarwebos/widgets/check_in/container_observacao_adicional.dart';
+import 'package:rodarwebos/widgets/confirmacao_dados/lista_resumo_estado.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../widgets/check_out/container_check_out.dart';
@@ -17,19 +18,24 @@ class CheckOutTela extends StatefulWidget {
 class _CheckOutTelaState extends State<CheckOutTela> {
   SelectedOptions selectedOptions =
       SelectedOptions(); // Instância da classe SelectedOptions
+
   Future<void> salvaopcoes() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     setState(() {
-      selectedOptions.luzesPainelInstrumento = opcs.getString("luzesPainelInstrumento")!;
-      selectedOptions.arCondicionado= opcs.getString("arCondicionado")!;
-      selectedOptions.arQuenteVentilacao = opcs.getString("arQuenteVentilacao")!;
+      selectedOptions.luzesPainelInstrumento =
+          opcs.getString("luzesPainelInstrumento")!;
+      selectedOptions.arCondicionado = opcs.getString("arCondicionado")!;
+      selectedOptions.arQuenteVentilacao =
+          opcs.getString("arQuenteVentilacao")!;
       selectedOptions.radioCdDvdMp3 = opcs.getString("radioCdDvdMp3")!;
       selectedOptions.buzinas = opcs.getString("buzinas")!;
-      selectedOptions.tetoPainelQuebraSol = opcs.getString("tetoPainelQuebraSol")!;
+      selectedOptions.tetoPainelQuebraSol =
+          opcs.getString("tetoPainelQuebraSol")!;
       selectedOptions.partidaFuncMotor = opcs.getString("partidaFuncMotor")!;
       selectedOptions.vidrosEletricos = opcs.getString("vidrosEletricos")!;
       selectedOptions.alarme = opcs.getString("alarme")!;
-      selectedOptions.condicoesIntalacaoEletrico = opcs.getString("condicoesIntalacaoEletrico")!;
+      selectedOptions.condicoesIntalacaoEletrico =
+          opcs.getString("condicoesIntalacaoEletrico")!;
     });
   }
 
@@ -38,6 +44,7 @@ class _CheckOutTelaState extends State<CheckOutTela> {
     salvaopcoes();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -156,10 +163,8 @@ class _CheckOutTelaState extends State<CheckOutTela> {
             onPressed: () {
               printSelectedOptions();
               checkNavigation();
-              
             },
           ),
-          
         ],
       ),
     );
@@ -219,4 +224,4 @@ class _CheckOutTelaState extends State<CheckOutTela> {
   }
 }
 
-
+// =============================================================
