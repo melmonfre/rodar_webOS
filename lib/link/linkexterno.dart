@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:rodarwebos/services/getToken.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:flutter/services.dart' show PlatformException;
 
 
+// class LinkExterno extends StatelessWidget {
+//   const LinkExterno({super.key});
 
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container();
+//   }
+// }
 
 class LinkHandler {
   String? linkExterno;
@@ -15,9 +24,15 @@ class LinkHandler {
       if (initialLink != null) {
         // Salva o link em uma variável
         linkExterno = initialLink;
-
-        // Imprime o link no console
-        print('Link externo: $linkExterno');
+        if (linkExterno != null) {
+          var divid = linkExterno?.split("/auth/");
+          print(divid);
+          var token = divid?[1];
+          // Imprime o link no console
+          print('Link externo: $linkExterno');
+          print('token $token');
+          getToken().obter(token);
+        }
       }
     } on PlatformException {
       // Ocorreu um erro ao acessar o link externo
