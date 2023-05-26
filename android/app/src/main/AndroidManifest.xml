@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.rodarwebos"
-    xmlns:tools="http://schemas.android.com/tools">
-    <uses-sdk tools:overrideLibrary="carnegietechnologies.gallery_saver"/>
+    package="com.example.rodarwebos">
+
+
     <application
         android:label="rodarwebos"
         android:name="${applicationName}"

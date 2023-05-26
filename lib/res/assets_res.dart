@@ -5,5 +5,6 @@
 class AssetsRes {
   static const String PLUGIN_NAME = 'rodarwebos';
   static const String PLUGIN_VERSION = '1.0.0+1';
+  static const String BEAR = 'assets/bear.png';
   static const String REKTALOGOTIPO03 = 'assets/rekta/REKTALogotipo03.png';
 }
