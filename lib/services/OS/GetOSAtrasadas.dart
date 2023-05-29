@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class GetOSAtrasadas{
   //obtem as os atrasadas
-    obter() async {
+    obter(empresaid) async {
       SharedPreferences opcs = await SharedPreferences.getInstance();
       var token = opcs.getString("token")!;
      var retorno;

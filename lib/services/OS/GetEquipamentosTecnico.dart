@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Constantes/Urlconst.dart';
 class getequiptec{
-  obter() async {
+  obter(empresaid) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     var token = opcs.getString("token")!;
     var headers = {

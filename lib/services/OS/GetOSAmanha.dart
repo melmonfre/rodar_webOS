@@ -6,9 +6,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class GetOSAmanha{
   //obtem as os de amanhã
-    obter() async {
+    obter(empresaid) async {
       SharedPreferences opcs = await SharedPreferences.getInstance();
-      var token = opcs.getString("token")!;
+      var empresaid;
+      var token = opcs.getString("${empresaid}token")!;
      var retorno;
     var headers = {
       'Accept': 'application/json',
