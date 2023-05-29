@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../Constantes/Urlconst.dart';
+import '../../Constantes/Urlconst.dart';
 class getequiptec{
   obter() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();

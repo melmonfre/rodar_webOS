@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:rodarwebos/Constantes/Urlconst.dart';
-import 'package:rodarwebos/services/GetOSAmanha.dart';
-import 'package:rodarwebos/services/GetOSAtrasadas.dart';
-import 'package:rodarwebos/services/GetOSDoDia.dart';
-import 'package:rodarwebos/services/GetOSFuturas.dart';
-import 'package:rodarwebos/services/GetEquipamentosTecnico.dart';
+import 'package:rodarwebos/services/OS/GetOSAmanha.dart';
+import 'package:rodarwebos/services/OS/GetOSAtrasadas.dart';
+import 'package:rodarwebos/services/OS/GetOSDoDia.dart';
+import 'package:rodarwebos/services/OS/GetOSFuturas.dart';
+import 'package:rodarwebos/services/OS/GetEquipamentosTecnico.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class getToken{
