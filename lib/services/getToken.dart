@@ -39,19 +39,30 @@ class getToken{
   opcs.setString("${empresaid}@GetOSDia",dodia);
   opcs.setString("${empresaid}@GetOSFuturas",futuras);
   opcs.setString("${empresaid}@getequiptec",equiptecnico);
+  opcs.setString("${empresaid}login", dados);
 }
-Future<void> setempresas(empresa) async {
-List <String> empresas = [];
-SharedPreferences opcs = await SharedPreferences.getInstance();
-if(opcs.getStringList("empresas") ==  null){
- empresas.add(empresa);
-} else {
+ getempresas() async {
+ SharedPreferences opcs = await SharedPreferences.getInstance();
  List<String>? listaempresas = opcs.getStringList("empresas");
-if (listaempresas!.contains(empresa)){
-} else{
- listaempresas.add(empresa);
- opcs.setStringList("empresas",listaempresas);
+return listaempresas;
 }
+getlogin(empresaid) async {
+ SharedPreferences opcs = await SharedPreferences.getInstance();
+var login = opcs.getString("${empresaid}login");
 }
-}
+
+Future<void> setempresas(empresa) async {
+ List <String> empresas = [];
+ SharedPreferences opcs = await SharedPreferences.getInstance();
+ if(opcs.getStringList("empresas") ==  null){
+  empresas.add(empresa);
+ } else {
+  List<String>? listaempresas = opcs.getStringList("empresas");
+ if (listaempresas!.contains(empresa)){
+ } else{
+  listaempresas.add(empresa);
+  opcs.setStringList("empresas",listaempresas);
+   }
+  }
+ }
 }
