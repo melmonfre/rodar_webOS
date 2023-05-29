@@ -17,9 +17,8 @@ class getequiptec{
     var url = Uri.parse('${Urlconst().url}equipamento/list_equipamentos_tecnico');
     var res = await http.get(url, headers: headers);
     if (res.statusCode != 200) throw Exception('http.get error: statusCode= ${res.statusCode}');
-    print(res.body);
     var retorno = jsonDecode(res.body);
-    print(retorno);
-    return retorno;
+    print("tecnico \n ${retorno}");
+    return res.body;
   }
 }

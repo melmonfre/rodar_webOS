@@ -22,7 +22,7 @@ class GetOSDia{
     var res = await http.post(url, headers: headers, body: data);
     if (res.statusCode != 200) throw Exception('http.post error: statusCode= ${res.statusCode}');
     retorno = jsonDecode(res.body);
-    print(retorno);
-    return retorno;
+    print("dodia \n ${retorno}");
+    return res.body;
   }
 }
