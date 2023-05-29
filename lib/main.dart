@@ -31,6 +31,21 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  bool shouldShowLogin = true; // Variável de estado para controlar a exibição da tela de login
+
+  @override
+  void initState() {
+    super.initState();
+    // Verifica se o aplicativo foi aberto por um link externo
+    widget.linkHandler.initUrlLaunch().then((_) {
+      setState(() {
+        // Atualiza a variável de estado para exibir a tela inicial em vez da tela de login
+        shouldShowLogin = false;
+      });
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -38,7 +53,7 @@ class _MyAppState extends State<MyApp> {
         colorSchemeSeed: Color(0xFF26738E), // Define a cor da AppBar
       ),
       // home: TelaInicial(),
-      home: loginTeste('token'),
+      home: shouldShowLogin ? loginTeste('teste') : TelaInicial(),
     );
   }
 }
