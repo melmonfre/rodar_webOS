@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import 'package:rodarwebos/Constantes/Urlconst.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,7 +21,7 @@ class GetOSAmanha{
     var url = Uri.parse('${Urlconst().url}ordem_servico/tecnico');
     var res = await http.post(url, headers: headers, body: data);
     if (res.statusCode != 200) throw Exception('http.post error: statusCode= ${res.statusCode}');
-    retorno = res.body;
+    retorno = jsonDecode(res.body);
     print(retorno);
     return retorno;
   }

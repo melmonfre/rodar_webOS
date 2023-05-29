@@ -9,6 +9,7 @@ class OrdemServico extends StatefulWidget {
 }
 
 class _OrdemServicoState extends State<OrdemServico> {
+
   var variaveis = VariaveisResumo();
 
   @override
