@@ -1,7 +1,10 @@
 //exibe uma lista de equipamentos disponiveis vinculados ao tecnico
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 class getequiptec{
-  obter(var token) async {
+  obter() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    var token = opcs.getString("token")!;
     var headers = {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',

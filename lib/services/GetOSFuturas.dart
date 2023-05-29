@@ -1,9 +1,12 @@
 import 'package:http/http.dart' as http;
 import 'package:rodarwebos/Constantes/Urlconst.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class GetOSFuturas{
   //obtem as os futuras
-    obter(var token) async {
+    obter() async {
+      SharedPreferences opcs = await SharedPreferences.getInstance();
+      var token = opcs.getString("token")!;
      var retorno;
     var headers = {
       'Accept': 'application/json',

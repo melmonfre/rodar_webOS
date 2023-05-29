@@ -19,7 +19,7 @@ class LinkHandler {
           // Imprime o link no console
           print('Link externo: $linkExterno');
           print('token $token');
-          // getToken().obter(token);
+           getToken().obter(token);
         }
       }
     } catch (e) {

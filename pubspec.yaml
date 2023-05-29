@@ -71,8 +71,10 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    - assets/rekta/REKTALogotipo03.png 
     - assets/bear.png
+    - assets/ca/isrgrootx1.pem
+    - assets/ca/lets-encrypt-r3.pem
+    - assets/rekta/REKTALogotipo03.png
  
   # To add assets to your application, add an assets section, like this:
   # assets:
