@@ -49,6 +49,7 @@ return listaempresas;
 getlogin(empresaid) async {
  SharedPreferences opcs = await SharedPreferences.getInstance();
 var login = opcs.getString("${empresaid}login");
+return login;
 }
 
 Future<void> setempresas(empresa) async {
