@@ -38,7 +38,7 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     checkInitialRoute();
   }
-
+ 
   Future<void> checkInitialRoute() async {
     await widget.linkHandler.initUrlLaunch();
     setState(() {
