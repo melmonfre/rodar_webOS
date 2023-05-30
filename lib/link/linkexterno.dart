@@ -7,27 +7,24 @@ class LinkHandler {
 
   Future<void> initUrlLaunch() async {
     try {
-      // Verifica se o aplicativo foi aberto por um link externo
       String? initialLink = await getInitialLink();
       if (initialLink != null) {
-        // Salva o link em uma variável
         linkExterno = initialLink;
         if (linkExterno != null) {
           var divid = linkExterno?.split("/auth/");
           print(divid);
           var token = divid?[1];
-          // Imprime o link no console
           print('Link externo: $linkExterno');
           print('token $token');
-          getToken().obter(token); // Aguarde a conclusão da obtenção do token
+          getToken().obter(token);
         }
       }
     } catch (e) {
-      // Ocorreu um erro ao acessar o link externo
       // Trate o erro conforme necessário
     }
   }
 }
+
 
 
 

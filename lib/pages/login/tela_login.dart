@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 
 import 'package:rodarwebos/pages/tela_inicial/tela_inicial.dart';
+import 'package:rodarwebos/services/getToken.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import "package:flutter/material.dart";
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -18,6 +19,7 @@ class loginTeste extends StatefulWidget {
 }
 
 class _loginTesteState extends State<loginTeste> {
+  getToken tokenInstance = getToken(); //instanciando a classe getToken
   var variaveis = VarLogin();
   bool isButtonEnabled = true;
   var username;
@@ -67,14 +69,34 @@ class _loginTesteState extends State<loginTeste> {
                   ),
                 ),
                 SizedBox(height: 40),
-                CustomContainerWidget(
-                  imagePath: variaveis.images[0],
-                  name: variaveis.nomesEmpresas[0],
-                  nextPage: TelaInicial(),
+                FutureBuilder<dynamic>(
+                  future: tokenInstance.getempresas() as Future<dynamic>,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      List<String>? empresas = snapshot.data as List<String>?;
+                      if (empresas != null) {
+                        return Column(
+                          children: empresas.map((empresa) {
+                            return CustomContainerWidget(
+                              imagePath: variaveis.images[0],
+                              name: empresa,
+                              nextPage: TelaInicial(),
+                            );
+                          }).toList(),
+                        );
+                      }
+                    }
+                    return Container();
+                  },
                 ),
 
+                // CustomContainerWidget(
+                //   imagePath: variaveis.images[0],
+                //   name: variaveis.nomesEmpresas[0],
+                //   nextPage: TelaInicial(),
+                // ),
+
                 // Outros widgets...
-                
               ],
             ),
           ),
