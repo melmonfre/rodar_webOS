@@ -1,22 +1,45 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_amanha.dart';
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_atrasadas.dart';
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_futuras.dart';
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_hoje.dart';
-import 'package:rodarwebos/widgets/menu_inicial/containers/containers_os/containers_os.dart';
-import 'package:rodarwebos/widgets/menu_inicial/containers/variaveis.dart';
-import 'package:rodarwebos/pages/ordem_de_servico/ordem_servico.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Futuras extends StatefulWidget {
   @override
   State<Futuras> createState() => _FuturasState();
 }
+ int  numdodia = 0;
+ int  numfuturas = 0;
+ int  numamanha = 0;
+ int  numatrasadas = 0;
 
 class _FuturasState extends State<Futuras> {
   @override
+  var empresaid;
+  List varfuturas = [];
+  var jsonfuturas;
+  Future<void> getdata() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    empresaid = opcs.getInt("sessionid");
+    jsonfuturas =  opcs.getString("${empresaid}@GetOSFuturas");
+    varfuturas = jsonDecode(jsonfuturas);
+    int numero =0;
+    varfuturas.forEach((element) {
+      numero++;
+      print(numero);
+    });
+    setState(() {
+      numfuturas = numero;
+    });
+    //numfuturas = varfuturas.length;
+  }
+  void initState() {
+    getdata();
+    super.initState();
+  }
   Widget build(BuildContext context) {
-    var variaveis = Variaveis();
-
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -42,7 +65,8 @@ class _FuturasState extends State<Futuras> {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  variaveis.numero_futuras.toString(),
+
+                  numfuturas.toString() ?? "",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
                 ),
               ],
@@ -60,10 +84,31 @@ class Amanha extends StatefulWidget {
 }
 
 class _AmanhaState extends State<Amanha> {
-  @override
-  Widget build(BuildContext context) {
-    var variaveis = Variaveis();
+  var empresaid;
+  List varamanha = [];
+  var jsonamanha;
+  Future<void> getdata() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    empresaid = opcs.getInt("sessionid");
+    jsonamanha = opcs.getString("${empresaid}@GetOSAmanha");
+    varamanha = jsonDecode(jsonamanha);
 
+    int numero =0;
+    varamanha.forEach((element) {
+      numero++;
+      print(numero);
+    });
+    setState(() {
+      numamanha = numero;
+    });
+    //numamanha = varamanha.length;
+  }
+  @override
+  void initState() {
+    getdata();
+    super.initState();
+  }
+  Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -89,7 +134,7 @@ class _AmanhaState extends State<Amanha> {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  variaveis.numero_amanha.toString(),
+                 numamanha.toString() ?? "",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
                 ),
               ],
@@ -107,10 +152,34 @@ class Hoje extends StatefulWidget {
 }
 
 class _HojeState extends State<Hoje> {
-  @override
-  Widget build(BuildContext context) {
-    var variaveis = Variaveis();
+  var empresaid;
+  List vardodia = [];
 
+  var jsondodia;
+
+  Future<void> getdata() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    empresaid = opcs.getInt("sessionid");
+    jsondodia = opcs.getString("${empresaid}@GetOSDia");
+    vardodia = jsonDecode(jsondodia);
+
+    int numero =0;
+    vardodia.forEach((element) {
+      numero++;
+      print(numero);
+    });
+    setState(() {
+      numdodia = numero;
+    });
+
+   // numdodia = vardodia.length;
+  }
+  @override
+  void initState() {
+    getdata();
+    super.initState();
+  }
+  Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -136,7 +205,7 @@ class _HojeState extends State<Hoje> {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  variaveis.numero_dia.toString(),
+                  numdodia.toString() ?? "",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
                 ),
               ],
@@ -149,15 +218,37 @@ class _HojeState extends State<Hoje> {
 }
 
 class Atrasadas extends StatefulWidget {
+
   @override
   State<Atrasadas> createState() => _AtrasadasState();
 }
 
 class _AtrasadasState extends State<Atrasadas> {
-  @override
-  Widget build(BuildContext context) {
-    var variaveis = Variaveis();
+  var empresaid;
+  List varatrasadas = [];
+  var jsonatrasadas;
+  Future<void> getdata() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    empresaid = opcs.getInt("sessionid");
+    jsonatrasadas = opcs.getString("${empresaid}@GetOSAtrasadas");
+    varatrasadas = jsonDecode(jsonatrasadas);
+    //numatrasadas = varatrasadas.length;
 
+    int numero =0;
+    varatrasadas.forEach((element) {
+      numero++;
+      print(numero);
+    });
+    setState(() {
+      numatrasadas = numero;
+    });
+  }
+  @override
+  void initState() {
+    getdata();
+    super.initState();
+  }
+  Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -183,7 +274,7 @@ class _AtrasadasState extends State<Atrasadas> {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  variaveis.numero_dia.toString(),
+                  numatrasadas.toString() ?? "",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
                 ),
               ],
@@ -194,9 +285,18 @@ class _AtrasadasState extends State<Atrasadas> {
     );
   }
 }
-class ContainerContent extends StatelessWidget {
+class ContainerContent extends StatefulWidget {
+  const ContainerContent({Key? key}) : super(key: key);
+
+  @override
+  State<ContainerContent> createState() => _ContainerContentState();
+}
+
+class _ContainerContentState extends State<ContainerContent> {
+
   @override
   Widget build(BuildContext context) {
+
     return SingleChildScrollView(
       // physics: AlwaysScrollableScrollPhysics(),
       child: Padding(
@@ -231,3 +331,6 @@ class ContainerContent extends StatelessWidget {
     );
   }
 }
+
+
+

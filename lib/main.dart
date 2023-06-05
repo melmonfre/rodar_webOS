@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:rodarwebos/pages/login/tela_login.dart';
 import 'package:rodarwebos/pages/tela_inicial/tela_inicial.dart';
 import 'package:rodarwebos/widgets/drawer/drawer.dart';
-import 'package:rodarwebos/widgets/menu_inicial/containers/todos_containers.dart';
+import 'package:rodarwebos/widgets/Tela%20Inicial/Containeres_Tela_inicial.dart';
 
 import 'link/linkexterno.dart';
 
@@ -52,7 +52,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         colorSchemeSeed: Color(0xFF26738E), // Define a cor da AppBar
       ),
-      home: shouldShowLogin ? loginTeste('') : TelaInicial(),
+      home: shouldShowLogin ? login('') : TelaInicial(),
     );
   }
 }

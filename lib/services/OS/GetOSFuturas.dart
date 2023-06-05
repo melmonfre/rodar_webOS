@@ -8,7 +8,7 @@ class GetOSFuturas{
   //obtem as os futuras
     obter(empresaid) async {
       SharedPreferences opcs = await SharedPreferences.getInstance();
-      var token = opcs.getString("token")!;
+      var token = opcs.getString("${empresaid}@token")!;
      var retorno;
     var headers = {
       'Accept': 'application/json',
@@ -22,7 +22,7 @@ class GetOSFuturas{
     var res = await http.post(url, headers: headers, body: data);
     if (res.statusCode != 200) throw Exception('http.post error: statusCode= ${res.statusCode}');
     retorno = jsonDecode(res.body);
-    print("futuras \n ${retorno}");
-    return res.body;
+    //print("futuras \n ${retorno}");
+    return Utf8Decoder().convert(res.bodyBytes);
   }
 }

@@ -8,8 +8,7 @@ class GetOSAmanha{
   //obtem as os de amanhã
     obter(empresaid) async {
       SharedPreferences opcs = await SharedPreferences.getInstance();
-      var empresaid;
-      var token = opcs.getString("${empresaid}token")!;
+      var token = opcs.getString("${empresaid}@token")!;
      var retorno;
     var headers = {
       'Accept': 'application/json',
@@ -23,7 +22,7 @@ class GetOSAmanha{
     var res = await http.post(url, headers: headers, body: data);
     if (res.statusCode != 200) throw Exception('http.post error: statusCode= ${res.statusCode}');
     retorno = jsonDecode(res.body);
-    print( "AMANHA \n ${retorno}");
-    return res.body;
+    //print( "AMANHA \n ${retorno}");
+    return Utf8Decoder().convert(res.bodyBytes);
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 
 import '../../Constantes/Urlconst.dart';
@@ -13,6 +15,7 @@ class GetDadoslogin{
     if (res.statusCode != 200) throw Exception(
         'http.get error: statusCode= ${res.statusCode}');
     print(res.body);
-    return res.body;
+    String source = Utf8Decoder().convert(res.bodyBytes);
+    return source;
   }
 }

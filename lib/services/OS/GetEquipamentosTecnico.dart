@@ -8,7 +8,7 @@ import '../../Constantes/Urlconst.dart';
 class getequiptec{
   obter(empresaid) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
-    var token = opcs.getString("token")!;
+    var token = opcs.getString("${empresaid}@token")!;
     var headers = {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
@@ -18,7 +18,7 @@ class getequiptec{
     var res = await http.get(url, headers: headers);
     if (res.statusCode != 200) throw Exception('http.get error: statusCode= ${res.statusCode}');
     var retorno = jsonDecode(res.body);
-    print("tecnico \n ${retorno}");
-    return res.body;
+    //print("tecnico \n ${retorno}");
+    return Utf8Decoder().convert(res.bodyBytes);
   }
 }

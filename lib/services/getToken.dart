@@ -25,10 +25,18 @@ class getToken {
     bearer = retorno['token'];
     var dados = await GetDadoslogin().fazlogin(bearer);
     var data = jsonDecode(dados);
-    var empresa = data['empresa'];
+    var emp =data['empresa'];
+    var empresa = jsonEncode(emp);
     setempresas(empresa);
-    var empresaid = empresa['id'];
+    var empresaid = emp['id'];
+    print(empresaid);
     opcs.setString("${empresaid}@token", bearer);
+   sincronizar(empresaid);
+    opcs.setString("${empresaid}@login", dados);
+  }
+
+  sincronizar(empresaid) async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
     String amanha = await GetOSAmanha().obter(empresaid);
     String atrasadas = await GetOSAtrasadas().obter(empresaid);
     String dodia = await GetOSDia().obter(empresaid);
@@ -39,26 +47,28 @@ class getToken {
     opcs.setString("${empresaid}@GetOSDia", dodia);
     opcs.setString("${empresaid}@GetOSFuturas", futuras);
     opcs.setString("${empresaid}@getequiptec", equiptecnico);
-    opcs.setString("${empresaid}login", dados);
   }
 
   getempresas() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     List<String>? listaempresas = opcs.getStringList("empresas");
+    print(listaempresas);
     return listaempresas;
   }
 
   getlogin(empresaid) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
-    var login = opcs.getString("${empresaid}login");
+    var login = opcs.getString("${empresaid}@login");
     return login;
   }
 
   Future<void> setempresas(empresa) async {
     List<String> empresas = [];
     SharedPreferences opcs = await SharedPreferences.getInstance();
+    print("EMPRESA $empresa");
     if (opcs.getStringList("empresas") == null) {
       empresas.add(empresa);
+      opcs.setStringList("empresas", empresas);
     } else {
       List<String>? listaempresas = opcs.getStringList("empresas");
       if (listaempresas!.contains(empresa)) {
