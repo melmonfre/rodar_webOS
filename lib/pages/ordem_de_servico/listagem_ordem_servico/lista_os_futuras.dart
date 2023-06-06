@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/ordem_de_servico/ordem_servico.dart';
 import 'package:rodarwebos/widgets/botoes/botoes_os.dart';
 import 'package:rodarwebos/widgets/menu_inicial/containers/containers_os/containers_os.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ListaOSFuturas extends StatefulWidget {
   @override
@@ -9,6 +10,20 @@ class ListaOSFuturas extends StatefulWidget {
 }
 
 class _ListaOSFuturasState extends State<ListaOSFuturas> {
+  var empresaid;
+  var json;
+  Future<void> getdata() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    empresaid = opcs.getInt("sessionid");
+    json = opcs.getString("${empresaid}@GetOSFuturas");
+    opcs.setString("SessionOS", json);
+    print("JSON: $json");
+  }
+  @override
+  void initState() {
+    getdata();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,43 +35,15 @@ class _ListaOSFuturasState extends State<ListaOSFuturas> {
             Navigator.pop(context);
           },
         ),
-        title: Text('Do dia - OS Futuras'),
+        title: Text('OS Futuras'),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             ContainerOS(
-              botao: BotaoFuturas(onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => OrdemServico(),
-                  ),
-                );
-              }),
+              botao: BotaoFuturas(),
             ),
             SizedBox(height: 0.2),
-            ContainerOS(
-              botao: BotaoFuturas(onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => OrdemServico(),
-                  ),
-                );
-              }),
-            ),
-            SizedBox(height: 0.2),
-            ContainerOS(
-              botao: BotaoFuturas(onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => OrdemServico(),
-                  ),
-                );
-              }),
-            ),
           ],
         ),
       ),

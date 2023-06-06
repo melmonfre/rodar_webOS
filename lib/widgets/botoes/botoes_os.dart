@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 
 class BotaoFuturas extends StatelessWidget {
-  final GestureTapCallback onTap;
 
-  const BotaoFuturas({required this.onTap});
+  const BotaoFuturas();
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
+    return  Container(
         width: 50.0,
         height: 50.0,
         decoration: BoxDecoration(
@@ -20,7 +17,6 @@ class BotaoFuturas extends StatelessWidget {
           Icons.more_time,
           color: Colors.black,
           size: 25.0,
-        ),
       ),
     );
   }
@@ -28,15 +24,12 @@ class BotaoFuturas extends StatelessWidget {
 
 
 class BotaoAmanha extends StatelessWidget {
-  final GestureTapCallback onTap;
 
-  const BotaoAmanha({required this.onTap});
+  const BotaoAmanha();
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
+    return Container(
         width: 50.0,
         height: 50.0,
         decoration: BoxDecoration(
@@ -48,21 +41,17 @@ class BotaoAmanha extends StatelessWidget {
           color: Colors.black,
           size: 25.0,
         ),
-      ),
     );
   }
 }
 
 class BotaoHoje extends StatelessWidget {
-  final GestureTapCallback onTap;
 
-  const BotaoHoje({required this.onTap});
+  const BotaoHoje();
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
+     return Container(
         width: 50.0,
         height: 50.0,
         decoration: BoxDecoration(
@@ -74,21 +63,18 @@ class BotaoHoje extends StatelessWidget {
           color: Colors.black,
           size: 25.0,
         ),
-      ),
     );
   }
 }
 
 class BotaoAtrasado extends StatelessWidget {
-  final GestureTapCallback onTap;
 
-  const BotaoAtrasado({required this.onTap});
+  const BotaoAtrasado();
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
+    return
+       Container(
         width: 50.0,
         height: 50.0,
         decoration: BoxDecoration(
@@ -100,8 +86,8 @@ class BotaoAtrasado extends StatelessWidget {
           color: Colors.black,
           size: 25.0,
         ),
-      ),
-    );
+      );
+
   }
 }
 

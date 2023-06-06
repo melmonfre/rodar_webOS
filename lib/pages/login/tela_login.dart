@@ -113,7 +113,7 @@ class _loginState extends State<login> {
 
   }
 
-  vaiprapaginainicxial() async {
+  vaiprapaginainicial() async {
     await Future.delayed(Duration(seconds: 5));
     Navigator.push(context, MaterialPageRoute(
         builder:(context) => TelaInicial()),);
@@ -223,7 +223,7 @@ class _loginState extends State<login> {
                                     _showSingleAnimationDialog(context, Indicator.ballSpinFadeLoader);
                                     setsession(ids[index]);
                                     getToken().sincronizar(ids[index]);
-                                    vaiprapaginainicxial();
+                                    vaiprapaginainicial();
 
                                   }
 

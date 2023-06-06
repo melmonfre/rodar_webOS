@@ -16,8 +16,7 @@ class GetOSAmanha{
       'Authorization': 'Bearer $token',
     };
 
-    var data = '{\n  "value": {\n    "tipo": 1\n  },\n  "first": 0,\n  "rows": 100,\n  "sorts": [\n    {\n      "campo": "id",\n      "asc": true\n    }\n  ]\n}';
-
+    var data = ' {\n    "tipo": 1\n  }';
     var url = Uri.parse('${Urlconst().url}ordem_servico/tecnico');
     var res = await http.post(url, headers: headers, body: data);
     if (res.statusCode != 200) throw Exception('http.post error: statusCode= ${res.statusCode}');

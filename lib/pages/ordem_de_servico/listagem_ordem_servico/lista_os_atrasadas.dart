@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/ordem_de_servico/ordem_servico.dart';
 import 'package:rodarwebos/widgets/botoes/botoes_os.dart';
 import 'package:rodarwebos/widgets/menu_inicial/containers/containers_os/containers_os.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ListaOSAtrasadas extends StatefulWidget {
   @override
@@ -9,6 +12,20 @@ class ListaOSAtrasadas extends StatefulWidget {
 }
 
 class _ListaOSAtrasadasState extends State<ListaOSAtrasadas> {
+  var empresaid;
+  var json;
+  Future<void> getdata() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    empresaid = opcs.getInt("sessionid");
+    json = opcs.getString("${empresaid}@GetOSAtrasadas");
+    opcs.setString("SessionOS", json);
+    print("JSON: $json");
+  }
+  @override
+  void initState() {
+    getdata();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,46 +37,13 @@ class _ListaOSAtrasadasState extends State<ListaOSAtrasadas> {
             Navigator.pop(context);
           },
         ),
-        title: Text('Do dia - OS Atrasadas'),
+        title: Text('OS Atrasadas'),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            ContainerOS(
-              botao: BotaoAtrasado(onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => OrdemServico(),
-                  ),
-                );
-              }),
+      body: Container(
+          child: ContainerOS(
+              botao: BotaoAtrasado(),
             ),
-            SizedBox(height: 0.2),
-            ContainerOS(
-              botao: BotaoAtrasado(onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => OrdemServico(),
-                  ),
-                );
-              }),
-            ),
-            SizedBox(height: 0.2),
-            ContainerOS(
-              botao: BotaoAtrasado(onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => OrdemServico(),
-                  ),
-                );
-              }),
-            ),
-          ],
         ),
-      ),
     );
   }
 }
