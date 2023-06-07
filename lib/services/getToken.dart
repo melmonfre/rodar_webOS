@@ -44,29 +44,14 @@ class getToken {
     String dodia = await GetOSDia().obter(empresaid);
     String futuras = await GetOSFuturas().obter(empresaid);
     String equiptecnico = await getequiptec().obter(empresaid);
-    getchecklist(empresaid, amanha);
-    getchecklist(empresaid, atrasadas);
-    getchecklist(empresaid, dodia);
-    getchecklist(empresaid, futuras);
+
     opcs.setString("${empresaid}@GetOSAmanha", amanha);
     opcs.setString("${empresaid}@GetOSAtrasadas", atrasadas);
     opcs.setString("${empresaid}@GetOSDia", dodia);
     opcs.setString("${empresaid}@GetOSFuturas", futuras);
     opcs.setString("${empresaid}@getequiptec", equiptecnico);
   }
-  getchecklist(empresaid, Json) async {
-    SharedPreferences opcs = await SharedPreferences.getInstance();
-    var osid;
-    List os = json.decode(Json);
-    os.forEach((element) async {
-      osid = element['id'];
-      String check = await GetChecklistOS().obter(empresaid, osid);
-      opcs.setString("${osid}@checklist", check);
-    });
 
-
-
-  }
   getempresas() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     List<String>? listaempresas = opcs.getStringList("empresas");

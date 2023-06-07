@@ -76,9 +76,9 @@ class _OrdemServicoState extends State<OrdemServico> {
 
         var eq = element['equipamentos'];
         eq.forEach((equip) {
-          tiposervico = "$tiposervico, ${equip["tipo"] }";
-          codequip = "$codequip, ${equip["id"]}";
-          localequip = "$localequip, ${equip["localInstalacao"]}";
+          tiposervico = "$tiposervico ${equip["tipo"] }";
+          codequip = "$codequip ${equip["id"]}";
+          localequip = "$localequip ${equip["localInstalacao"]}";
         });
 
         List servicos = element['servicos'];

@@ -49,7 +49,7 @@ class _ContainerCheckInState extends State<ContainerCheckIn> {
                         'OK',
                         style: TextStyle(fontSize: 14.0),
                       ),
-                      value: 'OK',
+                      value: '0',
                       groupValue: selectedButton,
                       onChanged: (value) {
                         setState(() {
@@ -64,7 +64,7 @@ class _ContainerCheckInState extends State<ContainerCheckIn> {
                         'Defeito',
                         style: TextStyle(fontSize: 14.0),
                       ),
-                      value: 'Defeito',
+                      value: '1',
                       groupValue: selectedButton,
                       onChanged: (value) {
                         setState(() {
@@ -79,7 +79,7 @@ class _ContainerCheckInState extends State<ContainerCheckIn> {
                         'Não Possui',
                         style: TextStyle(fontSize: 14.0),
                       ),
-                      value: 'Não Possui',
+                      value: '2',
                       groupValue: selectedButton,
                       onChanged: (value) {
                         setState(() {

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/check_in/variaveis_options.dart';
 import 'package:rodarwebos/pages/equipamentos/tela_equipamento.dart';
@@ -14,6 +16,30 @@ class CheckInTela extends StatefulWidget {
 class _CheckInTelaState extends State<CheckInTela> {
   SelectedOptions selectedOptions =
       SelectedOptions(); // Instância da classe SelectedOptions
+  List checklistID =[];
+  List checklistNome = [];
+  List checklistItens = [];
+  Future<void> getdata() async {
+    var json;
+    var osid;
+    var element;
+    var empresaid;
+    var token;
+    var check;
+    List checklist = [];
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    json = opcs.getString("SelectedOS");
+    empresaid = opcs.getInt('sessionid');
+    element = jsonDecode(json);
+    token = opcs.getString("${empresaid}@token")!;
+    osid = element['id'];
+    check = opcs.getString("${osid}@checklist");
+    checklist = jsonDecode(check);
+    checklist.forEach((element) { 
+      checklistID.add(element['id']);
+      checklistNome.add(element['descricao']);
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,155 +53,48 @@ class _CheckInTelaState extends State<CheckInTela> {
         ),
         title: Text('Check-in'),
       ),
-      body: ListView(
-        children: [
-          ContainerCheckIn(
-            title: 'Luzes Painel Instrumento',
-            onOptionSelected: (option) {
-              setState(() {
-                selectedOptions.luzesPainelInstrumento =
-                    option; // Atualize o valor selecionado
-              });
-            },
-          ),
-          ContainerCheckIn(
-            title: 'Ar Condicionado',
-            onOptionSelected: (option) {
-              setState(() {
-                selectedOptions.arCondicionado =
-                    option; // Atualize o valor selecionado
-              });
-            },
-          ),
-          ContainerCheckIn(
-            title: 'Ar quente / Ventilação',
-            onOptionSelected: (option) {
-              setState(() {
-                selectedOptions.arQuenteVentilacao =
-                    option; // Atualize o valor selecionado
-              });
-            },
-          ),
-          ContainerCheckIn(
-            title: 'Rádio / CD / DVD / MP3',
-            onOptionSelected: (option) {
-              setState(() {
-                selectedOptions.radioCdDvdMp3 =
-                    option; // Atualize o valor selecionado
-              });
-            },
-          ),
-          ContainerCheckIn(
-            title: 'Buzinas',
-            onOptionSelected: (option) {
-              setState(() {
-                selectedOptions.buzinas =
-                    option; // Atualize o valor selecionado
-              });
-            },
-          ),
-          ContainerCheckIn(
-            title: 'Teto / Painel / Quebra-sol',
-            onOptionSelected: (option) {
-              setState(() {
-                selectedOptions.tetoPainelQuebraSol =
-                    option; // Atualize o valor selecionado
-              });
-            },
-          ),
-          ContainerCheckIn(
-            title: 'Partida e func. do motor',
-            onOptionSelected: (option) {
-              setState(() {
-                selectedOptions.partidaFuncMotor =
-                    option; // Atualize o valor selecionado
-              });
-            },
-          ),
-          ContainerCheckIn(
-            title: 'Vidros elétricos',
-            onOptionSelected: (option) {
-              setState(() {
-                selectedOptions.vidrosEletricos =
-                    option; // Atualize o valor selecionado
-              });
-            },
-          ),
-          ContainerCheckIn(
-            title: 'Alarme',
-            onOptionSelected: (option) {
-              setState(() {
-                selectedOptions.alarme = option; // Atualize o valor selecionado
-              });
-            },
-          ),
-          ContainerCheckIn(
-            title: 'Condições instalação elétrica',
-            onOptionSelected: (option) {
-              setState(() {
-                selectedOptions.condicoesIntalacaoEletrico =
-                    option; // Atualize o valor selecionado
-              });
-            },
-          ),
-          ContainerObservacaoAdicional(
-            onPressed: () {
-              printSelectedOptions();
-              checkNavigation();
-              salvaopcoes();
-              
-            },
-          ),
-          
-        ],
+      body:  ListView.builder(
+          padding: const EdgeInsets.all(8),
+          itemCount: checklistID.length,
+          itemBuilder: (BuildContext context, int index)
+          {
+            return Column(
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    ContainerCheckIn(
+                      title: '${checklistNome[index]}',
+                      onOptionSelected: (option) {
+                        setState(() {
+                          if(checklistItens.asMap().containsKey(index)){
+                            checklistItens[index] = option;
+                          } else {
+                            checklistItens.add(option); // Atualize o valor selecionado
+                          }
+
+                        });
+                      },
+                    ),
+                    ContainerObservacaoAdicional(
+                      onPressed: () {
+                        checkNavigation();
+
+                      },
+                    ),
+
+                  ],
+                ),
+              ],
+            );
+          }
+
+
       ),
     );
   }
-
-  void printSelectedOptions() {
-
-    print(
-        'Luzes Painel Instrumento: ${selectedOptions.luzesPainelInstrumento}');
-    print('Ar Condicionado: ${selectedOptions.arCondicionado}');
-    print('Ar Quente / Ventilação: ${selectedOptions.arQuenteVentilacao}');
-    print('Rádio / CD / DVD / MP3: ${selectedOptions.radioCdDvdMp3}');
-    print('Buzinas: ${selectedOptions.buzinas}');
-    print('Teto / Painel / Quebra-sol: ${selectedOptions.tetoPainelQuebraSol}');
-    print('Partida e func. do motor: ${selectedOptions.partidaFuncMotor}');
-    print('Vidros elétricos: ${selectedOptions.vidrosEletricos}');
-    print('Alarme: ${selectedOptions.alarme}');
-    print(
-        'Condições instalação elétrica: ${selectedOptions.condicoesIntalacaoEletrico}');
-    // Imprima outras opções selecionadas
-  }
-
-  Future<void> salvaopcoes() async {
-    SharedPreferences opcs = await SharedPreferences.getInstance();
-    setState(() {
-      opcs.setString("luzesPainelInstrumento",selectedOptions.luzesPainelInstrumento);
-      opcs.setString("arCondicionado",selectedOptions.arCondicionado);
-      opcs.setString("arQuenteVentilacao",selectedOptions.arQuenteVentilacao);
-      opcs.setString("radioCdDvdMp3",selectedOptions.radioCdDvdMp3);
-      opcs.setString("buzinas",selectedOptions.buzinas);
-      opcs.setString("tetoPainelQuebraSol",selectedOptions.tetoPainelQuebraSol);
-      opcs.setString("partidaFuncMotor", selectedOptions.partidaFuncMotor);
-      opcs.setString("vidrosEletricos",selectedOptions.vidrosEletricos);
-      opcs.setString("alarme",selectedOptions.alarme);
-      opcs.setString("condicoesIntalacaoEletrico",selectedOptions.condicoesIntalacaoEletrico);
-    });
-  }
   void checkNavigation() {
 
-    if (selectedOptions.luzesPainelInstrumento.isEmpty ||
-        selectedOptions.arCondicionado.isEmpty ||
-        selectedOptions.arQuenteVentilacao.isEmpty ||
-        selectedOptions.radioCdDvdMp3.isEmpty ||
-        selectedOptions.buzinas.isEmpty ||
-        selectedOptions.tetoPainelQuebraSol.isEmpty ||
-        selectedOptions.partidaFuncMotor.isEmpty ||
-        selectedOptions.vidrosEletricos.isEmpty ||
-        selectedOptions.alarme.isEmpty ||
-        selectedOptions.condicoesIntalacaoEletrico.isEmpty) {
+    if (checklistItens.length != checklistID.length) {
       showDialog(
         context: context,
         builder: (BuildContext context) {

@@ -18,8 +18,10 @@ class GetChecklistOS{
     var url = Uri.parse('${Urlconst().url}ordem_servico/checklist/$OSID');
     var res = await http.get(url, headers: headers);
     if (res.statusCode != 200) throw Exception('http.get error: statusCode= ${res.statusCode}');
-    print(res.body);
-    return Utf8Decoder().convert(res.bodyBytes);
-
+    else{
+      print("CHECKLIST: ${res.body}");
+      String source = Utf8Decoder().convert(res.bodyBytes);
+      return source;
+    }
   }
 }
