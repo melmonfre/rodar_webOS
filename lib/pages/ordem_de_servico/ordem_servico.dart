@@ -156,7 +156,7 @@ class _OrdemServicoState extends State<OrdemServico> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  agendamento,
+                  "${agendamento}",
                   style: TextStyle(
                     fontSize: 14,
                   ),
@@ -351,7 +351,7 @@ class _OrdemServicoState extends State<OrdemServico> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  servico,
+                  "${servico}",
                   style: TextStyle(
                     fontSize: 14,
                   ),
@@ -423,7 +423,7 @@ class _OrdemServicoState extends State<OrdemServico> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  local,
+                  "${local}",
                   style: TextStyle(
                     fontSize: 14,
                   ),

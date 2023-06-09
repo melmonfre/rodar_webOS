@@ -41,19 +41,18 @@ class _BotaoIniciarExecucaoServicoState
     osid = element['id'];
     List<String>? iniciadas = opcs.getStringList("iniciadas");
     List<String>? iniciadasID = opcs.getStringList("iniciadasID");
-    for(int i =0; i< iniciadas!.length; i++){
-      if(iniciadasID![i]==osid){
+    if(iniciadas != null){
 
-      }else{
-        iniciadas.add(json);
-        iniciadasID.add(osid);
-        opcs.setStringList("iniciadas", iniciadas);
-        opcs.setStringList("iniciadasID", iniciadasID);
-      }
-      IniciaServico().iniciar(token, osid);
-      getchecklist(empresaid, json);
+    } else {
+      iniciadas = [];
+      iniciadasID = [];
+      iniciadas.add(json);
+      iniciadasID.add("$osid");
     }
-
+    opcs.setStringList("iniciadas", iniciadas);
+    opcs.setStringList("iniciadasID", iniciadasID!);
+    IniciaServico().iniciar(token, osid);
+    getchecklist(empresaid, json);
   }
   @override
   Widget build(BuildContext context) {
