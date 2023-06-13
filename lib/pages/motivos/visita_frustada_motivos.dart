@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/tela_inicial/tela_inicial.dart';
+import 'package:rodarwebos/services/Visita%20Frustrada/ConcluirVisitaFrustrada.dart';
 import 'package:rodarwebos/widgets/botoes/botao_enviar.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:rodarwebos/widgets/inputs/input_motivos.dart';
@@ -7,6 +10,7 @@ import 'package:rodarwebos/widgets/inputs/input_text.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class VisitaFrustadaMotivo extends StatefulWidget {
   @override
@@ -14,8 +18,23 @@ class VisitaFrustadaMotivo extends StatefulWidget {
 }
 
 class _VisitaFrustadaMotivoState extends State<VisitaFrustadaMotivo> {
-  var variaveis = VariaveisResumo();
-
+  var motivo;
+  var json;
+  var osid;
+  var element;
+  Future<void> getdata() async {
+    List checklist = [];
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    json = opcs.getString("SelectedOS");
+    element = jsonDecode(json);
+    setState(() {
+      osid = element['id'];
+    });
+  }
+  void initState() {
+    getdata();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +57,7 @@ class _VisitaFrustadaMotivoState extends State<VisitaFrustadaMotivo> {
               Container(
                 alignment: Alignment.center,
                 child: Text(
-                  variaveis.numero_os.toString(),
+                  "$osid",
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -71,13 +90,19 @@ class _VisitaFrustadaMotivoState extends State<VisitaFrustadaMotivo> {
                     ),
                     InputMotivos(
                         labelText:
-                            'Qual o motivo da diferença de deslocamento?'),
+                            'Relate os motivos da visita frustrada',
+                        onChanged:  (value) {
+                          motivo = value;
+                          gravamotivo(motivo);
+                        }
+                    ),
                     SizedBox(height: 5.0),
                     Container(
                       alignment: Alignment.center,
                       padding: EdgeInsets.all(16.0),
                       child: BotaoEnviar(
                         onPressed: () {
+                          concluivf().concluir();
                           Fluttertoast.showToast(
                             msg: 'Enviado com sucesso',
                             toastLength: Toast.LENGTH_SHORT,
@@ -101,5 +126,10 @@ class _VisitaFrustadaMotivoState extends State<VisitaFrustadaMotivo> {
         ),
       ),
     );
+  }
+
+  Future<void> gravamotivo(motivo) async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+   opcs.setString("motivovf", motivo);
   }
 }

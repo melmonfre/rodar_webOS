@@ -16,8 +16,6 @@ class VisitaFrustadaDeslocamento extends StatefulWidget {
 
 class _VisitaFrustadaDeslocamentoState
     extends State<VisitaFrustadaDeslocamento> {
-  var variaveis = VariaveisResumo();
-
   String motivoDivergencia = '';
 
   @override

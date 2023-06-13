@@ -34,13 +34,9 @@ salvanocache(base64Files) async {
           .last; // Obter o nome do arquivo corretamente
       setState(() {
         _images.add(image);
-        List<int> imageBytes = image.readAsBytesSync();
-        String base64File = base64Encode(imageBytes);
-
-        base64Files.add(base64File);
-        salvanocache(base64Files);
         _imageNames.add(fileName);
         _imageSizes.add(imageSize.toDouble());
+        createbase64(_images);
       });
 
       // Salvar a imagem na galeria
@@ -220,5 +216,14 @@ salvanocache(base64Files) async {
         ],
       ),
     );
+  }
+
+  void createbase64(List<File> images) {
+  images.forEach((image) {
+    List<int> imageBytes = image.readAsBytesSync();
+    String base64File = base64Encode(imageBytes);
+    base64Files.add(base64File);
+  });
+  salvanocache(base64Files);
   }
 }

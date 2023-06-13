@@ -65,6 +65,7 @@ class _VisitaFrustadaAnexoState extends State<VisitaFrustadaAnexo> {
                 AnexoEvidencias(
                   titulo: 'Anexar Evidências',
                   onPressed: () {
+                    salvarnocache();
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -77,5 +78,11 @@ class _VisitaFrustadaAnexoState extends State<VisitaFrustadaAnexo> {
             ),
           ),
         ));
+  }
+
+  Future<void> salvarnocache() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    List<String>? base64 = opcs.getStringList("base64camera");
+    opcs.setStringList("base64vf", base64!);
   }
 }

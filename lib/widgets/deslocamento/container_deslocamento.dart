@@ -189,6 +189,7 @@ class _ContainerDeslocamentoState extends State<ContainerDeslocamento> {
                               "distanciaPercorrida" : disper,
                               "valor": valor,
                               "pedagio": pedagio,
+                              "motivoDiv": motivoDivergencia,
                             };
                             salvanocache(jsonEncode(values));
                             widget.onPressed();
