@@ -50,8 +50,25 @@ class getToken {
     opcs.setString("${empresaid}@GetOSDia", dodia);
     opcs.setString("${empresaid}@GetOSFuturas", futuras);
     opcs.setString("${empresaid}@getequiptec", equiptecnico);
-  }
 
+    checklist(empresaid ,dodia);
+    checklist(empresaid, amanha);
+    checklist(empresaid, atrasadas);
+    checklist(empresaid, futuras);
+  }
+  checklist( empresaid, nf) async {
+    var osid;
+    var check;
+    var nota = jsonDecode(nf);
+    var notinha = nota [0];
+    osid = notinha ['id'];
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    check = await GetChecklistOS().obter(empresaid, osid);
+    if(check != null){
+      opcs.setString("${osid}@checklist", check);
+    }
+
+  }
   getempresas() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     List<String>? listaempresas = opcs.getStringList("empresas");

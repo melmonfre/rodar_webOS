@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/fotos/visita_frustada_anexo.dart';
 import 'package:rodarwebos/widgets/botoes/botao_iniciar_execucao.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:rodarwebos/widgets/botoes/botao_visita_frustada.dart';
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class VisitaFrustadaResumo extends StatefulWidget {
   @override
@@ -13,6 +16,105 @@ class VisitaFrustadaResumo extends StatefulWidget {
 class _VisitaFrustadaResumoState extends State<VisitaFrustadaResumo> {
   var variaveis = VariaveisResumo();
 
+  int num =0;
+
+  var element;
+  var agendamento; //ok
+  var tempoespera;
+  var json;
+  var os;
+  //carro
+  var placa; //ok
+  var corcarro; //ok
+  var chassi; //ok
+  var plataforma; //ok
+  var modelo; //ok
+  var ano; //ok
+  var renavam; //ok
+
+  //cliente
+  var cliente; //ok
+  var empresa;//ok
+  var telefone;//ok
+  //contatos
+  var contatonome; //ok
+  var contatoobs; //ok
+  //servicos ok
+  var servico;//ok
+  //equipamentos
+  var tiposervico = "";
+  var codequip = "";
+  var localequip = "";
+  // endereço ok
+  var local;
+  Future<void> getdata() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    json = opcs.getString("SelectedOS");
+    element = jsonDecode(json);
+    os = element['id'];
+    int numero =0;
+    var veiculo = element['veiculo'];
+    placa = veiculo['placa'];
+    corcarro = veiculo['cor'];
+    chassi = veiculo['chassi'];
+    modelo = veiculo['modelo'];
+    var pt = veiculo['plataforma'];
+    ano = veiculo['ano'];
+    renavam = veiculo['renavan'];
+    plataforma = pt['nome'];
+    var clie = veiculo['cliente'];
+    var epss = clie['pessoa'];
+    cliente = epss['nome'];
+    var emp = epss['empresa'];
+    empresa = emp['nome'];
+    var tel = emp['telefones'];
+    var numtel = tel[0];
+    telefone = numtel['numero'];
+    var cont = element['contatos'];
+    var contacto = cont[0];
+    var contact = contacto["contato"];
+    contatonome = contact['nome'];
+    contatoobs = contact['observacao'];
+
+    var eq = element['equipamentos'];
+    eq.forEach((equip) {
+      tiposervico = "$tiposervico ${equip["tipo"] }";
+      codequip = "$codequip ${equip["id"]}";
+      localequip = "$localequip ${equip["localInstalacao"]}";
+    });
+
+    List servicos = element['servicos'];
+    var serv;
+    servicos.forEach((ser) {
+      serv = ser['servico'];
+    });
+    servico = serv['descricao'];
+    var end = element['endereco'];
+    var bairro = end['bairro'];
+    var cit = end['cidade'];
+    var cidade = cit['nome'];
+    var rua = end['rua'];
+    var numerocasa = end['numero'];
+    local = "rua:${rua} numero:${numerocasa}, ${bairro}, ${cidade}";
+    var localtime = element['dataInstalacao'];
+    var datahora = localtime.split('T');
+    var data = datahora[0].split('-');
+    var hora = datahora[1].split(':');
+    var agend = "${data[2]}/${data[1]}/${data[0]}  às ${int.parse(hora[0])-3}:${hora[1]}";
+    //TODO: fazer calculo do tempo de espera
+    agendamento = agend;
+    print("agendamento $agendamento");
+    numero++;
+    print(numero);
+    setState(() {
+      num = numero;
+    });
+  }
+  @override
+  void initState() {
+    getdata();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +137,7 @@ class _VisitaFrustadaResumoState extends State<VisitaFrustadaResumo> {
               Container(
                 alignment: Alignment.center,
                 child: Text(
-                  variaveis.numero_os.toString(),
+                  '${os}',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -57,39 +159,39 @@ class _VisitaFrustadaResumoState extends State<VisitaFrustadaResumo> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  variaveis.horario_agendamento,
+                  '$agendamento',
                   style: TextStyle(
                     fontSize: 14,
                   ),
                 ),
               ),
-              SizedBox(height: 12.0),
-              Container(
-                height: 1.0,
-                color: Colors.grey[500],
-              ),
-              SizedBox(height: 12.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Tempo de espera',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Não houve tempo de espera, agendamento marcado para ${variaveis.minutos} minutos',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 12.0),
+              //SizedBox(height: 12.0),
+              //Container(
+             //   height: 1.0,
+              //  color: Colors.grey[500],
+             // ),
+             // SizedBox(height: 12.0),
+             // Align(
+              //  alignment: Alignment.centerLeft,
+              //  child: Text(
+                //  'Tempo de espera',
+                //  style: TextStyle(
+                 //   fontSize: 15,
+                  //  fontWeight: FontWeight.bold,
+                 // ),
+               // ),
+              //),
+             // SizedBox(height: 3.0),
+              //Align(
+              //  alignment: Alignment.centerLeft,
+               // child: Text(
+                //  'Não houve tempo de espera, agendamento marcado para ${variaveis.minutos} minutos',
+                //  style: TextStyle(
+                //    fontSize: 14,
+                //  ),
+               // ),
+             // ),
+             // SizedBox(height: 12.0),
               Container(
                 height: 1.0,
                 color: Colors.grey[500],
@@ -109,7 +211,7 @@ class _VisitaFrustadaResumoState extends State<VisitaFrustadaResumo> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Cliente: ${variaveis.cliente}',
+                  'Cliente: ${cliente}',
                   style: TextStyle(
                     fontSize: 14,
                   ),
@@ -119,7 +221,7 @@ class _VisitaFrustadaResumoState extends State<VisitaFrustadaResumo> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Empresa: ${variaveis.empresa}',
+                  'Empresa: ${empresa}',
                   style: TextStyle(
                     fontSize: 14,
                   ),
@@ -146,7 +248,7 @@ class _VisitaFrustadaResumoState extends State<VisitaFrustadaResumo> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Placa: ${variaveis.placa}',
+                  'Placa: ${placa}',
                   style: TextStyle(
                     fontSize: 14,
                   ),
@@ -156,7 +258,7 @@ class _VisitaFrustadaResumoState extends State<VisitaFrustadaResumo> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Cor: ${variaveis.cor}',
+                  'Cor: ${corcarro}',
                   style: TextStyle(
                     fontSize: 14,
                   ),
@@ -166,7 +268,7 @@ class _VisitaFrustadaResumoState extends State<VisitaFrustadaResumo> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Chassi: ${variaveis.chassi}',
+                  'Chassis: ${chassi}',
                   style: TextStyle(
                     fontSize: 14,
                   ),
@@ -176,7 +278,7 @@ class _VisitaFrustadaResumoState extends State<VisitaFrustadaResumo> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Plataforma: ${variaveis.plataforma}',
+                  'Plataforma: ${plataforma}',
                   style: TextStyle(
                     fontSize: 14,
                   ),
@@ -186,7 +288,7 @@ class _VisitaFrustadaResumoState extends State<VisitaFrustadaResumo> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Modelo: ${variaveis.modelo}',
+                  'Modelo: ${modelo}',
                   style: TextStyle(
                     fontSize: 14,
                   ),
@@ -196,7 +298,7 @@ class _VisitaFrustadaResumoState extends State<VisitaFrustadaResumo> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Ano: ${variaveis.ano}',
+                  'Ano: ${ano}',
                   style: TextStyle(
                     fontSize: 14,
                   ),
@@ -206,7 +308,7 @@ class _VisitaFrustadaResumoState extends State<VisitaFrustadaResumo> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Renavam: ${variaveis.renavam}',
+                  'Renavan: ${renavam}',
                   style: TextStyle(
                     fontSize: 14,
                   ),
@@ -232,7 +334,7 @@ class _VisitaFrustadaResumoState extends State<VisitaFrustadaResumo> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  variaveis.servicos,
+                  "$servico",
                   style: TextStyle(
                     fontSize: 14,
                   ),
@@ -258,7 +360,7 @@ class _VisitaFrustadaResumoState extends State<VisitaFrustadaResumo> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  variaveis.endereco,
+                  '$local',
                   style: TextStyle(
                     fontSize: 14,
                   ),

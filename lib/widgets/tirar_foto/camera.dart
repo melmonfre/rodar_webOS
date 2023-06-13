@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rodarwebos/widgets/botoes/botao_cancelar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CameraButton extends StatefulWidget {
   @override
@@ -13,6 +15,11 @@ class _CameraButtonState extends State<CameraButton> {
   List<File> _images = [];
   List<String> _imageNames = [];
   List<double> _imageSizes = [];
+  List<String> base64Files = [];
+salvanocache(base64Files) async {
+  SharedPreferences opcs = await SharedPreferences.getInstance();
+  opcs.setStringList("base64camera", base64Files);
+}
 
   Future<void> _takePicture(ImageSource source) async {
     final picker = ImagePicker();
@@ -27,6 +34,11 @@ class _CameraButtonState extends State<CameraButton> {
           .last; // Obter o nome do arquivo corretamente
       setState(() {
         _images.add(image);
+        List<int> imageBytes = image.readAsBytesSync();
+        String base64File = base64Encode(imageBytes);
+
+        base64Files.add(base64File);
+        salvanocache(base64Files);
         _imageNames.add(fileName);
         _imageSizes.add(imageSize.toDouble());
       });

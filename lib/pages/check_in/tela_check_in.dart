@@ -8,6 +8,8 @@ import 'package:rodarwebos/widgets/check_in/container_check_in.dart';
 import 'package:rodarwebos/widgets/check_in/container_observacao_adicional.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../services/OS/GetChecklistOS.dart';
+
 class CheckInTela extends StatefulWidget {
   @override
   _CheckInTelaState createState() => _CheckInTelaState();
@@ -35,12 +37,14 @@ class _CheckInTelaState extends State<CheckInTela> {
     element = jsonDecode(json);
     token = opcs.getString("${empresaid}@token")!;
     osid = element['id'];
+    print(check);
     check = opcs.getString("${osid}@checklist");
     checklist = jsonDecode(check);
     checklist.forEach((element) { 
       setState(() {
         checklistID.add(element['id']);
         checklistNome.add(element['descricao']);
+
         checklistItens.add(3);
         tamanho = checklistID.length;
       });
@@ -188,7 +192,13 @@ class _CheckInTelaState extends State<CheckInTela> {
                 } else {
                   return  ContainerObservacaoAdicional(
                     onPressed: () {
-                      checkNavigation();
+                      Map<String, dynamic> values = {
+                        "idscheckin" : checklistID,
+                        "nomescheckin" : checklistNome,
+                        "itenscheckin" : checklistItens,
+                      };
+
+                      checkNavigation(json.encode(values));
 
                     },
                   );
@@ -201,8 +211,9 @@ class _CheckInTelaState extends State<CheckInTela> {
     )
     );
   }
-  void checkNavigation() {
-
+  Future<void> checkNavigation(jsoncheckin) async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    opcs.setString("checkinitens", jsoncheckin);
     if (checklistItens.length != checklistID.length) {
       showDialog(
         context: context,

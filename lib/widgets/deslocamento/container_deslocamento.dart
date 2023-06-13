@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:rodarwebos/widgets/deslocamento/variaveis_container_deslocamento.dart';
 import 'package:rodarwebos/widgets/inputs/input_motivos.dart';
 import 'package:rodarwebos/widgets/inputs/input_number.dart';
 import 'package:rodarwebos/widgets/inputs/input_text.dart';
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../pages/check_out/tela_check_out.dart';
 
@@ -25,19 +29,60 @@ class _ContainerDeslocamentoState extends State<ContainerDeslocamento> {
   var variaveis = VariaveisDeslocamento();
   String motivoDivergencia = '';
   double? disCalc;
+  double? disper;
   double? valor;
   double? pedagio;
+  var latitude;
+  var longitude;
+
+  void getLocation() async {
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.low);
+    print(position.latitude);
+    print(position.longitude);
+    setState(() {
+      latitude = position.latitude;
+      longitude = position.longitude;
+    });
+  }
+
+  salvanocache(valores) async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    opcs.setString("dadosdeslocamento", valores);
+  }
+  Future<void> getdata() async {
+    var json;
+    var osid;
+    var element;
+    var empresaid;
+    var token;
+    List checklist = [];
+
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    json = opcs.getString("SelectedOS");
+    empresaid = opcs.getInt('sessionid');
+    element = jsonDecode(json);
+    token = opcs.getString("${empresaid}@token")!;
+    osid = element['id'];
+
+    setState(() {
+      disCalc = element['distanciaDeslocamentoOriginal'];
+      disper = element['distanciaDeslocamentoOriginal'];
+      valor = element['valorDeslocamentoOriginal'];
+      pedagio = element['valorPedagioOriginal'];
+    });
+
+  }
 
   @override
   void initState() {
     super.initState();
-    disCalc = null;
-    valor = null;
-    pedagio = null;
+    getdata();
+    getLocation();
   }
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
       child: SingleChildScrollView(
         child: Padding(
@@ -80,43 +125,39 @@ class _ContainerDeslocamentoState extends State<ContainerDeslocamento> {
                       ),
                     ),
                     InputNumber(
-                      labelText: 'Distância calculada (KM)',
-                      
-                      onChanged: (value) {
-                        setState(() {
-                          disCalc = double.tryParse(value) ?? 0.0;
-                        });
-                      },
+                      labelText: 'Distância calculada (KM): $disCalc',
+                      enabled: false,
                     ),
                     InputNumber(
-                      labelText: 'Distância percorrida (KM)',
+                      labelText: 'Distância percorrida (KM): $disper',
                       onChanged: (value) {
                         setState(() {
-                          motivoDivergencia = value;
+                          disper = double.tryParse(value) ?? 0.0;
+
                         });
                       },
                     ),
-                    if (motivoDivergencia.isNotEmpty) SizedBox(height: 3.0),
-                    if (motivoDivergencia.isNotEmpty)
+                    if (disper != disCalc) SizedBox(height: 3.0),
+                    if (disper != disCalc)
                       InputMotivos(
                         labelText:
                             'Qual o motivo da diferença de deslocamento?',
                         onChanged: (value) {
                           setState(() {
-                            // Aqui você pode salvar o valor do motivo de alguma forma
+                            motivoDivergencia = value;
                           });
                         },
                       ),
                     InputText(
-                      labelText: 'Latitude',
+                      labelText: 'Latitude: $latitude',
                       enabled: false,
                     ),
                     InputText(
-                      labelText: 'Longitude',
+                      labelText: 'Longitude: $longitude',
                       enabled: false,
                     ),
                     InputNumber(
-                      labelText: 'Valor (R\$)',
+                      labelText: 'Valor (R\$) $valor',
                       showInfoIcon: true,
                       onChanged: (value) {
                         setState(() {
@@ -125,7 +166,7 @@ class _ContainerDeslocamentoState extends State<ContainerDeslocamento> {
                       },
                     ),
                     InputNumber(
-                      labelText: 'Pedágio (R\$)',
+                      labelText: 'Pedágio (R\$) $pedagio',
                       onChanged: (value) {
                         setState(() {
                           pedagio = double.tryParse(value) ?? 0.0;
@@ -141,10 +182,15 @@ class _ContainerDeslocamentoState extends State<ContainerDeslocamento> {
                           if (disCalc != null &&
                               valor != null &&
                               pedagio != null) {
-                            variaveis.disCalc = disCalc;
-                            variaveis.valor = valor;
-                            variaveis.pedagio = pedagio;
-
+                            Map<String, dynamic> values = {
+                              "latitude": latitude,
+                              "longitude": longitude,
+                              "distanciaCalculada": disCalc,
+                              "distanciaPercorrida" : disper,
+                              "valor": valor,
+                              "pedagio": pedagio,
+                            };
+                            salvanocache(jsonEncode(values));
                             widget.onPressed();
                           } else {
                             showDialog(

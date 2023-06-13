@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/motivos/visita_frustada_motivos.dart';
-import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:rodarwebos/widgets/deslocamento/container_deslocamento.dart';
-import 'package:rodarwebos/widgets/inputs/input_motivos.dart';
-import 'package:rodarwebos/widgets/inputs/input_text.dart';
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
+import 'package:geolocator/geolocator.dart';
 
 class VisitaFrustadaDeslocamento extends StatefulWidget {
   // final VoidCallback onPressed;

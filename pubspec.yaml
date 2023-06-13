@@ -50,6 +50,7 @@ dependencies:
   app_links: ^3.4.3
   image_to_byte: ^1.0.0
   loading_indicator: ^3.1.0
+  geolocator: ^9.0.2
 
 dev_dependencies:
   flutter_test:

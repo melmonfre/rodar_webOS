@@ -1,7 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/deslocamento/visita_frustada_deslocamento.dart';
 import 'package:rodarwebos/widgets/anexos/anexo_evidencias.dart';
-import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class VisitaFrustadaAnexo extends StatefulWidget {
   @override
@@ -9,7 +11,27 @@ class VisitaFrustadaAnexo extends StatefulWidget {
 }
 
 class _VisitaFrustadaAnexoState extends State<VisitaFrustadaAnexo> {
-  var variaveis = VariaveisResumo();
+
+
+  int num =0;
+
+  var element;
+  var json;
+  var os;
+  Future<void> getdata() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    json = opcs.getString("SelectedOS");
+    element = jsonDecode(json);
+    os = element['id'];
+    setState(() {
+      os;
+    });
+  }
+  @override
+  void initState() {
+    getdata();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +54,7 @@ class _VisitaFrustadaAnexoState extends State<VisitaFrustadaAnexo> {
                 Container(
                   alignment: Alignment.center,
                   child: Text(
-                    variaveis.numero_os.toString(),
+                    "$os",
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,

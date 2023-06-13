@@ -25,10 +25,12 @@ class _BotaoIniciarExecucaoServicoState
     SharedPreferences opcs = await SharedPreferences.getInstance();
     var osid;
     List os = json.decode(Json);
+    print("ORDEM: $Json");
     os.forEach((element) async {
       osid = element['id'];
+      print("OSID $osid");
       String check = await GetChecklistOS().obter(empresaid, osid);
-
+      print("Check $check");
       opcs.setString("${osid}@checklist", check);
     });
   }
@@ -39,18 +41,6 @@ class _BotaoIniciarExecucaoServicoState
     element = jsonDecode(json);
     token = opcs.getString("${empresaid}@token")!;
     osid = element['id'];
-    List<String>? iniciadas = opcs.getStringList("iniciadas");
-    List<String>? iniciadasID = opcs.getStringList("iniciadasID");
-    if(iniciadas != null){
-
-    } else {
-      iniciadas = [];
-      iniciadasID = [];
-      iniciadas.add(json);
-      iniciadasID.add("$osid");
-    }
-    opcs.setStringList("iniciadas", iniciadas);
-    opcs.setStringList("iniciadasID", iniciadasID!);
     IniciaServico().iniciar(token, osid);
     getchecklist(empresaid, json);
   }

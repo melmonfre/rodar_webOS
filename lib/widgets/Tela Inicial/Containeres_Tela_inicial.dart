@@ -296,37 +296,55 @@ class _ContainerContentState extends State<ContainerContent> {
 
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+    GlobalKey<RefreshIndicatorState>();
 
-    return SingleChildScrollView(
-      // physics: AlwaysScrollableScrollPhysics(),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 3.0),
-            Container(
-              constraints: BoxConstraints(maxHeight: 140.0),
-              child: Hoje(),
-            ),
-            SizedBox(height: 3.0),
-            Container(
-              constraints: BoxConstraints(maxHeight: 140.0),
-              child: Atrasadas(),
-            ),
-            SizedBox(height: 3.0),
-            Container(
-              constraints: BoxConstraints(maxHeight: 140.0),
-              child: Amanha(),
-            ),
-            SizedBox(height: 3.0),
-            Container(
-              constraints: BoxConstraints(maxHeight: 140.0),
-              child: Futuras(),
-            ),
-            SizedBox(height: 3.0),
-          ],
+    @override
+    void initState() {
+      _refreshIndicatorKey.currentState?.show();
+      super.initState();
+    }
+    return Scaffold(
+      body: RefreshIndicator(
+        key: _refreshIndicatorKey,
+        color: Colors.white,
+        backgroundColor: Color(0xFF26738e),
+        strokeWidth: 4.0,
+        onRefresh: () async {
+          return Future<void>.delayed(const Duration(seconds: 5));
+        },
+      child: SingleChildScrollView(
+        // physics: AlwaysScrollableScrollPhysics(),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 3.0),
+              Container(
+                constraints: BoxConstraints(maxHeight: 140.0),
+                child: Hoje(),
+              ),
+              SizedBox(height: 3.0),
+              Container(
+                constraints: BoxConstraints(maxHeight: 140.0),
+                child: Atrasadas(),
+              ),
+              SizedBox(height: 3.0),
+              Container(
+                constraints: BoxConstraints(maxHeight: 140.0),
+                child: Amanha(),
+              ),
+              SizedBox(height: 3.0),
+              Container(
+                constraints: BoxConstraints(maxHeight: 140.0),
+                child: Futuras(),
+              ),
+              SizedBox(height: 3.0),
+            ],
+          ),
         ),
+      ),
       ),
     );
   }
