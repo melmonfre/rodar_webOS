@@ -3,6 +3,8 @@ import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_o
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_atrasadas.dart';
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_futuras.dart';
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_hoje.dart';
+import 'package:rodarwebos/pages/sincronizar/tela_sincronizar.dart';
+import 'package:rodarwebos/pages/tela_inicial/tela_inicial.dart';
 import 'package:rodarwebos/widgets/Tela%20Inicial/Containeres_Tela_inicial.dart';
 
 class AppDrawer extends StatefulWidget {
@@ -117,6 +119,28 @@ class _AppDrawerState extends State<AppDrawer> {
                   child: Icon(Icons.forward),
                 ),
                 title: Text('OS Futuras'),
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TelaSincronizar(),
+                  ),
+                );
+            },
+            child: Container(
+              color: Colors.transparent,
+              child: ListTile(
+                leading: IconTheme(
+                  data: IconThemeData(
+                    color: Color(0xFF26738E), // Define a cor dos ícones
+                  ),
+                  child: Icon(Icons.cloud_download_outlined),
+                ),
+                title: Text('Sincronizar'),
               ),
             ),
           ),

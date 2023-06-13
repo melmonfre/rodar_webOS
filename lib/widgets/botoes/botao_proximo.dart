@@ -22,7 +22,7 @@ class _BotaoProximoState extends State<BotaoProximo> {
           onPressed: widget.onPressed,
           style: ElevatedButton.styleFrom(
             padding: EdgeInsets.symmetric(vertical: 12.0),
-            primary: Color(0xFF00204E), // Cor do botão
+            backgroundColor: Color(0xFF00204E), // Cor do botão
             shadowColor: Colors.black.withOpacity(0.2), // Cor da sombra
             elevation: 4.0, // Elevação da sombra
             shape: RoundedRectangleBorder(
