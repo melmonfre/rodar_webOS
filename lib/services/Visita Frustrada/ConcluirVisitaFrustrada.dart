@@ -21,18 +21,21 @@ class concluivf{
     var pedagioTec = deslocamento['pedagio'];
     var motivoDiv = element['motivoDiv'];
     List<String>? base64images = opcs.getStringList("base64vf");
-    var localGps = opcs.getStringList("local"); //TODO: implementar local gps
+    var localGps = "${opcs.getStringList("latitude")},${opcs.getStringList("longitude")}";
     if(base64images!.isNotEmpty){
       if(base64images.length > 1){
-        //TODO: fazer metodo enviar varias imagens
+        base64images.forEach((base64image) {
+
+        });
       }
-      enviamotivosvf(osid, token, base64images[0], DistanciaTec, valorDeslocamentoTec, pedagioTec, motivoDiv, motivo, localGps);
+      enviamotivosvf(osid, token, base64images, DistanciaTec, valorDeslocamentoTec, pedagioTec, motivoDiv, motivo, localGps);
     }
 
 
   }
 
   enviamotivosvf(osid, token, image,  DistanciaTec,valorDeslocamentoTec, pedagioTec, motivoDiv, motivo, localGps) async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
     final headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
@@ -44,9 +47,34 @@ class concluivf{
 
     final res = await http.post(url, headers: headers, body: data);
     final status = res.statusCode;
-    if (status != 200) throw Exception('http.post error: statusCode= $status');
-
+    if (status != 200) {
+      opcs.setString("osIDaFinalizarvf", osid);
+      opcs.setString("OSaFinalizarvf", data);
+      throw Exception('http.post error: statusCode= $status');
+    }
+    print("VISITA FRUSTRADA");
     print(res.body);
   }
 
+
+  enviardiversasfotosvf(osid, token, image) async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    final headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    final data = '{\n    "base64":[\n        "$image"\n    ], "idsRemove":[], \n  "etapa": "SERVICO_INICIADO"\n  }';
+
+    final url = Uri.parse('${Urlconst().url}ordem_servico/enviardiversasfotosvf/$osid');
+
+    final res = await http.post(url, headers: headers, body: data);
+    final status = res.statusCode;
+    if (status != 200) {
+      opcs.setString("osIDaFinalizarvf", osid);
+      opcs.setString("OSaFinalizarvf", data);
+      throw Exception('http.post error: statusCode= $status');
+    }
+    print(res.body);
+  }
 }
