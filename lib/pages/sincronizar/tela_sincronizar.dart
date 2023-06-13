@@ -26,7 +26,7 @@ class _TelaSincronizarState extends State<TelaSincronizar> {
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 2.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center, // Centraliza os elementos verticalmente
           children: [
             SizedBox(height: 16.0),
             // Container com texto
