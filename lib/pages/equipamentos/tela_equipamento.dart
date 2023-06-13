@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rodarwebos/widgets/equipamentos/container_equipamento.dart';
 
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Equipamentos extends StatefulWidget {
   @override
@@ -10,9 +11,17 @@ class Equipamentos extends StatefulWidget {
 
 class _EquipamentosState extends State<Equipamentos> {
   var variaveis = VariaveisResumo();
-  var control =
-      "manutenção"; // Definindo o tipo de tela - estatico somente para testes
-
+  var control; // Definindo o tipo de tela - estatico somente para testes
+  getdata() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    control = opcs.getString("servico");
+    print("CONTROL $control");
+  }
+  @override
+  void initState() {
+    getdata();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     bool isManutencao = control == "manutenção";

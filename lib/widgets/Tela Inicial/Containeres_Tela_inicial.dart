@@ -40,7 +40,7 @@ class _FuturasState extends State<Futuras> {
     });
     //numfuturas = varfuturas.length;
   }
-  var timer  = 5;
+  var timer  = 1;
   void _decrementCounter() {
     Timer.periodic(const Duration(seconds: 1), (_) {
       setState(() {
@@ -120,7 +120,7 @@ class _AmanhaState extends State<Amanha> {
     });
     //numamanha = varamanha.length;
   }
-  var timer  = 5;
+  var timer  = 1;
   void _decrementCounter() {
     Timer.periodic(const Duration(seconds: 1), (_) {
       setState(() {
@@ -203,7 +203,7 @@ class _HojeState extends State<Hoje> {
 
    // numdodia = vardodia.length;
   }
-  var timer  = 5;
+  var timer  = 1;
   void _decrementCounter() {
     Timer.periodic(const Duration(seconds: 1), (_) {
       setState(() {
@@ -284,7 +284,7 @@ class _AtrasadasState extends State<Atrasadas> {
       numatrasadas = numero;
     });
   }
-  var timer  = 5;
+  var timer  = 1;
   void _decrementCounter() {
     Timer.periodic(const Duration(seconds: 1), (_) {
       setState(() {
@@ -359,7 +359,7 @@ class _ContainerContentState extends State<ContainerContent> {
 
     }
     @override
-    var timer  = 5;
+    var timer  = 1;
     void _decrementCounter() {
       Timer.periodic(const Duration(seconds: 1), (_) {
         setState(() {

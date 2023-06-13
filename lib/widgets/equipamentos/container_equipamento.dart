@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/acessorios/tela_acessorios.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:rodarwebos/widgets/equipamentos/variaveis_container.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ContainerEquipamento extends StatefulWidget {
   @override
@@ -11,7 +12,9 @@ class ContainerEquipamento extends StatefulWidget {
 class _ContainerEquipamentoState extends State<ContainerEquipamento> {
   String? situacaoEquipamento;
   String localInstalacao = '';
+
   var variaveis = VariaveisEquipamentos();
+
 
   @override
   void initState() {
