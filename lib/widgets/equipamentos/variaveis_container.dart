@@ -3,4 +3,5 @@ class VariaveisEquipamentos {
   int? selectedListItem;
   String? situacaoEquipamento;
   String localInstalacao = '';
+  int numero_os = 343434;
 }

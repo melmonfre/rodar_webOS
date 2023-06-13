@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:rodarwebos/pages/acessorios/tela_acessorios.dart';
+import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:rodarwebos/widgets/equipamentos/container_equipamento.dart';
+import 'package:rodarwebos/widgets/equipamentos/variaveis_container.dart';
 
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,18 +13,21 @@ class Equipamentos extends StatefulWidget {
 }
 
 class _EquipamentosState extends State<Equipamentos> {
-  var variaveis = VariaveisResumo();
+  var variaveis = VariaveisEquipamentos();
+
   var control; // Definindo o tipo de tela - estatico somente para testes
   getdata() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     control = opcs.getString("servico");
     print("CONTROL $control");
   }
+
   @override
   void initState() {
     getdata();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     bool isManutencao = control == "manutenção";
@@ -57,10 +63,10 @@ class _EquipamentosState extends State<Equipamentos> {
                 ),
               ),
               SizedBox(height: 16.0),
-              if (isManutencao) ContainerManutencao(),
-              if (isRetirada) ContainerRetirada(),
-              if (isInstalacao) ContainerInstalacao(),
-              if (isTroca) ContainerTroca(),
+              if (control.contains("manutenção")) ContainerManutencao(),
+              if (control.contains("retirada")) ContainerRetirada(),
+              if (control.contains("instalação")) ContainerInstalacao(),
+              if (control.contains("troca")) ContainerTroca(),
             ],
           ),
         ),
@@ -69,125 +75,499 @@ class _EquipamentosState extends State<Equipamentos> {
   }
 }
 
-class ContainerTroca extends StatelessWidget {
+class ContainerRetirada extends StatefulWidget {
+  @override
+  State<ContainerRetirada> createState() => _ContainerRetiradaState();
+}
+
+class _ContainerRetiradaState extends State<ContainerRetirada> {
+  String? situacaoEquipamento;
+
+  var variaveis = VariaveisEquipamentos();
+
+  String localInstalacao = '';
+
   @override
   Widget build(BuildContext context) {
+    List<int> codigosEq = variaveis.codigosEq.cast<int>();
     return Column(
       children: [
         // Input equipamento
-        TextFormField(
-          decoration: InputDecoration(
-            labelText: 'Equipamento',
-          ),
+        DropdownButton<int>(
+          value: variaveis.selectedListItem,
+          onChanged: (int? newValue) {
+            setState(() {
+              variaveis.selectedListItem = newValue;
+            });
+          },
+          items: codigosEq.map((int item) {
+            return DropdownMenuItem<int>(
+              value: item,
+              child: Row(
+                children: [
+                  Icon(Icons.arrow_right),
+                  SizedBox(width: 5.0),
+                  Text(item.toString()),
+                ],
+              ),
+            );
+          }).toList(),
         ),
-        // Input equipamento retirado
-        TextFormField(
-          decoration: InputDecoration(
-            labelText: 'Equipamento Retirado',
-          ),
+        SizedBox(height: 16.0),
+        DropdownButton<int>(
+          value: variaveis.selectedListItem,
+          onChanged: (int? newValue) {
+            setState(() {
+              variaveis.selectedListItem = newValue;
+            });
+          },
+          items: codigosEq.map((int item) {
+            return DropdownMenuItem<int>(
+              value: item,
+              child: Row(
+                children: [
+                  Icon(Icons.arrow_right),
+                  SizedBox(width: 5.0),
+                  Text(item.toString()),
+                ],
+              ),
+            );
+          }).toList(),
         ),
-        // Checkbox situação do equipamento
-        Row(
-          children: [
-            Checkbox(
-              value: true, // Valor do checkbox "ok"
-              onChanged: (value) {},
-            ),
-            Text('OK'),
-            Checkbox(
-              value: false, // Valor do checkbox "com defeito"
-              onChanged: (value) {},
-            ),
-            Text('Com Defeito'),
-          ],
-        ),
+        SizedBox(height: 16,),
+        Text(
+                'Situação do equipamento - RETIRADA TESTE',
+                style: TextStyle(
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 8.0),
+              Column(
+                children: <Widget>[
+                  RadioListTile<String>(
+                    title: Text(
+                      'OK',
+                      style: TextStyle(fontSize: 14.0),
+                    ),
+                    value: 'OK',
+                    groupValue: situacaoEquipamento,
+                    onChanged: (String? value) {
+                      setState(() {
+                        situacaoEquipamento = value;
+                      });
+                    },
+                  ),
+                  RadioListTile<String>(
+                    title: Text(
+                      'Com defeito',
+                      style: TextStyle(fontSize: 14.0),
+                    ),
+                    value: 'Com defeito',
+                    groupValue: situacaoEquipamento,
+                    onChanged: (String? value) {
+                      setState(() {
+                        situacaoEquipamento = value;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              SizedBox(height: 16.0),
         // Input local de instalação
-        TextFormField(
-          decoration: InputDecoration(
-            labelText: 'Local de Instalação',
+        Text(
+          'Local de instalação',
+          style: TextStyle(
+            fontSize: 14.0,
+            fontWeight: FontWeight.bold,
           ),
         ),
+        SizedBox(height: 8.0),
+        TextField(
+          decoration: InputDecoration(
+            // labelText: 'Local de instalação...',
+            border: OutlineInputBorder(),
+          ),
+          onChanged: (value) {
+            setState(() {
+              localInstalacao = value;
+            });
+          },
+        ),
+        SizedBox(height: 8.0),
+        BotaoProximo(
+          onPressed: () {
+            if (situacaoEquipamento != null &&
+                      localInstalacao.isNotEmpty) {
+                    variaveis.situacaoEquipamento = situacaoEquipamento!;
+                    variaveis.localInstalacao = localInstalacao;
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Acessorios()),
+                    );
+                  } else {
+              // Exibir uma mensagem de erro informando que todas as respostas devem ser preenchidas
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text('Erro'),
+                    content: Text('Por favor, preencha todas as respostas.'),
+                    actions: [
+                      TextButton(
+                        child: Text('OK'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            }
+          },
+        )
+      ],
+    );
+  }
+}
+class ContainerManutencao extends StatefulWidget {
+  @override
+  State<ContainerManutencao> createState() => _ContainerManutencaoState();
+}
+
+class _ContainerManutencaoState extends State<ContainerManutencao> {
+  var variaveis = VariaveisEquipamentos();
+
+  String localInstalacao = '';
+
+  @override
+  Widget build(BuildContext context) {
+    List<int> codigosEq = variaveis.codigosEq.cast<int>();
+    return Column(
+      children: [
+        // Input equipamento
+        DropdownButton<int>(
+          value: variaveis.selectedListItem,
+          onChanged: (int? newValue) {
+            setState(() {
+              variaveis.selectedListItem = newValue;
+            });
+          },
+          items: codigosEq.map((int item) {
+            return DropdownMenuItem<int>(
+              value: item,
+              child: Row(
+                children: [
+                  Icon(Icons.arrow_right),
+                  SizedBox(width: 5.0),
+                  Text(item.toString()),
+                ],
+              ),
+            );
+          }).toList(),
+        ),
+        SizedBox(height: 16.0),
+        // Input local de instalação
+        Text(
+          'Local de instalação - MANUTENCAO TESTE',
+          style: TextStyle(
+            fontSize: 14.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 8.0),
+        TextField(
+          decoration: InputDecoration(
+            // labelText: 'Local de instalação...',
+            border: OutlineInputBorder(),
+          ),
+          onChanged: (value) {
+            setState(() {
+              localInstalacao = value;
+            });
+          },
+        ),
+        SizedBox(height: 8.0),
+        BotaoProximo(
+          onPressed: () {
+            if (localInstalacao.isNotEmpty) {
+              variaveis.localInstalacao = localInstalacao;
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Acessorios()),
+              );
+            } else {
+              // Exibir uma mensagem de erro informando que todas as respostas devem ser preenchidas
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text('Erro'),
+                    content: Text('Por favor, preencha todas as respostas.'),
+                    actions: [
+                      TextButton(
+                        child: Text('OK'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            }
+          },
+        )
       ],
     );
   }
 }
 
-class ContainerManutencao extends StatelessWidget {
+//  TROCA
+
+class ContainerTroca extends StatefulWidget {
+  @override
+  State<ContainerTroca> createState() => _ContainerTrocaState();
+}
+
+class _ContainerTrocaState extends State<ContainerTroca> {
+  String? situacaoEquipamento;
+  var variaveis = VariaveisEquipamentos();
+  String localInstalacao = '';
   @override
   Widget build(BuildContext context) {
+    List<int> codigosEq = variaveis.codigosEq.cast<int>();
     return Column(
       children: [
         // Input equipamento
-        TextFormField(
-          decoration: InputDecoration(
-            labelText: 'Equipamento',
-          ),
+        DropdownButton<int>(
+          value: variaveis.selectedListItem,
+          onChanged: (int? newValue) {
+            setState(() {
+              variaveis.selectedListItem = newValue;
+            });
+          },
+          items: codigosEq.map((int item) {
+            return DropdownMenuItem<int>(
+              value: item,
+              child: Row(
+                children: [
+                  Icon(Icons.arrow_right),
+                  SizedBox(width: 5.0),
+                  Text(item.toString()),
+                ],
+              ),
+            );
+          }).toList(),
         ),
+        SizedBox(height: 16.0),
+        DropdownButton<int>(
+          value: variaveis.selectedListItem,
+          onChanged: (int? newValue) {
+            setState(() {
+              variaveis.selectedListItem = newValue;
+            });
+          },
+          items: codigosEq.map((int item) {
+            return DropdownMenuItem<int>(
+              value: item,
+              child: Row(
+                children: [
+                  Icon(Icons.arrow_right),
+                  SizedBox(width: 5.0),
+                  Text(item.toString()),
+                ],
+              ),
+            );
+          }).toList(),
+        ),
+        SizedBox(height: 16,),
+        Text(
+                'Situação do equipamento - TROCA TESTE',
+                style: TextStyle(
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 8.0),
+              Column(
+                children: <Widget>[
+                  RadioListTile<String>(
+                    title: Text(
+                      'OK',
+                      style: TextStyle(fontSize: 14.0),
+                    ),
+                    value: 'OK',
+                    groupValue: situacaoEquipamento,
+                    onChanged: (String? value) {
+                      setState(() {
+                        situacaoEquipamento = value;
+                      });
+                    },
+                  ),
+                  RadioListTile<String>(
+                    title: Text(
+                      'Com defeito',
+                      style: TextStyle(fontSize: 14.0),
+                    ),
+                    value: 'Com defeito',
+                    groupValue: situacaoEquipamento,
+                    onChanged: (String? value) {
+                      setState(() {
+                        situacaoEquipamento = value;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              SizedBox(height: 16.0),
         // Input local de instalação
-        TextFormField(
-          decoration: InputDecoration(
-            labelText: 'Local de Instalação',
+        Text(
+          'Local de instalação',
+          style: TextStyle(
+            fontSize: 14.0,
+            fontWeight: FontWeight.bold,
           ),
         ),
+        SizedBox(height: 8.0),
+        TextField(
+          decoration: InputDecoration(
+            // labelText: 'Local de instalação...',
+            border: OutlineInputBorder(),
+          ),
+          onChanged: (value) {
+            setState(() {
+              localInstalacao = value;
+            });
+          },
+        ),
+        SizedBox(height: 8.0),
+        BotaoProximo(
+          onPressed: () {
+            if (situacaoEquipamento != null &&
+                      localInstalacao.isNotEmpty) {
+                    variaveis.situacaoEquipamento = situacaoEquipamento!;
+                    variaveis.localInstalacao = localInstalacao;
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Acessorios()),
+                    );
+                  } else {
+              // Exibir uma mensagem de erro informando que todas as respostas devem ser preenchidas
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text('Erro'),
+                    content: Text('Por favor, preencha todas as respostas.'),
+                    actions: [
+                      TextButton(
+                        child: Text('OK'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            }
+          },
+        )
       ],
     );
   }
 }
 
-class ContainerRetirada extends StatelessWidget {
+// INSTALAÇÃO
+
+class ContainerInstalacao extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // Input equipamento
-        TextFormField(
-          decoration: InputDecoration(
-            labelText: 'Equipamento',
-          ),
-        ),
-        // Checkbox situação do equipamento
-        Row(
-          children: [
-            Checkbox(
-              value: true, // Valor do checkbox "ok"
-              onChanged: (value) {},
-            ),
-            Text('OK'),
-            Checkbox(
-              value: false, // Valor do checkbox "com defeito"
-              onChanged: (value) {},
-            ),
-            Text('Com Defeito'),
-          ],
-        ),
-        // Input local de instalação
-        TextFormField(
-          decoration: InputDecoration(
-            labelText: 'Local de Instalação',
-          ),
-        ),
-      ],
-    );
-  }
+  State<ContainerInstalacao> createState() => _ContainerInstalacaoState();
 }
 
-class ContainerInstalacao extends StatelessWidget {
+class _ContainerInstalacaoState extends State<ContainerInstalacao> {
+  var variaveis = VariaveisEquipamentos();
+  String localInstalacao = '';
   @override
   Widget build(BuildContext context) {
+    List<int> codigosEq = variaveis.codigosEq.cast<int>();
     return Column(
       children: [
         // Input equipamento
-        TextFormField(
-          decoration: InputDecoration(
-            labelText: 'Equipamento',
-          ),
+        DropdownButton<int>(
+          value: variaveis.selectedListItem,
+          onChanged: (int? newValue) {
+            setState(() {
+              variaveis.selectedListItem = newValue;
+            });
+          },
+          items: codigosEq.map((int item) {
+            return DropdownMenuItem<int>(
+              value: item,
+              child: Row(
+                children: [
+                  Icon(Icons.arrow_right),
+                  SizedBox(width: 5.0),
+                  Text(item.toString()),
+                ],
+              ),
+            );
+          }).toList(),
         ),
+        SizedBox(height: 16.0),
         // Input local de instalação
-        TextFormField(
-          decoration: InputDecoration(
-            labelText: 'Local de Instalação',
+        Text(
+          'Local de instalação - INSTALAÇÃO',
+          style: TextStyle(
+            fontSize: 14.0,
+            fontWeight: FontWeight.bold,
           ),
         ),
+        SizedBox(height: 8.0),
+        TextField(
+          decoration: InputDecoration(
+            // labelText: 'Local de instalação...',
+            border: OutlineInputBorder(),
+          ),
+          onChanged: (value) {
+            setState(() {
+              localInstalacao = value;
+            });
+          },
+        ),
+        SizedBox(height: 8.0),
+        BotaoProximo(
+          onPressed: () {
+            if (localInstalacao.isNotEmpty) {
+              variaveis.localInstalacao = localInstalacao;
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Acessorios()),
+              );
+            } else {
+              // Exibir uma mensagem de erro informando que todas as respostas devem ser preenchidas
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text('Erro'),
+                    content: Text('Por favor, preencha todas as respostas.'),
+                    actions: [
+                      TextButton(
+                        child: Text('OK'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            }
+          },
+        )
       ],
     );
   }
