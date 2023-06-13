@@ -28,24 +28,25 @@ class _TelaSincronizarState extends State<TelaSincronizar> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Container com texto
-            Container(
-              alignment: Alignment.center,
-              child: Text(
-                'Testando com variável',
-                style: TextStyle(fontSize: 15),
-              ),
-            ),
             SizedBox(height: 16.0),
             // Container com texto
             Container(
               alignment: Alignment.center,
               child: Text(
-                'texto teste',
-                style: TextStyle(fontSize: 16),
+                'Testando com variável',
+                style: TextStyle(fontSize: 19, fontWeight: FontWeight.w600),
               ),
             ),
-            SizedBox(height: 20.0),
+            SizedBox(height: 24.0),
+            // Container com texto
+            Container(
+              alignment: Alignment.center,
+              child: Text(
+                'texto teste',
+                style: TextStyle(fontSize: 19, fontWeight: FontWeight.w600),
+              ),
+            ),
+            SizedBox(height: 30.0),
             // Botão
             _BotaoSincronizar(),
           ],
@@ -83,7 +84,7 @@ class _BotaoSincronizarState extends State<_BotaoSincronizar> {
             'Sincronizar',
             style: TextStyle(
               color: Colors.white, // Cor do texto
-              fontSize: 16.0,
+              fontSize: 17.0,
             ),
           ),
         ),
