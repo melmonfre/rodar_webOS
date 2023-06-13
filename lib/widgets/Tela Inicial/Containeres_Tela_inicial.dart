@@ -366,7 +366,7 @@ class _ContainerContentState extends State<ContainerContent> {
           timer--;
           if (timer == 0) {
             getdata();
-            timer = 600;
+            timer = 30;
           }
         });
       });
