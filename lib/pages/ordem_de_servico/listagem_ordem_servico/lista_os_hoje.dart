@@ -37,14 +37,9 @@ class _ListaOSHojeState extends State<ListaOSHoje> {
         ),
         title: Text('OS Hoje'),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            ContainerOS(
-              botao: BotaoHoje(),
-            ),
-            SizedBox(height: 0.2),
-          ],
+      body: Container(
+        child: ContainerOS(
+          botao: BotaoHoje(),
         ),
       ),
     );

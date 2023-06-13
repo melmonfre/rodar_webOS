@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_amanha.dart';
@@ -5,6 +6,8 @@ import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_o
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_futuras.dart';
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_hoje.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../services/getToken.dart';
 
 class Futuras extends StatefulWidget {
   @override
@@ -30,13 +33,27 @@ class _FuturasState extends State<Futuras> {
       numero++;
       print(numero);
     });
+
+
     setState(() {
       numfuturas = numero;
     });
     //numfuturas = varfuturas.length;
   }
+  var timer  = 5;
+  void _decrementCounter() {
+    Timer.periodic(const Duration(seconds: 1), (_) {
+      setState(() {
+        timer--;
+        if (timer == 0) {
+          getdata();
+          timer = 5;
+        }
+      });
+    });
+  }
   void initState() {
-    getdata();
+    _decrementCounter();
     super.initState();
   }
   Widget build(BuildContext context) {
@@ -103,11 +120,23 @@ class _AmanhaState extends State<Amanha> {
     });
     //numamanha = varamanha.length;
   }
-  @override
+  var timer  = 5;
+  void _decrementCounter() {
+    Timer.periodic(const Duration(seconds: 1), (_) {
+      setState(() {
+        timer--;
+        if (timer == 0) {
+          getdata();
+          timer = 5;
+        }
+      });
+    });
+  }
   void initState() {
-    getdata();
+    _decrementCounter();
     super.initState();
   }
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
@@ -174,11 +203,23 @@ class _HojeState extends State<Hoje> {
 
    // numdodia = vardodia.length;
   }
-  @override
+  var timer  = 5;
+  void _decrementCounter() {
+    Timer.periodic(const Duration(seconds: 1), (_) {
+      setState(() {
+        timer--;
+        if (timer == 0) {
+          getdata();
+          timer = 5;
+        }
+      });
+    });
+  }
   void initState() {
-    getdata();
+    _decrementCounter();
     super.initState();
   }
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
@@ -243,11 +284,23 @@ class _AtrasadasState extends State<Atrasadas> {
       numatrasadas = numero;
     });
   }
-  @override
+  var timer  = 5;
+  void _decrementCounter() {
+    Timer.periodic(const Duration(seconds: 1), (_) {
+      setState(() {
+        timer--;
+        if (timer == 0) {
+          getdata();
+          timer = 5;
+        }
+      });
+    });
+  }
   void initState() {
-    getdata();
+    _decrementCounter();
     super.initState();
   }
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
@@ -298,10 +351,28 @@ class _ContainerContentState extends State<ContainerContent> {
   Widget build(BuildContext context) {
     final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
     GlobalKey<RefreshIndicatorState>();
+    Future<void> getdata() async {
 
+      SharedPreferences opcs = await SharedPreferences.getInstance();
+      var empresaid = opcs.getInt("sessionid");
+      getToken().sincronizar(empresaid);
+
+    }
     @override
+    var timer  = 5;
+    void _decrementCounter() {
+      Timer.periodic(const Duration(seconds: 1), (_) {
+        setState(() {
+          timer--;
+          if (timer == 0) {
+            getdata();
+            timer = 600;
+          }
+        });
+      });
+    }
     void initState() {
-      _refreshIndicatorKey.currentState?.show();
+      _decrementCounter();
       super.initState();
     }
     return Scaffold(

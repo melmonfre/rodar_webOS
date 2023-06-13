@@ -37,14 +37,9 @@ class _ListaOSFuturasState extends State<ListaOSFuturas> {
         ),
         title: Text('OS Futuras'),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            ContainerOS(
-              botao: BotaoFuturas(),
-            ),
-            SizedBox(height: 0.2),
-          ],
+      body: Container(
+        child: ContainerOS(
+          botao: BotaoFuturas(),
         ),
       ),
     );

@@ -11,8 +11,6 @@ import "package:flutter/material.dart";
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../widgets/login/container_login.dart';
-import '../../widgets/login/variaveis_login.dart';
-
 class login extends StatefulWidget {
   var token;
   login(this.token, {Key? key}) : super(key: key);
@@ -118,7 +116,6 @@ class _loginState extends State<login> {
     Navigator.push(context, MaterialPageRoute(
         builder:(context) => TelaInicial()),);
   }
-  var variaveis = VarLogin();
   bool isButtonEnabled = true;
   var username;
   var password;

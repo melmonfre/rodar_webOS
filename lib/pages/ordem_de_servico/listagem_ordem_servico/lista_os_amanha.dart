@@ -34,17 +34,11 @@ class _ListaOSAmanhaState extends State<ListaOSAmanha> {
             Navigator.pop(context);
           },
         ),
-        title: Text('OS Amanha'),
+        title: Text('OS Amanhã'),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            ContainerOS(
-
-              botao: BotaoAmanha(),
-            ),
-            SizedBox(height: 0.2),
-          ],
+      body: Container(
+        child: ContainerOS(
+          botao: BotaoAmanha(),
         ),
       ),
     );
