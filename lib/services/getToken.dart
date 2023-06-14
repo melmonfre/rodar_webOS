@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:rodarwebos/Constantes/Urlconst.dart';
+import 'package:rodarwebos/services/OS/GetMotivosOS.dart';
 import 'package:rodarwebos/services/OS/GetOSAmanha.dart';
 import 'package:rodarwebos/services/OS/GetOSAtrasadas.dart';
 import 'package:rodarwebos/services/OS/GetOSDoDia.dart';
@@ -69,6 +70,7 @@ class getToken {
   checklist( empresaid, nf) async {
     var osid;
     var check;
+    var motivos;
     var nota = jsonDecode(nf);
     var notinha = nota [0];
     osid = notinha ['id'];
@@ -77,7 +79,10 @@ class getToken {
     if(check != null){
       opcs.setString("${osid}@checklist", check);
     }
-
+    motivos = await GetMotivosOS().obter(empresaid, osid);
+    if(motivos != null){
+      opcs.setString("${osid}@motivos", motivos);
+    }
   }
   getempresas() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
