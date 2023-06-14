@@ -80,28 +80,30 @@ class _ContainerOSState extends State<ContainerOS> {
   }
   @override
   Widget build(BuildContext context) {
-    return Container(
-          child: Container(
-            child: ListView.builder(
-            padding: const EdgeInsets.all(8),
-            itemCount: num,
-            itemBuilder: (BuildContext context, int index) {
-              return Container(
-                padding: const EdgeInsets.only(top: 5),
-                decoration: const BoxDecoration(
-                  border: Border(top: BorderSide(color: Colors.black12)),
-
+  return Padding(
+    padding: EdgeInsets.symmetric(
+      horizontal: MediaQuery.of(context).size.width * 0.05,
+      vertical: MediaQuery.of(context).size.height * 0.02,
+    ),
+    child: Container(
+      child: ListView.builder(
+        padding: const EdgeInsets.all(8),
+        itemCount: num,
+        itemBuilder: (BuildContext context, int index) {
+          return Padding(
+            padding: const EdgeInsets.only(top: 5),
+            child: Container(
+              decoration: const BoxDecoration(
+                border: Border(top: BorderSide(color: Colors.black12)),
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    //color: Colors.transparent,
-                    //.withOpacity(0.7), // Definindo a cor do container
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  // gera a linha
-                  child: GestureDetector(onTap: () {
+                child: GestureDetector(
+                  onTap: () {
                     setossessao(os[index]);
                     print("OS ${os[index]}");
                     Navigator.push(
@@ -167,13 +169,15 @@ class _ContainerOSState extends State<ContainerOS> {
                       ),
                       widget.botao,
                     ],
-                  ))
-
+                  ),
                 ),
-              );
-            }
-            )
-          ),
-    );
-  }
+              ),
+            ),
+          );
+        },
+      ),
+    ),
+  );
+}
+
 }

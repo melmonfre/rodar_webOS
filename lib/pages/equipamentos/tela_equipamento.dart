@@ -125,8 +125,12 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> codigosEq = EquipamentoVeiculoCodigos;
-    return Column(
+  List<String> codigosEq = EquipamentoVeiculoCodigos;
+  
+  return Padding(
+    padding: EdgeInsets.all(16.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Input equipamento
         DropdownButton<String>(
@@ -153,44 +157,44 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
         SizedBox(height: 16.0),
 
         Text(
-                'Situação do equipamento - RETIRADA',
-                style: TextStyle(
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.bold,
-                ),
+          'Situação do equipamento - RETIRADA',
+          style: TextStyle(
+            fontSize: 14.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 8.0),
+        Column(
+          children: <Widget>[
+            RadioListTile<String>(
+              title: Text(
+                'OK',
+                style: TextStyle(fontSize: 14.0),
               ),
-              SizedBox(height: 8.0),
-              Column(
-                children: <Widget>[
-                  RadioListTile<String>(
-                    title: Text(
-                      'OK',
-                      style: TextStyle(fontSize: 14.0),
-                    ),
-                    value: 'OK',
-                    groupValue: situacaoEquipamento,
-                    onChanged: (String? value) {
-                      setState(() {
-                        situacaoEquipamento = value;
-                      });
-                    },
-                  ),
-                  RadioListTile<String>(
-                    title: Text(
-                      'Com defeito',
-                      style: TextStyle(fontSize: 14.0),
-                    ),
-                    value: 'Com defeito',
-                    groupValue: situacaoEquipamento,
-                    onChanged: (String? value) {
-                      setState(() {
-                        situacaoEquipamento = value;
-                      });
-                    },
-                  ),
-                ],
+              value: 'OK',
+              groupValue: situacaoEquipamento,
+              onChanged: (String? value) {
+                setState(() {
+                  situacaoEquipamento = value;
+                });
+              },
+            ),
+            RadioListTile<String>(
+              title: Text(
+                'Com defeito',
+                style: TextStyle(fontSize: 14.0),
               ),
-              SizedBox(height: 16.0),
+              value: 'Com defeito',
+              groupValue: situacaoEquipamento,
+              onChanged: (String? value) {
+                setState(() {
+                  situacaoEquipamento = value;
+                });
+              },
+            ),
+          ],
+        ),
+        SizedBox(height: 16.0),
         // Input local de instalação
         Text(
           'Local de instalação',
@@ -200,17 +204,20 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
           ),
         ),
         SizedBox(height: 8.0),
-        TextField(
-          decoration: InputDecoration(
-            hintText: localInstalacao,
-            // labelText: 'Local de instalação...',
-            border: OutlineInputBorder(),
+        Container(
+          width: double.infinity,
+          child: TextField(
+            textAlignVertical: TextAlignVertical.center,
+            decoration: InputDecoration(
+              hintText: localInstalacao,
+              border: OutlineInputBorder(),
+            ),
+            onSubmitted: (value) {
+              setState(() {
+                localInstalacao = value;
+              });
+            },
           ),
-          onSubmitted: (value) {
-            setState(() {
-              localInstalacao = value;
-            });
-          },
         ),
         SizedBox(height: 8.0),
         BotaoProximo(
@@ -259,7 +266,7 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
           },
         )
       ],
-    );
+    ),);
   }
 }
 class ContainerManutencao extends StatefulWidget {
@@ -274,8 +281,12 @@ class _ContainerManutencaoState extends State<ContainerManutencao> {
 
   @override
   Widget build(BuildContext context) {
-    List<int> codigosEq = variaveis.codigosEq.cast<int>();
-    return Column(
+  List<int> codigosEq = variaveis.codigosEq.cast<int>();
+  
+  return Padding(
+    padding: EdgeInsets.all(16.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Input equipamento
         DropdownButton<int>(
@@ -309,17 +320,20 @@ class _ContainerManutencaoState extends State<ContainerManutencao> {
           ),
         ),
         SizedBox(height: 8.0),
-        TextField(
-          decoration: InputDecoration(
-            hintText: localInstalacao,
-            // labelText: 'Local de instalação...',
-            border: OutlineInputBorder(),
+        Container(
+          width: double.infinity,
+          child: TextField(
+            textAlignVertical: TextAlignVertical.center,
+            decoration: InputDecoration(
+              hintText: localInstalacao,
+              border: OutlineInputBorder(),
+            ),
+            onSubmitted: (value) {
+              setState(() {
+                localInstalacao = value;
+              });
+            },
           ),
-          onSubmitted: (value) {
-            setState(() {
-              localInstalacao = value;
-            });
-          },
         ),
         SizedBox(height: 8.0),
         BotaoProximo(
@@ -353,7 +367,7 @@ class _ContainerManutencaoState extends State<ContainerManutencao> {
           },
         )
       ],
-    );
+    ),);
   }
 }
 
@@ -514,10 +528,6 @@ class _ContainerTrocaState extends State<ContainerTroca> {
           ),
         ),
         SizedBox(height: 8.0),
-  
-  
-
-
         BotaoProximo(
           onPressed: () {
             if (situacaoEquipamento != null &&
@@ -616,7 +626,10 @@ class _ContainerInstalacaoState extends State<ContainerInstalacao> {
     super.initState();
   }
   Widget build(BuildContext context) {
-    return Column(
+  return Padding(
+    padding: EdgeInsets.all(16.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Input equipamento
         DropdownButton<String>(
@@ -650,65 +663,69 @@ class _ContainerInstalacaoState extends State<ContainerInstalacao> {
           ),
         ),
         SizedBox(height: 8.0),
-        TextField(
-          decoration: InputDecoration(
-            hintText: localInstalacao,
-            // labelText: 'Local de instalação...',
-            border: OutlineInputBorder(),
+        Container(
+          width: double.infinity,
+          child: TextField(
+            textAlignVertical: TextAlignVertical.center,
+            decoration: InputDecoration(
+              hintText: localInstalacao,
+              border: OutlineInputBorder(),
+            ),
+            onSubmitted: (value) {
+              setState(() {
+                localInstalacao = value;
+              });
+            },
           ),
-          onSubmitted: (value) {
-            setState(() {
-              localInstalacao = value;
-            });
-          },
         ),
         SizedBox(height: 8.0),
-        BotaoProximo(
-
-          onPressed: () {
-            var eqnovosid;
-            for (int i =0; i< EquipamentoNovoCodigos.length; i++) {
-              if(EquipamentoNovoCodigos[i] == selecionadonovo){
-                eqnovosid = EquipamentoNovoIDs[i];
+          BotaoProximo(
+    
+            onPressed: () {
+              var eqnovosid;
+              for (int i =0; i< EquipamentoNovoCodigos.length; i++) {
+                if(EquipamentoNovoCodigos[i] == selecionadonovo){
+                  eqnovosid = EquipamentoNovoIDs[i];
+                }
               }
-            }
-            Map<String, dynamic> equipamentos = {
-              "EquipamentoInstaladoID": eqnovosid,
-              "EquipamentoInstaladoCodigo": selecionadonovo,
-              "EquipamentosRemovidoID":"",
-              "EquipamentoRemovidoCodigo": "",
-              "localInstalacao" : localInstalacao,
-            };
-            getequipamentos().setEquipamento(equipamentos);
-            if (localInstalacao.isNotEmpty) {
-              Navigator.push(
-                context,
-                //TODO ROTA Acessorios()
-                MaterialPageRoute(builder: (context) => FotoHodometro()),
-              );
-            } else {
-              // Exibir uma mensagem de erro informando que todas as respostas devem ser preenchidas
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: Text('Erro'),
-                    content: Text('Por favor, preencha todas as respostas.'),
-                    actions: [
-                      TextButton(
-                        child: Text('OK'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
-            }
-          },
-        )
-      ],
+              Map<String, dynamic> equipamentos = {
+                "EquipamentoInstaladoID": eqnovosid,
+                "EquipamentoInstaladoCodigo": selecionadonovo,
+                "EquipamentosRemovidoID":"",
+                "EquipamentoRemovidoCodigo": "",
+                "localInstalacao" : localInstalacao,
+              };
+              getequipamentos().setEquipamento(equipamentos);
+              if (localInstalacao.isNotEmpty) {
+                Navigator.push(
+                  context,
+                  //TODO ROTA Acessorios()
+                  MaterialPageRoute(builder: (context) => FotoHodometro()),
+                );
+              } else {
+                // Exibir uma mensagem de erro informando que todas as respostas devem ser preenchidas
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('Erro'),
+                      content: Text('Por favor, preencha todas as respostas.'),
+                      actions: [
+                        TextButton(
+                          child: Text('OK'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
+            },
+          )
+        ],
+      ),
     );
   }
 }
