@@ -148,6 +148,7 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
               ),
             );
           }).toList(),
+          hint: Text('Equipamento'),
         ),
         SizedBox(height: 16.0),
 
@@ -296,6 +297,7 @@ class _ContainerManutencaoState extends State<ContainerManutencao> {
               ),
             );
           }).toList(),
+          hint: Text('Equipamento'),
         ),
         SizedBox(height: 16.0),
         // Input local de instalação
@@ -397,7 +399,10 @@ class _ContainerTrocaState extends State<ContainerTroca> {
     super.initState();
   }
   Widget build(BuildContext context) {
-    return Column(
+  return Padding(
+    padding: EdgeInsets.all(16.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Input equipamento
         DropdownButton<String>(
@@ -419,6 +424,7 @@ class _ContainerTrocaState extends State<ContainerTroca> {
               ),
             );
           }).toList(),
+          hint: Text('Equipamento'),
         ),
         SizedBox(height: 16.0),
         DropdownButton<String>(
@@ -440,48 +446,49 @@ class _ContainerTrocaState extends State<ContainerTroca> {
               ),
             );
           }).toList(),
+          hint: Text('Equipamento Retirado'),
         ),
         SizedBox(height: 16,),
         Text(
-                'Situação do equipamento - TROCA',
-                style: TextStyle(
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.bold,
-                ),
+          'Situação do equipamento - TROCA',
+          style: TextStyle(
+            fontSize: 14.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 8.0),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            RadioListTile<String>(
+              title: Text(
+                'OK',
+                style: TextStyle(fontSize: 14.0),
               ),
-              SizedBox(height: 8.0),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  RadioListTile<String>(
-                    title: Text(
-                      'OK',
-                      style: TextStyle(fontSize: 14.0),
-                    ),
-                    value: 'OK',
-                    groupValue: situacaoEquipamento,
-                    onChanged: (String? value) {
-                      setState(() {
-                        situacaoEquipamento = value;
-                      });
-                    },
-                  ),
-                  RadioListTile<String>(
-                    title: Text(
-                      'Com defeito',
-                      style: TextStyle(fontSize: 14.0),
-                    ),
-                    value: 'Com defeito',
-                    groupValue: situacaoEquipamento,
-                    onChanged: (String? value) {
-                      setState(() {
-                        situacaoEquipamento = value;
-                      });
-                    },
-                  ),
-                ],
+              value: 'OK',
+              groupValue: situacaoEquipamento,
+              onChanged: (String? value) {
+                setState(() {
+                  situacaoEquipamento = value;
+                });
+              },
+            ),
+            RadioListTile<String>(
+              title: Text(
+                'Com defeito',
+                style: TextStyle(fontSize: 14.0),
               ),
-              SizedBox(height: 16.0),
+              value: 'Com defeito',
+              groupValue: situacaoEquipamento,
+              onChanged: (String? value) {
+                setState(() {
+                  situacaoEquipamento = value;
+                });
+              },
+            ),
+          ],
+        ),
+        SizedBox(height: 16.0),
         // Input local de instalação
         Text(
           'Local de instalação',
@@ -491,19 +498,26 @@ class _ContainerTrocaState extends State<ContainerTroca> {
           ),
         ),
         SizedBox(height: 8.0),
-        TextField(
-          decoration: InputDecoration(
-            hintText: localInstalacao,
-            // labelText: 'Local de instalação...',
-            border: OutlineInputBorder(),
+        Container(
+          width: double.infinity,
+          child: TextField(
+            textAlignVertical: TextAlignVertical.center,
+            decoration: InputDecoration(
+              hintText: localInstalacao,
+              border: OutlineInputBorder(),
+            ),
+            onSubmitted: (value) {
+              setState(() {
+                localInstalacao = value;
+              });
+            },
           ),
-          onSubmitted: (value) {
-            setState(() {
-              localInstalacao = value;
-            });
-          },
         ),
         SizedBox(height: 8.0),
+  
+  
+
+
         BotaoProximo(
           onPressed: () {
             if (situacaoEquipamento != null &&
@@ -557,7 +571,7 @@ class _ContainerTrocaState extends State<ContainerTroca> {
           },
         )
       ],
-    );
+    ));
   }
 }
 
@@ -624,6 +638,7 @@ class _ContainerInstalacaoState extends State<ContainerInstalacao> {
               ),
             );
           }).toList(),
+          hint: Text('Equipamento'),
         ),
         SizedBox(height: 16.0),
         // Input local de instalação
