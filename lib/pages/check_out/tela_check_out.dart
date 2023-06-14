@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/check_in/variaveis_options.dart';
 import 'package:rodarwebos/pages/equipamentos/tela_equipamento.dart';
@@ -8,6 +10,7 @@ import 'package:rodarwebos/widgets/check_in/container_observacao_adicional.dart'
 import 'package:rodarwebos/widgets/confirmacao_dados/lista_resumo_estado.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../services/GetEquipamento.dart';
 import '../../widgets/check_out/container_check_out.dart';
 
 class CheckOutTela extends StatefulWidget {
@@ -17,186 +20,205 @@ class CheckOutTela extends StatefulWidget {
 
 class _CheckOutTelaState extends State<CheckOutTela> {
   SelectedOptions selectedOptions =
-      SelectedOptions(); // Instância da classe SelectedOptions
+  SelectedOptions(); // Instância da classe SelectedOptions
+  List checklistID =[];
+  List checklistNome = [];
+  List checklistItens = [];
+  int tamanho = 0;
+  Future<void> getdata() async {
+    var json;
+    var osid;
+    var element;
+    var empresaid;
+    var token;
+    var check;
 
-  Future<void> salvaopcoes() async {
+    List checklist = [];
     SharedPreferences opcs = await SharedPreferences.getInstance();
-    setState(() {
-      selectedOptions.luzesPainelInstrumento =
-          opcs.getString("luzesPainelInstrumento")!;
-      selectedOptions.arCondicionado = opcs.getString("arCondicionado")!;
-      selectedOptions.arQuenteVentilacao =
-          opcs.getString("arQuenteVentilacao")!;
-      selectedOptions.radioCdDvdMp3 = opcs.getString("radioCdDvdMp3")!;
-      selectedOptions.buzinas = opcs.getString("buzinas")!;
-      selectedOptions.tetoPainelQuebraSol =
-          opcs.getString("tetoPainelQuebraSol")!;
-      selectedOptions.partidaFuncMotor = opcs.getString("partidaFuncMotor")!;
-      selectedOptions.vidrosEletricos = opcs.getString("vidrosEletricos")!;
-      selectedOptions.alarme = opcs.getString("alarme")!;
-      selectedOptions.condicoesIntalacaoEletrico =
-          opcs.getString("condicoesIntalacaoEletrico")!;
+    getequipamentos().get();
+    json = opcs.getString("SelectedOS");
+    empresaid = opcs.getInt('sessionid');
+    element = jsonDecode(json);
+    token = opcs.getString("${empresaid}@token")!;
+    osid = element['id'];
+    print(check);
+    check = opcs.getString("${osid}@checklist");
+    checklist = jsonDecode(check);
+    checklist.forEach((element) {
+      setState(() {
+        checklistID.add(element['id']);
+        checklistNome.add(element['descricao']);
+
+        checklistItens.add(3);
+        tamanho = checklistID.length;
+      });
+      print(checklistNome);
     });
   }
-
-  @override
   void initState() {
-    salvaopcoes();
+    getdata();
     super.initState();
   }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: Text('Check-out'),
-      ),
-      body: ListView(
-        children: [
-          ContainerCheckOut(
-            title: 'Luzes Painel Instrumento',
-            value: selectedOptions.luzesPainelInstrumento,
-            onOptionSelected: (option) {
-              setState(() {
-                selectedOptions.luzesPainelInstrumento =
-                    option; // Atualize o valor selecionado
-              });
-            },
-          ),
-          ContainerCheckOut(
-            title: 'Ar Condicionado',
-            value: selectedOptions.arCondicionado,
-            onOptionSelected: (option) {
-              setState(() {
-                selectedOptions.arCondicionado =
-                    option; // Atualize o valor selecionado
-              });
-            },
-          ),
-          ContainerCheckOut(
-            title: 'Ar quente / Ventilação',
-            value: selectedOptions.arQuenteVentilacao,
-            onOptionSelected: (option) {
-              setState(() {
-                selectedOptions.arQuenteVentilacao =
-                    option; // Atualize o valor selecionado
-              });
-            },
-          ),
-          ContainerCheckOut(
-            title: 'Rádio / CD / DVD / MP3',
-            value: selectedOptions.radioCdDvdMp3,
-            onOptionSelected: (option) {
-              setState(() {
-                selectedOptions.radioCdDvdMp3 =
-                    option; // Atualize o valor selecionado
-              });
-            },
-          ),
-          ContainerCheckOut(
-            title: 'Buzinas',
-            value: selectedOptions.buzinas,
-            onOptionSelected: (option) {
-              setState(() {
-                selectedOptions.buzinas =
-                    option; // Atualize o valor selecionado
-              });
-            },
-          ),
-          ContainerCheckOut(
-            title: 'Teto / Painel / Quebra-sol',
-            value: selectedOptions.tetoPainelQuebraSol,
-            onOptionSelected: (option) {
-              setState(() {
-                selectedOptions.tetoPainelQuebraSol =
-                    option; // Atualize o valor selecionado
-              });
-            },
-          ),
-          ContainerCheckOut(
-            title: 'Partida e func. do motor',
-            value: selectedOptions.partidaFuncMotor,
-            onOptionSelected: (option) {
-              setState(() {
-                selectedOptions.partidaFuncMotor =
-                    option; // Atualize o valor selecionado
-              });
-            },
-          ),
-          ContainerCheckOut(
-            title: 'Vidros elétricos',
-            value: selectedOptions.vidrosEletricos,
-            onOptionSelected: (option) {
-              setState(() {
-                selectedOptions.vidrosEletricos =
-                    option; // Atualize o valor selecionado
-              });
-            },
-          ),
-          ContainerCheckOut(
-            title: 'Alarme',
-            value: selectedOptions.alarme,
-            onOptionSelected: (option) {
-              setState(() {
-                selectedOptions.alarme = option; // Atualize o valor selecionado
-              });
-            },
-          ),
-          ContainerCheckOut(
-            title: 'Condições instalação elétrica',
-            value: selectedOptions.condicoesIntalacaoEletrico,
-            onOptionSelected: (option) {
-              setState(() {
-                selectedOptions.condicoesIntalacaoEletrico =
-                    option; // Atualize o valor selecionado
-              });
-            },
-          ),
-          ContainerObservacaoAdicional(
-            onPressed: () {
-              printSelectedOptions();
-              checkNavigation();
-            },
-          ),
-        ],
-      ),
+    return SafeArea(
+        child: Scaffold(
+            appBar: AppBar(
+              centerTitle: true,
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              title: Text('Check-out'),
+            ),
+            body:  Column(
+              children: [
+                Expanded(
+                    child: ListView.builder(
+                        padding: const EdgeInsets.all(8),
+                        itemCount: tamanho + 1,
+                        itemBuilder: (BuildContext context, int index) {
+                          if(index < tamanho){
+                            return Row(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(16.0),
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.width - 48,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      border: Border.all(
+                                        color: Colors.grey[300]!,
+                                        width: 1.0,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    padding: EdgeInsets.all(16.0),
+
+                                    child: Column(
+                                      children: <Widget>[
+                                        Text(
+                                          "${checklistNome[index]}",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16.0,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        SizedBox(height: 5.0),
+                                        Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Row(children: [
+
+                                              Radio(
+                                                value: 0,
+                                                groupValue: checklistItens[index],
+                                                onChanged:  (value) {
+                                                  setState(() {
+                                                    print(value);
+                                                    if(checklistItens.asMap().containsKey(index)){
+                                                      checklistItens[index] = value;
+                                                    } else {
+                                                      checklistItens.add(value); // Atualize o valor selecionado
+                                                    }
+                                                  });
+                                                },
+                                              ),
+                                              Text(
+                                                'OK',
+                                                style: TextStyle(fontSize: 14.0),
+                                              ),
+                                              SizedBox(width: 13),
+
+                                              Radio(
+                                                value: 1,
+                                                groupValue: checklistItens[index],
+                                                onChanged:  (value) {
+                                                  setState(() {
+                                                    print(value);
+                                                    if(checklistItens.asMap().containsKey(index)){
+                                                      checklistItens[index] = value;
+                                                    } else {
+                                                      checklistItens.add(value); // Atualize o valor selecionado
+                                                    }
+                                                  });
+                                                },
+                                              ),
+                                              Text(
+                                                'Com \nDefeito',
+                                                style: TextStyle(fontSize: 14.0),
+                                              ),
+                                              SizedBox(width: 13),
+
+                                              Radio(
+                                                value: 2,
+                                                groupValue: checklistItens[index],
+                                                onChanged:  (value) {
+                                                  setState(() {
+                                                    print(value);
+                                                    if(checklistItens.asMap().containsKey(index)){
+                                                      checklistItens[index] = value;
+                                                    } else {
+                                                      checklistItens.add(value); // Atualize o valor selecionado
+                                                    }
+                                                  });
+                                                },
+                                              ),
+                                              Text(
+                                                'Não \nPossui',
+                                                style: TextStyle(fontSize: 14.0),
+                                              ),
+
+                                            ],),
+
+                                            TextField(
+                                              decoration: InputDecoration(
+                                                labelText: 'Observação...',
+                                                border: OutlineInputBorder(),
+                                              ),
+
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 16.0),
+
+
+                                      ],
+                                    ),
+
+                                  ),
+                                )
+                              ],
+                            );
+                          } else {
+                            return  ContainerObservacaoAdicional(
+                              onPressed: () {
+                                Map<String, dynamic> values = {
+                                  "idscheckin" : checklistID,
+                                  "nomescheckin" : checklistNome,
+                                  "itenscheckin" : checklistItens,
+                                };
+
+                                checkNavigation(json.encode(values));
+
+                              },
+                            );
+                          }
+                        }
+                    )
+                )
+              ],
+            )
+        )
     );
   }
-
-  void printSelectedOptions() {
-    print(
-        'Luzes Painel Instrumento: ${selectedOptions.luzesPainelInstrumento}');
-    print('Ar Condicionado: ${selectedOptions.arCondicionado}');
-    print('Ar Quente / Ventilação: ${selectedOptions.arQuenteVentilacao}');
-    print('Rádio / CD / DVD / MP3: ${selectedOptions.radioCdDvdMp3}');
-    print('Buzinas: ${selectedOptions.buzinas}');
-    print('Teto / Painel / Quebra-sol: ${selectedOptions.tetoPainelQuebraSol}');
-    print('Partida e func. do motor: ${selectedOptions.partidaFuncMotor}');
-    print('Vidros elétricos: ${selectedOptions.vidrosEletricos}');
-    print('Alarme: ${selectedOptions.alarme}');
-    print(
-        'Condições instalação elétrica: ${selectedOptions.condicoesIntalacaoEletrico}');
-    // Imprima outras opções selecionadas
-  }
-
-  void checkNavigation() {
-    if (selectedOptions.luzesPainelInstrumento.isEmpty ||
-        selectedOptions.arCondicionado.isEmpty ||
-        selectedOptions.arQuenteVentilacao.isEmpty ||
-        selectedOptions.radioCdDvdMp3.isEmpty ||
-        selectedOptions.buzinas.isEmpty ||
-        selectedOptions.tetoPainelQuebraSol.isEmpty ||
-        selectedOptions.partidaFuncMotor.isEmpty ||
-        selectedOptions.vidrosEletricos.isEmpty ||
-        selectedOptions.alarme.isEmpty ||
-        selectedOptions.condicoesIntalacaoEletrico.isEmpty) {
+  Future<void> checkNavigation(jsoncheckin) async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    opcs.setString("checkoutitens", jsoncheckin);
+    if (checklistItens.length != checklistID.length) {
       showDialog(
         context: context,
         builder: (BuildContext context) {

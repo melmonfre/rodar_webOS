@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/check_out/tela_check_out.dart';
-import 'package:rodarwebos/pages/motivos/visita_frustada_motivos.dart';
-import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:rodarwebos/widgets/deslocamento/container_deslocamento.dart';
-import 'package:rodarwebos/widgets/inputs/input_motivos.dart';
-import 'package:rodarwebos/widgets/inputs/input_text.dart';
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
 
 class TelaDeslocamento extends StatefulWidget {
@@ -39,6 +35,7 @@ class _TelaDeslocamentoState extends State<TelaDeslocamento> {
               ContainerDeslocamento(
                 titulo: "Deslocamento",
                 onPressed: () {
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(

@@ -7,6 +7,7 @@ import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../widgets/equipamentos/variaveis_container.dart';
+import '../fotos/telas_fotos/foto_hodometro.dart';
 
 class Equipamentos extends StatefulWidget {
   @override
@@ -231,7 +232,8 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
               getequipamentos().setEquipamento(equipamentos);
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Acessorios()),
+                      //TODO ROTA Acessorios()
+                      MaterialPageRoute(builder: (context) => FotoHodometro()),
                     );
                   } else {
               // Exibir uma mensagem de erro informando que todas as respostas devem ser preenchidas
@@ -321,10 +323,10 @@ class _ContainerManutencaoState extends State<ContainerManutencao> {
         BotaoProximo(
           onPressed: () {
             if (localInstalacao.isNotEmpty) {
-              //Todo sincronizar
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Acessorios()),
+                  //TODO ROTA Acessorios()
+                MaterialPageRoute(builder: (context) => FotoHodometro()),
               );
             } else {
               // Exibir uma mensagem de erro informando que todas as respostas devem ser preenchidas
@@ -387,8 +389,6 @@ class _ContainerTrocaState extends State<ContainerTroca> {
       localInstalacao = eqp["localInstalacao"];
       stringEquipamento = eqp["stringEquipamento"];
 
-      //var mapanovo = Map.fromIterables(EquipamentoNovoIDs, EquipamentoNovoCodigos);
-      //var mapveiculo = Map.fromIterables(EquipamentosVeiculoIDs, EquipamentoVeiculoCodigos );
     });
   }
   @override
@@ -531,7 +531,8 @@ class _ContainerTrocaState extends State<ContainerTroca> {
               getequipamentos().setEquipamento(equipamentos);
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Acessorios()),
+                      //TODO ROTA Acessorios()
+                      MaterialPageRoute(builder: (context) => FotoHodometro()),
                     );
                   } else {
               // Exibir uma mensagem de erro informando que todas as respostas devem ser preenchidas
@@ -667,7 +668,8 @@ class _ContainerInstalacaoState extends State<ContainerInstalacao> {
             if (localInstalacao.isNotEmpty) {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Acessorios()),
+                //TODO ROTA Acessorios()
+                MaterialPageRoute(builder: (context) => FotoHodometro()),
               );
             } else {
               // Exibir uma mensagem de erro informando que todas as respostas devem ser preenchidas

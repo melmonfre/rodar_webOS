@@ -5,6 +5,8 @@ import 'package:rodarwebos/widgets/equipamentos/container_equipamento.dart';
 
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
 
+import '../../../services/salvaFotos.dart';
+
 class FotoHodometro extends StatefulWidget {
   @override
   _FotoHodometroState createState() => _FotoHodometroState();
@@ -45,6 +47,7 @@ class _FotoHodometroState extends State<FotoHodometro> {
               AnexoEvidencias(
                 titulo: 'Tirar foto hodometro',
                 onPressed: () {
+                  salvarfotos().save("FotoHodometro");
                   Navigator.push(
                     context,
                     MaterialPageRoute(

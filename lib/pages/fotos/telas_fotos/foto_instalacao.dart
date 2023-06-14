@@ -5,6 +5,8 @@ import 'package:rodarwebos/widgets/equipamentos/container_equipamento.dart';
 
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
 
+import '../../../services/salvaFotos.dart';
+
 class FotoInstalacao extends StatefulWidget {
   @override
   _FotoInstalacaoState createState() => _FotoInstalacaoState();
@@ -45,6 +47,7 @@ class _FotoInstalacaoState extends State<FotoInstalacao> {
               AnexoEvidencias(
                 titulo: 'Tirar foto da instalação',
                 onPressed: () {
+                  salvarfotos().save("FotoInstalacao");
                   Navigator.push(
                     context,
                     MaterialPageRoute(

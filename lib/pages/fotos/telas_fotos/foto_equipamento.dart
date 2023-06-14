@@ -6,6 +6,8 @@ import 'package:rodarwebos/widgets/anexos/anexo_evidencias.dart';
 import 'package:rodarwebos/widgets/equipamentos/container_equipamento.dart';
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
 
+import '../../../services/salvaFotos.dart';
+
 class FotoEquipamento extends StatefulWidget {
   @override
   _FotoEquipamentoState createState() => _FotoEquipamentoState();
@@ -46,6 +48,7 @@ class _FotoEquipamentoState extends State<FotoEquipamento> {
               AnexoEvidencias(
                 titulo: 'Tirar foto do equipamento',
                 onPressed: () {
+                  salvarfotos().save("FotoEquipamento");
                   Navigator.push(
                     context,
                     MaterialPageRoute(

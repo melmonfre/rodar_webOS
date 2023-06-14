@@ -1,9 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
-import 'package:rodarwebos/widgets/inputs/input_motivos.dart';
-import 'package:rodarwebos/widgets/inputs/input_text.dart';
 import 'package:rodarwebos/widgets/motivos/container_relate_motivos.dart';
-import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RelateMotivo extends StatefulWidget {
   @override
@@ -11,9 +10,22 @@ class RelateMotivo extends StatefulWidget {
 }
 
 class _RelateMotivoState extends State<RelateMotivo> {
-  var variaveis = VariaveisResumo();
+
+  var osid;
+  Future<void> getdata() async {
+    var json;
+    var element;
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    json = opcs.getString("SelectedOS");
+    element = jsonDecode(json);
+    osid = element['id'];
+  }
 
   @override
+  void initState() {
+    super.initState();
+    getdata();
+  }
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -34,8 +46,7 @@ class _RelateMotivoState extends State<RelateMotivo> {
             children: [
               Container(
                 alignment: Alignment.center,
-                child: Text(
-                  variaveis.numero_os.toString(),
+                child: Text("$osid",
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,

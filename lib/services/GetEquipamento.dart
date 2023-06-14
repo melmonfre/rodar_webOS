@@ -56,12 +56,20 @@ class getequipamentos{
     };
    opcs.setString("equipamentos", jsonEncode(equipamentos));
     print(equipamentos);
-    
   }
+  setEquipamento(Map<String, dynamic> equip) async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    var eqp = jsonEncode(equip);
+    opcs.setString("EQProcess", eqp);
 
-  setEquipamento(Map<String, dynamic> equip){
+/*    Map<String, dynamic> equipamentos = {
 
-
+      "EquipamentoInstaladoID": eqnovosid,
+      "EquipamentoInstaladoCodigo": selecionadonovo,
+      "EquipamentosRemovidoID":eqremovid,
+      "EquipamentoRemovidoCodigo": selecionadoveiculo,
+      "localInstalacao" : localInstalacao,
+    };*/
   }
 
 }
