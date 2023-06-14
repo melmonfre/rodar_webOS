@@ -52,7 +52,7 @@ class _ContainerOSState extends State<ContainerOS> {
       var serv;
       servicos.forEach((ser) {
         serv = ser['servico'];
-        opcs.setString("servico", serv);
+        //print("serv $serv");
       });
       servico.add(serv['descricao']);
       var end = element['endereco'];

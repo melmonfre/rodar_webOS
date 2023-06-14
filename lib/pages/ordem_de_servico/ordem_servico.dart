@@ -69,17 +69,25 @@ class _OrdemServicoState extends State<OrdemServico> {
         var numtel = tel[0];
         telefone = numtel['numero'];
         var cont = element['contatos'];
-        var contacto = cont[0];
-        var contact = contacto["contato"];
-        contatonome = contact['nome'];
-        contatoobs = contact['observacao'];
+        try{
+          var contacto = cont[0];
+          var contact = contacto["contato"];
+          contatonome = contact['nome'];
+          contatoobs = contact['observacao'];
+        } catch(e){
+          contatonome ="Não informado";
+          contatoobs = "";
+        }
+
 
         var eq = element['equipamentos'];
         eq.forEach((equip) {
           tiposervico = "$tiposervico ${equip["tipo"] }";
+
           codequip = "$codequip ${equip["id"]}";
           localequip = "$localequip ${equip["localInstalacao"]}";
         });
+        opcs.setString("servico", tiposervico);
 
         List servicos = element['servicos'];
         var serv;

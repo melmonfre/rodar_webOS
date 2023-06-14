@@ -1,11 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/acessorios/tela_acessorios.dart';
+import 'package:rodarwebos/services/GetEquipamento.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
-import 'package:rodarwebos/widgets/equipamentos/container_equipamento.dart';
-import 'package:rodarwebos/widgets/equipamentos/variaveis_container.dart';
-
-import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../widgets/equipamentos/variaveis_container.dart';
 
 class Equipamentos extends StatefulWidget {
   @override
@@ -13,12 +14,20 @@ class Equipamentos extends StatefulWidget {
 }
 
 class _EquipamentosState extends State<Equipamentos> {
-  var variaveis = VariaveisEquipamentos();
 
-  var control; // Definindo o tipo de tela - estatico somente para testes
-  getdata() async {
+
+  var control = ""; // Definindo o tipo de tela - estatico somente para testes
+  var json;
+  var element;
+  var os;
+    getdata() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
-    control = opcs.getString("servico");
+    json = opcs.getString("SelectedOS");
+    element = jsonDecode(json);
+    os = element['id'];
+    setState(() {
+      control = opcs.getString("servico")!;
+    });
     print("CONTROL $control");
   }
 
@@ -30,11 +39,6 @@ class _EquipamentosState extends State<Equipamentos> {
 
   @override
   Widget build(BuildContext context) {
-    bool isManutencao = control == "manutenção";
-    bool isRetirada = control == "retirada";
-    bool isInstalacao = control == "instalação";
-    bool isTroca = control == "troca";
-
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -44,7 +48,7 @@ class _EquipamentosState extends State<Equipamentos> {
             Navigator.pop(context);
           },
         ),
-        title: Text(control),
+        title: Text('Equipamentos'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -55,7 +59,7 @@ class _EquipamentosState extends State<Equipamentos> {
               Container(
                 alignment: Alignment.center,
                 child: Text(
-                  variaveis.numero_os.toString(),
+                  "$os",
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -63,10 +67,10 @@ class _EquipamentosState extends State<Equipamentos> {
                 ),
               ),
               SizedBox(height: 16.0),
-              if (control.contains("manutenção")) ContainerManutencao(),
-              if (control.contains("retirada")) ContainerRetirada(),
-              if (control.contains("instalação")) ContainerInstalacao(),
-              if (control.contains("troca")) ContainerTroca(),
+              if (control.toLowerCase().contains("manutençao")) ContainerManutencao(),
+              if (control.toLowerCase().contains("retirada")) ContainerRetirada(),
+              if (control.toLowerCase().contains("instalaçao")) ContainerInstalacao(),
+              if (control.toLowerCase().contains("troca")) ContainerTroca(),
             ],
           ),
         ),
@@ -75,6 +79,7 @@ class _EquipamentosState extends State<Equipamentos> {
   }
 }
 
+
 class ContainerRetirada extends StatefulWidget {
   @override
   State<ContainerRetirada> createState() => _ContainerRetiradaState();
@@ -82,26 +87,56 @@ class ContainerRetirada extends StatefulWidget {
 
 class _ContainerRetiradaState extends State<ContainerRetirada> {
   String? situacaoEquipamento;
+  var EquipamentoNovoIDs;
+  List<String> EquipamentoNovoCodigos = [];
+  var AcessoriosID;
+  var AcessoriosDescricao;
+  var EquipamentosVeiculoIDs;
+  List<String> EquipamentoVeiculoCodigos = [];
+  var localInstalacao;
+  var stringEquipamento;
+  var selecionadonovo;
+  var selecionadoveiculo;
+  var situequip;
+  getdata() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    var json = opcs.getString("equipamentos");
+    var eqp = jsonDecode(json!);
+    setState(() {
+      EquipamentoNovoIDs = eqp["EquipamentoNovoIDs"];
+      EquipamentoNovoCodigos =  List<String>.from(eqp["EquipamentoNovoCodigos"] as List);
+      AcessoriosID = eqp["AcessoriosID"];
+      AcessoriosDescricao = eqp["AcessoriosDescricao"];
+      EquipamentosVeiculoIDs = eqp["EquipamentosVeiculoIDs"];
+      EquipamentoVeiculoCodigos = List<String>.from(eqp["EquipamentoVeiculoCodigos"] as List);
+      localInstalacao = eqp["localInstalacao"];
+      stringEquipamento = eqp["stringEquipamento"];
 
-  var variaveis = VariaveisEquipamentos();
-
-  String localInstalacao = '';
+      //var mapanovo = Map.fromIterables(EquipamentoNovoIDs, EquipamentoNovoCodigos);
+      //var mapveiculo = Map.fromIterables(EquipamentosVeiculoIDs, EquipamentoVeiculoCodigos );
+    });
+  }
+  @override
+  void initState() {
+    getdata();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    List<int> codigosEq = variaveis.codigosEq.cast<int>();
+    List<String> codigosEq = EquipamentoVeiculoCodigos;
     return Column(
       children: [
         // Input equipamento
-        DropdownButton<int>(
-          value: variaveis.selectedListItem,
-          onChanged: (int? newValue) {
+        DropdownButton<String>(
+          value: selecionadoveiculo,
+          onChanged: (String? newValue) {
             setState(() {
-              variaveis.selectedListItem = newValue;
+              selecionadoveiculo = newValue;
             });
           },
-          items: codigosEq.map((int item) {
-            return DropdownMenuItem<int>(
+          items: codigosEq.map((String item) {
+            return DropdownMenuItem<String>(
               value: item,
               child: Row(
                 children: [
@@ -114,29 +149,9 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
           }).toList(),
         ),
         SizedBox(height: 16.0),
-        DropdownButton<int>(
-          value: variaveis.selectedListItem,
-          onChanged: (int? newValue) {
-            setState(() {
-              variaveis.selectedListItem = newValue;
-            });
-          },
-          items: codigosEq.map((int item) {
-            return DropdownMenuItem<int>(
-              value: item,
-              child: Row(
-                children: [
-                  Icon(Icons.arrow_right),
-                  SizedBox(width: 5.0),
-                  Text(item.toString()),
-                ],
-              ),
-            );
-          }).toList(),
-        ),
-        SizedBox(height: 16,),
+
         Text(
-                'Situação do equipamento - RETIRADA TESTE',
+                'Situação do equipamento - RETIRADA',
                 style: TextStyle(
                   fontSize: 14.0,
                   fontWeight: FontWeight.bold,
@@ -185,10 +200,11 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
         SizedBox(height: 8.0),
         TextField(
           decoration: InputDecoration(
+            hintText: localInstalacao,
             // labelText: 'Local de instalação...',
             border: OutlineInputBorder(),
           ),
-          onChanged: (value) {
+          onSubmitted: (value) {
             setState(() {
               localInstalacao = value;
             });
@@ -199,8 +215,20 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
           onPressed: () {
             if (situacaoEquipamento != null &&
                       localInstalacao.isNotEmpty) {
-                    variaveis.situacaoEquipamento = situacaoEquipamento!;
-                    variaveis.localInstalacao = localInstalacao;
+              var eqremovid;
+              for (int i =0; i< EquipamentoVeiculoCodigos.length; i++) {
+                if(EquipamentoVeiculoCodigos[i] == selecionadoveiculo){
+                  eqremovid = EquipamentosVeiculoIDs[i];
+                }
+              }
+              Map<String, dynamic> equipamentos = {
+                "EquipamentoInstaladoID": "",
+                "EquipamentoInstaladoCodigo": "",
+                "EquipamentosRemovidoID":eqremovid,
+                "EquipamentoRemovidoCodigo": selecionadoveiculo,
+                "localInstalacao" : localInstalacao,
+              };
+              getequipamentos().setEquipamento(equipamentos);
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => Acessorios()),
@@ -270,7 +298,7 @@ class _ContainerManutencaoState extends State<ContainerManutencao> {
         SizedBox(height: 16.0),
         // Input local de instalação
         Text(
-          'Local de instalação - MANUTENCAO TESTE',
+          'Local de instalação - MANUTENÇÃO',
           style: TextStyle(
             fontSize: 14.0,
             fontWeight: FontWeight.bold,
@@ -279,10 +307,11 @@ class _ContainerManutencaoState extends State<ContainerManutencao> {
         SizedBox(height: 8.0),
         TextField(
           decoration: InputDecoration(
+            hintText: localInstalacao,
             // labelText: 'Local de instalação...',
             border: OutlineInputBorder(),
           ),
-          onChanged: (value) {
+          onSubmitted: (value) {
             setState(() {
               localInstalacao = value;
             });
@@ -292,7 +321,7 @@ class _ContainerManutencaoState extends State<ContainerManutencao> {
         BotaoProximo(
           onPressed: () {
             if (localInstalacao.isNotEmpty) {
-              variaveis.localInstalacao = localInstalacao;
+              //Todo sincronizar
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => Acessorios()),
@@ -333,50 +362,80 @@ class ContainerTroca extends StatefulWidget {
 
 class _ContainerTrocaState extends State<ContainerTroca> {
   String? situacaoEquipamento;
-  var variaveis = VariaveisEquipamentos();
-  String localInstalacao = '';
+  var EquipamentoNovoIDs;
+  List<String> EquipamentoNovoCodigos = [];
+  var AcessoriosID;
+  var AcessoriosDescricao;
+  var EquipamentosVeiculoIDs;
+  List<String> EquipamentoVeiculoCodigos = [];
+  var localInstalacao;
+  var stringEquipamento;
+  var selecionadonovo;
+  var selecionadoveiculo;
+  var situequip;
+  getdata() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    var json = opcs.getString("equipamentos");
+    var eqp = jsonDecode(json!);
+    setState(() {
+      EquipamentoNovoIDs = eqp["EquipamentoNovoIDs"];
+      EquipamentoNovoCodigos =  List<String>.from(eqp["EquipamentoNovoCodigos"] as List);
+      AcessoriosID = eqp["AcessoriosID"];
+      AcessoriosDescricao = eqp["AcessoriosDescricao"];
+      EquipamentosVeiculoIDs = eqp["EquipamentosVeiculoIDs"];
+      EquipamentoVeiculoCodigos = List<String>.from(eqp["EquipamentoVeiculoCodigos"] as List);
+      localInstalacao = eqp["localInstalacao"];
+      stringEquipamento = eqp["stringEquipamento"];
+
+      //var mapanovo = Map.fromIterables(EquipamentoNovoIDs, EquipamentoNovoCodigos);
+      //var mapveiculo = Map.fromIterables(EquipamentosVeiculoIDs, EquipamentoVeiculoCodigos );
+    });
+  }
   @override
+  void initState() {
+    getdata();
+    super.initState();
+  }
   Widget build(BuildContext context) {
-    List<int> codigosEq = variaveis.codigosEq.cast<int>();
     return Column(
       children: [
         // Input equipamento
-        DropdownButton<int>(
-          value: variaveis.selectedListItem,
-          onChanged: (int? newValue) {
+        DropdownButton<String>(
+          value: selecionadonovo,
+          onChanged: (String? newValue) {
             setState(() {
-              variaveis.selectedListItem = newValue;
+              selecionadonovo = newValue;
             });
           },
-          items: codigosEq.map((int item) {
-            return DropdownMenuItem<int>(
+          items: EquipamentoNovoCodigos.map((item) {
+            return DropdownMenuItem<String>(
               value: item,
               child: Row(
                 children: [
                   Icon(Icons.arrow_right),
                   SizedBox(width: 5.0),
-                  Text(item.toString()),
+                  Text("$item"),
                 ],
               ),
             );
           }).toList(),
         ),
         SizedBox(height: 16.0),
-        DropdownButton<int>(
-          value: variaveis.selectedListItem,
-          onChanged: (int? newValue) {
+        DropdownButton<String>(
+          value: selecionadoveiculo,
+          onChanged: (String? newValue) {
             setState(() {
-              variaveis.selectedListItem = newValue;
+              selecionadoveiculo = newValue;
             });
           },
-          items: codigosEq.map((int item) {
-            return DropdownMenuItem<int>(
+          items: EquipamentoVeiculoCodigos.map((item) {
+            return DropdownMenuItem<String>(
               value: item,
               child: Row(
                 children: [
                   Icon(Icons.arrow_right),
                   SizedBox(width: 5.0),
-                  Text(item.toString()),
+                  Text("$item"),
                 ],
               ),
             );
@@ -384,7 +443,7 @@ class _ContainerTrocaState extends State<ContainerTroca> {
         ),
         SizedBox(height: 16,),
         Text(
-                'Situação do equipamento - TROCA TESTE',
+                'Situação do equipamento - TROCA',
                 style: TextStyle(
                   fontSize: 14.0,
                   fontWeight: FontWeight.bold,
@@ -392,6 +451,7 @@ class _ContainerTrocaState extends State<ContainerTroca> {
               ),
               SizedBox(height: 8.0),
               Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   RadioListTile<String>(
                     title: Text(
@@ -433,10 +493,11 @@ class _ContainerTrocaState extends State<ContainerTroca> {
         SizedBox(height: 8.0),
         TextField(
           decoration: InputDecoration(
+            hintText: localInstalacao,
             // labelText: 'Local de instalação...',
             border: OutlineInputBorder(),
           ),
-          onChanged: (value) {
+          onSubmitted: (value) {
             setState(() {
               localInstalacao = value;
             });
@@ -447,8 +508,27 @@ class _ContainerTrocaState extends State<ContainerTroca> {
           onPressed: () {
             if (situacaoEquipamento != null &&
                       localInstalacao.isNotEmpty) {
-                    variaveis.situacaoEquipamento = situacaoEquipamento!;
-                    variaveis.localInstalacao = localInstalacao;
+              var eqremovid;
+              for (int i =0; i< EquipamentoVeiculoCodigos.length; i++) {
+                if(EquipamentoVeiculoCodigos[i] == selecionadoveiculo){
+                  eqremovid = EquipamentosVeiculoIDs[i];
+                }
+              }
+
+              var eqnovosid;
+              for (int i =0; i< EquipamentoNovoCodigos.length; i++) {
+                if(EquipamentoNovoCodigos[i] == selecionadonovo){
+                  eqnovosid = EquipamentoNovoIDs[i];
+                }
+              }
+              Map<String, dynamic> equipamentos = {
+                "EquipamentoInstaladoID": eqnovosid,
+                "EquipamentoInstaladoCodigo": selecionadonovo,
+                "EquipamentosRemovidoID":eqremovid,
+                "EquipamentoRemovidoCodigo": selecionadoveiculo,
+                "localInstalacao" : localInstalacao,
+              };
+              getequipamentos().setEquipamento(equipamentos);
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => Acessorios()),
@@ -488,29 +568,57 @@ class ContainerInstalacao extends StatefulWidget {
 }
 
 class _ContainerInstalacaoState extends State<ContainerInstalacao> {
-  var variaveis = VariaveisEquipamentos();
-  String localInstalacao = '';
+
+
+  var EquipamentoNovoIDs;
+  List<String> EquipamentoNovoCodigos = [];
+  var AcessoriosID;
+  var AcessoriosDescricao;
+  var EquipamentosVeiculoIDs;
+  List<String> EquipamentoVeiculoCodigos = [];
+  var localInstalacao;
+  var stringEquipamento;
+  var selecionadonovo;
+  var selecionadoveiculo;
+  getdata() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    var json = opcs.getString("equipamentos");
+    var eqp = jsonDecode(json!);
+    setState(() {
+      EquipamentoNovoIDs = eqp["EquipamentoNovoIDs"];
+      EquipamentoNovoCodigos =  List<String>.from(eqp["EquipamentoNovoCodigos"] as List);
+      AcessoriosID = eqp["AcessoriosID"];
+      AcessoriosDescricao = eqp["AcessoriosDescricao"];
+      EquipamentosVeiculoIDs = eqp["EquipamentosVeiculoIDs"];
+      EquipamentoVeiculoCodigos = List<String>.from(eqp["EquipamentoVeiculoCodigos"] as List);
+      localInstalacao = eqp["localInstalacao"];
+      stringEquipamento = eqp["stringEquipamento"];
+    });
+  }
   @override
+  void initState() {
+    getdata();
+    super.initState();
+  }
   Widget build(BuildContext context) {
-    List<int> codigosEq = variaveis.codigosEq.cast<int>();
     return Column(
       children: [
         // Input equipamento
-        DropdownButton<int>(
-          value: variaveis.selectedListItem,
-          onChanged: (int? newValue) {
+        DropdownButton<String>(
+          value: selecionadonovo,
+          onChanged: (String? newValue) {
             setState(() {
-              variaveis.selectedListItem = newValue;
+              selecionadonovo = newValue;
             });
           },
-          items: codigosEq.map((int item) {
-            return DropdownMenuItem<int>(
+          items: EquipamentoNovoCodigos.map((String item) {
+            return DropdownMenuItem<String>(
               value: item,
               child: Row(
                 children: [
                   Icon(Icons.arrow_right),
                   SizedBox(width: 5.0),
-                  Text(item.toString()),
+                  Text(item),
                 ],
               ),
             );
@@ -528,10 +636,11 @@ class _ContainerInstalacaoState extends State<ContainerInstalacao> {
         SizedBox(height: 8.0),
         TextField(
           decoration: InputDecoration(
+            hintText: localInstalacao,
             // labelText: 'Local de instalação...',
             border: OutlineInputBorder(),
           ),
-          onChanged: (value) {
+          onSubmitted: (value) {
             setState(() {
               localInstalacao = value;
             });
@@ -539,9 +648,23 @@ class _ContainerInstalacaoState extends State<ContainerInstalacao> {
         ),
         SizedBox(height: 8.0),
         BotaoProximo(
+
           onPressed: () {
+            var eqnovosid;
+            for (int i =0; i< EquipamentoNovoCodigos.length; i++) {
+              if(EquipamentoNovoCodigos[i] == selecionadonovo){
+                eqnovosid = EquipamentoNovoIDs[i];
+              }
+            }
+            Map<String, dynamic> equipamentos = {
+              "EquipamentoInstaladoID": eqnovosid,
+              "EquipamentoInstaladoCodigo": selecionadonovo,
+              "EquipamentosRemovidoID":"",
+              "EquipamentoRemovidoCodigo": "",
+              "localInstalacao" : localInstalacao,
+            };
+            getequipamentos().setEquipamento(equipamentos);
             if (localInstalacao.isNotEmpty) {
-              variaveis.localInstalacao = localInstalacao;
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => Acessorios()),

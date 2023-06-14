@@ -39,6 +39,7 @@ class getToken {
 
   sincronizar(empresaid) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
+
     String amanha = await GetOSAmanha().obter(empresaid);
     String atrasadas = await GetOSAtrasadas().obter(empresaid);
     String dodia = await GetOSDia().obter(empresaid);
@@ -55,6 +56,15 @@ class getToken {
     checklist(empresaid, amanha);
     checklist(empresaid, atrasadas);
     checklist(empresaid, futuras);
+  }
+  
+  zerarcache(empresaid) async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    opcs.setString("${empresaid}@GetOSAmanha", "");
+    opcs.setString("${empresaid}@GetOSAtrasadas", "");
+    opcs.setString("${empresaid}@GetOSDia", "");
+    opcs.setString("${empresaid}@GetOSFuturas", "");
+    opcs.setString("${empresaid}@getequiptec", "");
   }
   checklist( empresaid, nf) async {
     var osid;

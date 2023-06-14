@@ -8,6 +8,7 @@ import 'package:rodarwebos/widgets/check_in/container_check_in.dart';
 import 'package:rodarwebos/widgets/check_in/container_observacao_adicional.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../services/GetEquipamento.dart';
 import '../../services/OS/GetChecklistOS.dart';
 
 class CheckInTela extends StatefulWidget {
@@ -32,6 +33,7 @@ class _CheckInTelaState extends State<CheckInTela> {
 
     List checklist = [];
     SharedPreferences opcs = await SharedPreferences.getInstance();
+    getequipamentos().get();
     json = opcs.getString("SelectedOS");
     empresaid = opcs.getInt('sessionid');
     element = jsonDecode(json);

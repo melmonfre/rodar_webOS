@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:rodarwebos/pages/equipamentos/tela_equipamento.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ContainerObservacaoAdicional extends StatefulWidget {
   final void Function() onPressed;
@@ -86,6 +87,10 @@ class _ContainerObservacaoAdicionalState
                   labelText: 'Observação...',
                   border: OutlineInputBorder(),
                 ),
+                onSubmitted: (value){
+                  obscheckin(value);
+                },
+
               ),
               SizedBox(height: 16.0),
               BotaoProximo(
@@ -120,5 +125,10 @@ class _ContainerObservacaoAdicionalState
         ),
       ),
     );
+  }
+
+  Future<void> obscheckin(String value) async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    opcs.setString("obscheckin", value);
   }
 }

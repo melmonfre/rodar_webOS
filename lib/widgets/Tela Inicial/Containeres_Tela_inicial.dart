@@ -47,7 +47,7 @@ class _FuturasState extends State<Futuras> {
         timer--;
         if (timer == 0) {
           getdata();
-          timer = 5;
+          timer = 30;
         }
       });
     });
@@ -127,7 +127,7 @@ class _AmanhaState extends State<Amanha> {
         timer--;
         if (timer == 0) {
           getdata();
-          timer = 5;
+          timer = 30;
         }
       });
     });
@@ -210,7 +210,7 @@ class _HojeState extends State<Hoje> {
         timer--;
         if (timer == 0) {
           getdata();
-          timer = 5;
+          timer = 30;
         }
       });
     });
@@ -291,7 +291,7 @@ class _AtrasadasState extends State<Atrasadas> {
         timer--;
         if (timer == 0) {
           getdata();
-          timer = 5;
+          timer = 30;
         }
       });
     });
