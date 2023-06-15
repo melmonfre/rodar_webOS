@@ -72,16 +72,31 @@ class getToken {
     var check;
     var motivos;
     var nota = jsonDecode(nf);
-    var notinha = nota [0];
-    osid = notinha ['id'];
-    SharedPreferences opcs = await SharedPreferences.getInstance();
-    check = await GetChecklistOS().obter(empresaid, osid);
-    if(check != null){
-      opcs.setString("${osid}@checklist", check);
-    }
-    motivos = await GetMotivosOS().obter(empresaid, osid);
-    if(motivos != null){
-      opcs.setString("${osid}@motivos", motivos);
+    var notinha;
+    try {
+      notinha = nota [0];
+      osid = notinha ['id'];
+      SharedPreferences opcs = await SharedPreferences.getInstance();
+      try{
+        check = await GetChecklistOS().obter(empresaid, osid);
+        if(check != null){
+          opcs.setString("${osid}@checklist", check);
+        }
+      } catch(e) {
+        opcs.remove("${osid}@checklist");
+      }
+      try{
+        motivos = await GetMotivosOS().obter(empresaid, osid);
+        if(motivos != null){
+          print("OS $osid");
+          print("Motivos: ${motivos}");
+          opcs.setString("${osid}@motivos", motivos);
+        }
+      } catch(e) {
+        opcs.remove("${osid}@motivos");
+      }
+    } catch(e){
+      print("isso não é um erro");
     }
   }
   getempresas() async {

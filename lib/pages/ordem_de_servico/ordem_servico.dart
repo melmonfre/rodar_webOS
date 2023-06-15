@@ -87,7 +87,7 @@ class _OrdemServicoState extends State<OrdemServico> {
           codequip = "$codequip ${equip["id"]}";
           localequip = "$localequip ${equip["localInstalacao"]}";
         });
-        opcs.setString("servico", tiposervico);
+
 
         List servicos = element['servicos'];
         var serv;
@@ -95,6 +95,11 @@ class _OrdemServicoState extends State<OrdemServico> {
           serv = ser['servico'];
         });
         servico = serv['descricao'];
+        if(tiposervico == ""){
+          opcs.setString("servico", servico);
+        } else {
+          opcs.setString("servico", tiposervico);
+        }
         var end = element['endereco'];
         var bairro = end['bairro'];
         var cit = end['cidade'];

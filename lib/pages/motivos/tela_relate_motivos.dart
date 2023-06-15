@@ -18,7 +18,9 @@ class _RelateMotivoState extends State<RelateMotivo> {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     json = opcs.getString("SelectedOS");
     element = jsonDecode(json);
-    osid = element['id'];
+    setState(() {
+      osid = element['id'];
+    });
   }
 
   @override
@@ -38,26 +40,8 @@ class _RelateMotivoState extends State<RelateMotivo> {
         ),
         title: Text('Motivos'),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                alignment: Alignment.center,
-                child: Text("$osid",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              ContainerRelateMotivos()
-            ],
-          ),
-        ),
-      ),
+      body: ContainerRelateMotivos()
+
     );
   }
 }
