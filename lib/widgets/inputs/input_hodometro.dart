@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 
-class InputHodometro extends StatelessWidget {
+class InputHodometro extends StatefulWidget {
   final String labelText;
   final Function(String)? onChanged;
+ 
 
   const InputHodometro({
     required this.labelText,
+
     this.onChanged,
   });
 
+  @override
+  State<InputHodometro> createState() => _InputHodometroState();
+}
+
+class _InputHodometroState extends State<InputHodometro> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -24,7 +29,7 @@ class InputHodometro extends StatelessWidget {
               color: Colors.blue,
             ),
           ),
-          labelText: labelText,
+          labelText: widget.labelText,
           labelStyle: TextStyle(fontSize: 14.0),
           contentPadding: EdgeInsets.symmetric(
             vertical: 10.0,
@@ -36,7 +41,7 @@ class InputHodometro extends StatelessWidget {
           FilteringTextInputFormatter.digitsOnly,
           _HodometroInputFormatter(),
         ],
-        onChanged: onChanged,
+        onChanged: widget.onChanged,
       ),
     );
   }

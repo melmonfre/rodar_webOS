@@ -4,8 +4,9 @@ import 'package:intl/intl.dart';
 
 class InputDate extends StatefulWidget {
   final String labelText;
+  final Function(String)? onChanged;
 
-  const InputDate({required this.labelText});
+  const InputDate({required this.labelText, this.onChanged,});
 
   @override
   _InputDateState createState() => _InputDateState();

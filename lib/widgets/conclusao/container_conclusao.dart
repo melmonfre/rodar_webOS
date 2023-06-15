@@ -88,11 +88,11 @@ class _ContainerConclusaoState extends State<ContainerConclusao> {
                     ),
                     InputDate(
                       labelText: 'Data de conclusão da OS',
-                      // onChanged: (value) {
-                      //   setState(() {
-                      //     dataConclusao = value;
-                      //   });
-                      // },
+                      onChanged: (value) {
+                        setState(() {
+                          dataConclusao = value;
+                        });
+                      },
                     ),
                     InputText(
                       labelText: 'Observações',
@@ -104,6 +104,7 @@ class _ContainerConclusaoState extends State<ContainerConclusao> {
                     ),
                     InputHodometro(
                       labelText: 'Hodômetro',
+                      
                       onChanged: (value) {
                         setState(() {
                           hodometro = value;
@@ -116,9 +117,9 @@ class _ContainerConclusaoState extends State<ContainerConclusao> {
                       padding: EdgeInsets.all(16.0),
                       child: BotaoProximo(
                         onPressed: () {
-                          if (validateInputs()) {
+                          // if (validateInputs()) {
                             widget.onPressed();
-                          }
+                          // }
                         },
                       ),
                     ),
