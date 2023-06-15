@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:rodarwebos/widgets/inputs/input_date.dart';
+import 'package:rodarwebos/widgets/inputs/input_hodometro.dart';
 import 'package:rodarwebos/widgets/inputs/input_motivos.dart';
 import 'package:rodarwebos/widgets/inputs/input_text.dart';
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
@@ -101,7 +102,7 @@ class _ContainerConclusaoState extends State<ContainerConclusao> {
                         });
                       },
                     ),
-                    InputText(
+                    InputHodometro(
                       labelText: 'Hodômetro',
                       onChanged: (value) {
                         setState(() {
