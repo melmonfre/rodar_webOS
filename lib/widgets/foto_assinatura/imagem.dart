@@ -92,13 +92,23 @@ class _ImagemState extends State<Imagem> {
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            _limparAssinatura();
-            widget.onPressed();
-          },
-          child: Icon(Icons.clear),
-        ),
+        floatingActionButton: Container(
+  width: 60.0, // Defina a largura desejada
+  height: 60.0, // Defina a altura desejada
+  child: FloatingActionButton(
+    heroTag: 'uniqueTag', // Atribua um valor único a heroTag
+    onPressed: () {
+      _limparAssinatura();
+      widget.onPressed();
+    },
+    backgroundColor: Colors.blue[600], // Altere a cor de acordo com a sua preferência
+    child: IconTheme(
+      data: IconThemeData(color: Colors.white), // Altere a cor do ícone de acordo com a sua preferência
+      child: Icon(Icons.check),
+    ),
+  ),
+),
+
       ),
     );
   }
