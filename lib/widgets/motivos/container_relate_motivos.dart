@@ -65,8 +65,8 @@ class _ContainerRelateMotivosState extends State<ContainerRelateMotivos> {
             appBar: AppBar(
               centerTitle: true,
               backgroundColor: Colors.white,
-              title: Text('       OS $osid \n Relate Os Motivos',
-              style: TextStyle(color: Colors.black),
+              title: Text('       OS $osid \n Relate os motivos',
+              style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
               ),
             ),
             body:  Column(
@@ -96,16 +96,20 @@ class _ContainerRelateMotivosState extends State<ContainerRelateMotivos> {
                                                   motivosbool[index] = newValue ?? false;
                                                 }
                                                 );
-                                              }
+                                              } , activeColor: Colors.blue[400],
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(4.0)
+                                              ),
+                                              visualDensity: VisualDensity.compact,
                                               ),
                                               Text("${motivosnome[index]}",
                                                 style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 17,
+                                                  fontWeight: FontWeight.w400,
                                                 ),
                                               ),
                                             ],),
-                                        SizedBox(height: 16.0),
+                                        SizedBox(height: 10.0),
 
 
                                       ],
