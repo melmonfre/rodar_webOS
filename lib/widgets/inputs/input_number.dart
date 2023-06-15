@@ -60,6 +60,18 @@ class _InputNumberState extends State<InputNumber> {
                 ),
             ],
           ),
+          if (widget.showInfoIcon && showInfoText)
+            Padding(
+              padding: EdgeInsets.fromLTRB(8.0, 10.0, 3.0, 0.0),
+              child: Text(
+                'O cálculo do valor é feito automaticamente pelo sistema e desconta a sua área de abrangência:\n\n'
+                'Distância Informada = 1.00\n'
+                'Área de abrangência (ida e volta) = 2 x 0 = 0.00\n'
+                'Valor Km = R\$0.00\n'
+                'Distância = 1 - (2 x 0) = 1.00\n'
+                'Valor = 1 x 0 = R\$0.00',
+              ),
+            ),
         ],
       ),
     );
