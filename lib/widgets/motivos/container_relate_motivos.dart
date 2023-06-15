@@ -104,15 +104,6 @@ class _ContainerRelateMotivosState extends State<ContainerRelateMotivos> {
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
-                                              // CheckboxListTile(
-                                              //   title: Text("${motivosnome[index]}"),
-                                              //   value: motivosbool[index],
-                                              //   onChanged: (newValue) {
-                                              //     setState(() {
-                                              //       motivosbool[index] = newValue ?? false;
-                                              //     });
-                                              //   },
-                                              // ),
                                             ],),
                                         SizedBox(height: 16.0),
 
@@ -126,6 +117,12 @@ class _ContainerRelateMotivosState extends State<ContainerRelateMotivos> {
                             );
                           } else {
                             return BotaoProximo(onPressed: () {
+                              Map<String, dynamic> values = {
+                                "idsmotivos" : motivosID,
+                                "nomesmotivos" : motivosnome,
+                                "itensmotivos" : motivosbool,
+                              };
+                              saveoncache(jsonEncode(values));
                               if (!_hasSelectedCheckbox()) {
                                 showDialog(
                                     context: context,
@@ -158,5 +155,10 @@ class _ContainerRelateMotivosState extends State<ContainerRelateMotivos> {
             )
         )
     );
+  }
+
+  Future<void> saveoncache(valor) async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    opcs.setString("motivositens", valor);
   }
 }

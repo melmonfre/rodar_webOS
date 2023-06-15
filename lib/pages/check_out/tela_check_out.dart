@@ -24,6 +24,7 @@ class _CheckOutTelaState extends State<CheckOutTela> {
   List checklistID =[];
   List checklistNome = [];
   List checklistItens = [];
+  List ChecklistOBS = [];
   int tamanho = 0;
   Future<void> getdata() async {
     var json;
@@ -48,7 +49,7 @@ class _CheckOutTelaState extends State<CheckOutTela> {
       setState(() {
         checklistID.add(element['id']);
         checklistNome.add(element['descricao']);
-
+        ChecklistOBS.add("");
         checklistItens.add(3);
         tamanho = checklistID.length;
       });
@@ -179,7 +180,9 @@ class _CheckOutTelaState extends State<CheckOutTela> {
                                                 labelText: 'Observação...',
                                                 border: OutlineInputBorder(),
                                               ),
-
+                                              onChanged: (value){
+                                                ChecklistOBS[index]= value;
+                                              },
                                             ),
                                           ],
                                         ),
@@ -200,6 +203,7 @@ class _CheckOutTelaState extends State<CheckOutTela> {
                                   "idscheckin" : checklistID,
                                   "nomescheckin" : checklistNome,
                                   "itenscheckin" : checklistItens,
+                                  "obscheckin" : ChecklistOBS
                                 };
 
                                 checkNavigation(json.encode(values));

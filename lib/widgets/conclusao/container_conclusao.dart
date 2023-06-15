@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:rodarwebos/widgets/inputs/input_motivos.dart';
 import 'package:rodarwebos/widgets/inputs/input_text.dart';
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ContainerConclusao extends StatefulWidget {
   final VoidCallback onPressed;
@@ -43,10 +46,20 @@ class _ContainerConclusaoState extends State<ContainerConclusao> {
         },
       );
       return false;
+    } else{
+      Map<String, dynamic> values = {
+        "dataConclusao" : dataConclusao,
+        "observacoes" : observacoes,
+        "hodometro" : hodometro,
+      };
+      saveoncache(json.encode(values));
+      return true;
     }
-    return true;
   }
-
+  Future<void> saveoncache(valor) async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    opcs.setString("conclusaoItens", valor);
+  }
   @override
   Widget build(BuildContext context) {
     return Container(

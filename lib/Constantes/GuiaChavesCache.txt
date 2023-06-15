@@ -1,0 +1,31 @@
+empresas, // Obtem a lista de empresas cadastradas
+
+${empresaid}@login, // A partir da empresa selecionada obtem os dados de login
+${empresaid}@token, // A partir da empresa selecionada obtem os dados de token
+${empresaid}@GetOSDia, // A partir da empresa selecionada obtem os dados Das OS do dia
+${empresaid}@GetOSAmanha, // A partir da empresa selecionada obtem os dados Das OS de amanhã
+${empresaid}@GetOSAtrasadas, // A partir da empresa selecionada obtem os dados das OS atrasadas
+${empresaid}@GetOSFuturas, // A partir da empresa selecionada obtem os dados das OS futuras
+${empresaid}@getequiptec, // A partir da empresa selecionada obtem os dados de equipamentos do tecnico
+
+${osid}@checklist, // A partir do Id Da OS selecionada obtem os dados de checklist
+${osid}@motivos,  // A partir do Id Da OS selecionada obtem os motivos
+
+
+sessionid, // obtem o ID da empresa da sessão do usuario
+SessionOS, // Obtem a OS da sessão do usuario
+SelectedOS, // Obtem a OS selecionada em que o usuário está trabalhando
+
+servico, // Obtem o serviço
+checkinitens // Obtem os itens de check-in preenchidos
+motivositens, // Obtem os itens de motivos preenchidos
+checkoutitens, // Obtem os itens de check-out preenchidos
+conclusaoItens, // Obtem os itens de conclusão preenchidos
+equipamentos,  // Obtem a lista de equipamentos da os em que o usuario está trabalhando
+EQProcess, // Obtem os equipamentos removidos e instalados pelo técnico da os em que o usuário está trabalhando
+dadosdeslocamento, // Obtém os dados de deslocamento preenchidos pelo usuario
+
+base64camera, // obtem a lista em Base64 das fotos tiradas na última tela de câmera
+FotoEquipamento, // obtem a lista de fotos do equipamento
+FotoHodometro, // obtem a lista de fotos do hodometro
+FotoInstalacao, //  obtem a lista de fotos da instalação
