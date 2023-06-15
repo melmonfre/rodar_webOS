@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
+import 'package:rodarwebos/widgets/inputs/input_date.dart';
 import 'package:rodarwebos/widgets/inputs/input_motivos.dart';
 import 'package:rodarwebos/widgets/inputs/input_text.dart';
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
@@ -84,13 +85,13 @@ class _ContainerConclusaoState extends State<ContainerConclusao> {
                     SizedBox(
                       height: 14.0,
                     ),
-                    InputText(
+                    InputDate(
                       labelText: 'Data de conclusão da OS',
-                      onChanged: (value) {
-                        setState(() {
-                          dataConclusao = value;
-                        });
-                      },
+                      // onChanged: (value) {
+                      //   setState(() {
+                      //     dataConclusao = value;
+                      //   });
+                      // },
                     ),
                     InputText(
                       labelText: 'Observações',
