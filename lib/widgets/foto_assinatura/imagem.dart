@@ -51,16 +51,19 @@ class _ImagemState extends State<Imagem> {
       });
     }
   }
+
   void createbase64(image) {
-      List<int> imageBytes = image;
-      String base64File = base64Encode(imageBytes);
-      print("BASE64 ${base64File}");
+    List<int> imageBytes = image;
+    String base64File = base64Encode(imageBytes);
+    print("BASE64 ${base64File}");
     salvanocache(base64File);
   }
+
   salvanocache(base64Files) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     opcs.setString("base64assinatura", base64Files);
   }
+
   void _limparAssinatura() {
     _controller.clear();
 
@@ -74,53 +77,60 @@ class _ImagemState extends State<Imagem> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 600, // Defina a altura desejada para o widget Imagem
-      child: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ListView(
-            children: <Widget>[
-              GestureDetector(
-                onTap: () {
-                  _criarImagem(context);
-                },
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    side: new BorderSide(color: Colors.black87, width: 2.0),
-                    borderRadius: BorderRadius.circular(4.0),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(2.0),
-                    child: data != null
-                        ? Image.memory(data!)
-                        : Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text("Clique aqui para assinar"),
-                          ),
+        height: 600, // Defina a altura desejada para o widget Imagem
+        child: Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListView(
+              children: <Widget>[
+                GestureDetector(
+                  onTap: () {
+                    _criarImagem(context);
+                  },
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      side: new BorderSide(color: Colors.black87, width: 2.0),
+                      borderRadius: BorderRadius.circular(4.0),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(2.0),
+                      child: data != null
+                          ? Image.memory(data!)
+                          : Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text("Clique aqui para assinar"),
+                            ),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        floatingActionButton: Container(
-  width: 60.0, // Defina a largura desejada
-  height: 60.0, // Defina a altura desejada
-  child: FloatingActionButton(
-    heroTag: 'uniqueTag', // Atribua um valor único a heroTag
-    onPressed: () {
-      _limparAssinatura();
-      widget.onPressed();
-    },
-    backgroundColor: Colors.blue[600], // Altere a cor de acordo com a sua preferência
-    child: IconTheme(
-      data: IconThemeData(color: Colors.white), // Altere a cor do ícone de acordo com a sua preferência
-      child: Icon(Icons.check),
-    ),
-  ),
-),
-
-      ),
-    );
+          floatingActionButton: null,
+          bottomNavigationBar: Container(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            color: Color(0xFF00204E),
+            child: SizedBox(
+              height: 48.0,
+              child: TextButton(
+                onPressed: () {
+                  _limparAssinatura();
+                  widget.onPressed();
+                },
+                style: ButtonStyle(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24.0),
+                    ),
+                  ),
+                ),
+                child: Text(
+                  'Limpar Assinatura',
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
+              ),
+            ),
+          ),
+        ));
   }
 }

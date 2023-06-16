@@ -594,35 +594,33 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
               ),
               SizedBox(height: 30.0),
               Align(
-  alignment: Alignment.center,
-  child: Container(
-    padding: EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Colors.blueGrey[800],
-      borderRadius: BorderRadius.circular(10),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.3),
-          blurRadius: 5,
-          offset: Offset(0, 2),
-        ),
-      ],
-    ),
-    child: Text(
-      '$checklist',
-      style: TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.w400,
-        color: Colors.white,
-        fontStyle: FontStyle.normal,
-        letterSpacing: 1.0,
-        decoration: TextDecoration.none,
-      ),
-    ),
-  ),
-),
-
-
+                alignment: Alignment.center,
+                child: Container(
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.blueGrey[800],
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.3),
+                        blurRadius: 5,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Text(
+                    '$checklist',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.white,
+                      fontStyle: FontStyle.normal,
+                      letterSpacing: 0.8,
+                      decoration: TextDecoration.none,
+                    ),
+                  ),
+                ),
+              ),
 
               // ================================================
               SizedBox(height: 20.0),
