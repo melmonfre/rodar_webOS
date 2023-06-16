@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 class InputText extends StatefulWidget {
   final String labelText;
   final Function(String)? onChanged;
+  final Function(String)? onSubmitted;
   final bool showInfoIcon;
   final bool enabled;
 
   const InputText(
       {required this.labelText,
       this.onChanged,
+      this.onSubmitted,
       this.showInfoIcon = false,
       this.enabled = true});
 
@@ -45,6 +47,7 @@ class _InputTextState extends State<InputText> {
                   ),
                   onChanged: widget.onChanged,
                   enabled: widget.enabled,
+                  onSubmitted: widget.onSubmitted,
                 ),
               ),
               if (widget.showInfoIcon)

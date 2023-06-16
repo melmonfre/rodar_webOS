@@ -100,19 +100,24 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                       nome = value;
                     });
                   }),
-              InputText(labelText: 'Email',
-              onChanged: (value){
-                setState(() {
-                  email =value;
-                });
-              },
+              InputText(
+                labelText: 'Email',
+                //chamando validacao de email
+                onSubmitted: (value) {
+                  setState(() {
+                    email = value;
+                    validateEmail(email);
+                  });
+                },
+                
               ),
-              InputNumber(labelText: 'Telefone',
-              onChanged: (value){
-                setState(() {
-                  telefone = value;
-                });
-              },
+              InputNumber(
+                labelText: 'Telefone',
+                onChanged: (value) {
+                  setState(() {
+                    telefone = value;
+                  });
+                },
               ),
               SizedBox(height: 10.0),
               Center(
@@ -184,10 +189,9 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                       )
                     : ColetarAssinaturaResponsavel(
                         onPressed: () {
-                          if (nome != null || 
+                          if (nome != null ||
                               email != null ||
-                              telefone != null
-                          ) {
+                              telefone != null) {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -224,4 +228,34 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
       ),
     );
   }
+  // Função de validação de e-mail
+bool validateEmail(String? email) {
+  final emailRegExp = RegExp(
+    r'^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$',
+  );
+
+  if (email == null || email.isEmpty || !emailRegExp.hasMatch(email)) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Aviso'),
+          content: Text('Por favor, insira um e-mail válido.'),
+          actions: [
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+    return false;
+  }
+  return true;
+}
+
+
 }
