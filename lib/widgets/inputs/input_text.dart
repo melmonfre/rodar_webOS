@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class InputText extends StatefulWidget {
   final String labelText;
+  final String? initialValue;
   final Function(String)? onChanged;
   final Function(String)? onSubmitted;
   final bool showInfoIcon;
@@ -9,6 +10,7 @@ class InputText extends StatefulWidget {
 
   const InputText(
       {required this.labelText,
+      this.initialValue,
       this.onChanged,
       this.onSubmitted,
       this.showInfoIcon = false,
@@ -19,7 +21,20 @@ class InputText extends StatefulWidget {
 }
 
 class _InputTextState extends State<InputText> {
+  late TextEditingController _controller;
   bool showInfoText = false;
+
+   @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.initialValue);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +47,7 @@ class _InputTextState extends State<InputText> {
             children: [
               Expanded(
                 child: TextField(
+                  controller: _controller, //Atribuicao do controlador
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderSide: BorderSide(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class InputNumber extends StatefulWidget {
   final String labelText;
+  final double? initialValue;
   final Function(String)? onChanged;
   final bool showInfoIcon;
   final bool enabled;
@@ -9,6 +10,7 @@ class InputNumber extends StatefulWidget {
   const InputNumber({
     required this.labelText,
     this.onChanged,
+    this.initialValue,
     this.showInfoIcon = false,
     this.enabled = true,
   });
@@ -20,6 +22,21 @@ class InputNumber extends StatefulWidget {
 class _InputNumberState extends State<InputNumber> {
   bool showInfoText = false;
 
+late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(
+      text: widget.initialValue != null ? widget.initialValue!.toString() : '',
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Padding(

@@ -21,7 +21,6 @@ class ContainerResponsavel extends StatefulWidget {
 }
 
 class _ContainerResponsavelState extends State<ContainerResponsavel> {
-  //var variaveis = VariaveisResumo();
   String motivoDivergencia = '';
   String nome = "guilherme";
   String email = "Amelissariver@gmail.com";
@@ -93,33 +92,84 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                 ),
               ),
               SizedBox(height: 10.0),
-              InputText(
-
-                  labelText: 'Nome',
-                  onChanged: (value) {
-                    setState(() {
-                      nome = value;
-                    });
-                  }),
-              InputText(
-                labelText: 'Email',
-                //chamando validacao de email
-                onSubmitted: (value) {
-                  setState(() {
-                    email = value;
-                    validateEmail(email);
-                  });
-                },
-                
-              ),
-              InputNumber(
-                labelText: 'Telefone',
-                onChanged: (value) {
-                  setState(() {
-                    telefone = value;
-                  });
-                },
-              ),
+              if (contatoSelecionado == 'nome')
+                Column(
+                  children: [
+                    InputText(
+                      labelText: 'Nome',
+                      initialValue:
+                          nome, //valor inicial do preenchimento automatico
+                      onChanged: (value) {
+                        if (mounted) {
+                          setState(() {
+                            nome = value;
+                          });
+                        }
+                      },
+                      enabled:
+                          false, // Desabilitar o campo preenchido automaticamente
+                    ),
+                    InputText(
+                      labelText: 'Email',
+                      initialValue: email,
+                      onSubmitted: (value) {
+                        if (mounted) {
+                          // Verificar se o widget ainda está montado
+                          setState(() {
+                            email = value;
+                            validateEmail(email);
+                          });
+                        }
+                      },
+                      enabled:
+                          false, // Desabilitar o campo preenchido automaticamente
+                    ),
+                    InputText(
+                      labelText: 'Telefone',
+                      initialValue: telefone,
+                      onChanged: (value) {
+                        if (mounted) {
+                          // Verificar se o widget ainda está montado
+                          setState(() {
+                            telefone = value;
+                          });
+                        }
+                      },
+                      enabled:
+                          false, // Desabilitar o campo preenchido automaticamente
+                    ),
+                  ],
+                ),
+              if (contatoSelecionado == 'outro')
+                Column(
+                  children: [
+                    InputText(
+                      labelText: 'Nome',
+                      onChanged: (value) {
+                        setState(() {
+                          nome = value;
+                        });
+                      },
+                    ),
+                    InputText(
+                      labelText: 'Email',
+                      onSubmitted: (value) {
+                        setState(() {
+                          email = value;
+                          validateEmail(email);
+                        });
+                      },
+                    ),
+                    InputNumber(
+                      labelText: 'Telefone',
+                      onChanged: (value) {
+                        setState(() {
+                          telefone = value;
+                        });
+                      },
+                    ),
+                  ],
+                ),
               SizedBox(height: 10.0),
               Center(
                 child: Text(
@@ -229,34 +279,33 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
       ),
     );
   }
+
   // Função de validação de e-mail
-bool validateEmail(String? email) {
-  final emailRegExp = RegExp(
-    r'^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$',
-  );
-
-  if (email == null || email.isEmpty || !emailRegExp.hasMatch(email)) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Aviso'),
-          content: Text('Por favor, insira um e-mail válido.'),
-          actions: [
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
+  bool validateEmail(String? email) {
+    final emailRegExp = RegExp(
+      r'^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$',
     );
-    return false;
+
+    if (email == null || email.isEmpty || !emailRegExp.hasMatch(email)) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Aviso'),
+            content: Text('Por favor, insira um e-mail válido.'),
+            actions: [
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+      return false;
+    }
+    return true;
   }
-  return true;
-}
-
-
 }
