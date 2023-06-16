@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/coletar_assinatura_responsavel/tela_coleta_assinatura_responsavel.dart';
 import 'package:rodarwebos/pages/tela_inicial/tela_inicial.dart';
@@ -8,6 +10,7 @@ import 'package:rodarwebos/widgets/inputs/input_motivos.dart';
 import 'package:rodarwebos/widgets/inputs/input_number.dart';
 import 'package:rodarwebos/widgets/inputs/input_text.dart';
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ContainerResponsavel extends StatefulWidget {
   final VoidCallback onPressed;
@@ -22,14 +25,43 @@ class ContainerResponsavel extends StatefulWidget {
 
 class _ContainerResponsavelState extends State<ContainerResponsavel> {
   String motivoDivergencia = '';
-  String nome = "guilherme";
-  String email = "Amelissariver@gmail.com";
-  String telefone = "43988522108";
+  String nome = "";
+  String email = "";
+  String telefone = "";
 
   String contatoSelecionado = '';
   bool responsavelAusente = false;
   String motivoAusencia = '';
+var osid;
+  Future<void> getdata() async {
+    var json;
+    var element;
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    json = opcs.getString("SelectedOS");
+    element = jsonDecode(json);
+    var contatos = element['contatos'];
 
+    setState(() {
+      osid = element['id'];
+      try{
+        var contacto = contatos[0];
+        var contact = contacto["contato"];
+        nome = contact['nome'];
+        email = contact['email'];
+        telefone = contact['telefone'];
+      } catch(e){
+        nome ="Não informado";
+        email = "";
+        telefone = "";
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getdata();
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
