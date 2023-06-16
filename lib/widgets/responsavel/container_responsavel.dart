@@ -5,6 +5,7 @@ import 'package:rodarwebos/widgets/botoes/botao_coletar_assinatura_responsavel.d
 import 'package:rodarwebos/widgets/botoes/botao_enviar.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:rodarwebos/widgets/inputs/input_motivos.dart';
+import 'package:rodarwebos/widgets/inputs/input_number.dart';
 import 'package:rodarwebos/widgets/inputs/input_text.dart';
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
 
@@ -106,7 +107,7 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                 });
               },
               ),
-              InputText(labelText: 'Telefone',
+              InputNumber(labelText: 'Telefone',
               onChanged: (value){
                 setState(() {
                   telefone = value;
