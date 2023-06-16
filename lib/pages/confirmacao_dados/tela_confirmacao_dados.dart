@@ -7,15 +7,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../widgets/ordem_servico/variaveis_resumo_os.dart';
 
-
 class TelaConfirmacaoDados extends StatefulWidget {
   @override
   _TelaConfirmacaoDadosState createState() => _TelaConfirmacaoDadosState();
 }
 
 class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
-
-  int num =0;
+  int num = 0;
 
   var element;
   var agendamento; //ok
@@ -32,13 +30,13 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
 
   //cliente
   var cliente; //ok
-  var empresa;//ok
-  var telefone;//ok
+  var empresa; //ok
+  var telefone; //ok
   //contatos
   var contatonome; //ok
   var contatoobs; //ok
   //servicos ok
-  var servico;//ok
+  var servico; //ok
   //equipamentos
   var tiposervico = "";
   var codequip = "";
@@ -46,13 +44,11 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
   // endereço ok
   var local;
 
-
-
   var motivo = ''; // ok
   var local_inst_equip;
 
   //var acessorio;
- // var quantidade_acessorio;
+  // var quantidade_acessorio;
   //var quantidade_acessorio_retirado;
   //var local_inst_acessorio;
   var deslocamento; //ok
@@ -62,8 +58,9 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
   var conclusaotecnicodesc; //ok
   var dataconclusao; //ok
   List checkinsitu = []; //ok
-  List checkoutsitu = [];//ok
+  List checkoutsitu = []; //ok
   List nomeschecklist = [];
+  String antesText = 'Antes: ';
   String checklist = '';
   Future<void> getdata() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
@@ -74,8 +71,8 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
     var mots = jsonDecode(motivos!);
     List nomesmotivos = mots["nomesmotivos"];
     List itensmotivos = mots["itensmotivos"];
-    for(int i = 0; i< nomesmotivos.length; i++){
-      if(itensmotivos[i]){
+    for (int i = 0; i < nomesmotivos.length; i++) {
+      if (itensmotivos[i]) {
         motivo = motivo + " ${nomesmotivos[i]}";
       }
     }
@@ -83,7 +80,7 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
     var equip = jsonDecode(eqp!);
 
     os = element['id'];
-    int numero =0;
+    int numero = 0;
     var veiculo = element['veiculo'];
     placa = veiculo['placa'];
     corcarro = veiculo['cor'];
@@ -102,21 +99,20 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
     var numtel = tel[0];
     telefone = numtel['numero'];
     var cont = element['contatos'];
-    try{
+    try {
       var contacto = cont[0];
       var contact = contacto["contato"];
       contatonome = contact['nome'];
       contatoobs = contact['observacao'];
-    } catch(e){
-      contatonome ="Não informado";
+    } catch (e) {
+      contatonome = "Não informado";
       contatoobs = "";
     }
-
 
     var eq = element['equipamentos'];
 
     eq.forEach((equip) {
-      tiposervico = "$tiposervico ${equip["tipo"] }";
+      tiposervico = "$tiposervico ${equip["tipo"]}";
       var eqpment = equip['equipamento'];
       codequip = "$codequip ${eqpment["codigo"]}";
       localequip = "$localequip ${equip["localInstalacao"]}";
@@ -139,7 +135,7 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
       serv = ser['servico'];
     });
     servico = serv['descricao'];
-    if(tiposervico == ""){
+    if (tiposervico == "") {
       opcs.setString("servico", servico);
     } else {
       opcs.setString("servico", tiposervico);
@@ -155,12 +151,12 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
     var datahora = localtime.split('T');
     var data = datahora[0].split('-');
     var hora = datahora[1].split(':');
-    var agend = "${data[2]}/${data[1]}/${data[0]} ${int.parse(hora[0])-3}:${hora[1]}";
+    var agend =
+        "${data[2]}/${data[1]}/${data[0]} ${int.parse(hora[0]) - 3}:${hora[1]}";
     agendamento = agend;
     print("agendamento $agendamento");
     numero++;
     print(numero);
-
 
     var checkin = opcs.getString('checkinitens');
     var checkinitens = jsonDecode(checkin!);
@@ -170,36 +166,34 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
     nomeschecklist = checkinitens["nomescheckin"];
     List itenscheckout = checkinitens['itenscheckin'];
 
-    for(int i = 0; i < itenscheckin.length; i++){
+    for (int i = 0; i < itenscheckin.length; i++) {
       var element = itenscheckin[i];
       var elemento = itenscheckout[i];
-      if(element == 0){
+      if (element == 0) {
         checkinsitu.add("OK");
-      } else if(element == 1){
+      } else if (element == 1) {
         checkinsitu.add("Com Defeito");
-      } else if(element == 2){
+      } else if (element == 2) {
         checkinsitu.add("Não Possui");
       }
-      if(elemento == 0){
+      if (elemento == 0) {
         checkoutsitu.add("OK");
-      } else if(elemento == 1){
+      } else if (elemento == 1) {
         checkoutsitu.add("Com Defeito");
-      } else if(elemento == 2){
+      } else if (elemento == 2) {
         checkoutsitu.add("Não Possui");
       }
-      checklist = checklist + "${nomeschecklist[i]}\n\nAntes: ${checkinsitu[i]}       Depois: ${checkoutsitu[i]}\n\n\n";
+      checklist = checklist +
+          "${nomeschecklist[i]}\n${antesText} ${checkinsitu[i]}       Depois: ${checkoutsitu[i]}\n\n\n";
     }
-    itenscheckin.forEach((element) {
-
-    });
-    itenscheckout.forEach((element) {
-
-    });
+    itenscheckin.forEach((element) {});
+    itenscheckout.forEach((element) {});
 
     setState(() {
       num = numero;
     });
   }
+
   @override
   void initState() {
     getdata();
@@ -587,28 +581,49 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
                 height: 1.0,
                 color: Colors.grey[500],
               ),
-              SizedBox(height: 12.0),
+              SizedBox(height: 15.0),
               Align(
-                alignment: Alignment.centerLeft,
+                alignment: Alignment.center,
                 child: Text(
-                  'CheckList',
+                  'CheckList'.toUpperCase(),
                   style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0.5),
                 ),
               ),
+              SizedBox(height: 30.0),
               Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  '$checklist',
-                  style: TextStyle(
-                    fontSize: 16,
-                    //fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              SizedBox(height: 20.0),
+  alignment: Alignment.center,
+  child: Container(
+    padding: EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: Colors.blueGrey[800],
+      borderRadius: BorderRadius.circular(10),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.3),
+          blurRadius: 5,
+          offset: Offset(0, 2),
+        ),
+      ],
+    ),
+    child: Text(
+      '$checklist',
+      style: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
+        color: Colors.white,
+        fontStyle: FontStyle.normal,
+        letterSpacing: 1.0,
+        decoration: TextDecoration.none,
+      ),
+    ),
+  ),
+),
+
+
+
               // ================================================
               SizedBox(height: 20.0),
               Align(
