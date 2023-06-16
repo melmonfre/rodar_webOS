@@ -47,12 +47,13 @@ class _FuturasState extends State<Futuras> {
         timer--;
         if (timer == 0) {
           getdata();
-          timer = 30;
+          timer = 120;
         }
       });
     });
   }
   void initState() {
+    getdata();
     _decrementCounter();
     super.initState();
   }
@@ -120,19 +121,20 @@ class _AmanhaState extends State<Amanha> {
     });
     //numamanha = varamanha.length;
   }
-  var timer  = 1;
+  var timer  = 2;
   void _decrementCounter() {
     Timer.periodic(const Duration(seconds: 1), (_) {
       setState(() {
         timer--;
         if (timer == 0) {
           getdata();
-          timer = 30;
+          timer = 120;
         }
       });
     });
   }
   void initState() {
+    getdata();
     _decrementCounter();
     super.initState();
   }
@@ -203,19 +205,20 @@ class _HojeState extends State<Hoje> {
 
    // numdodia = vardodia.length;
   }
-  var timer  = 1;
+  var timer  = 3;
   void _decrementCounter() {
     Timer.periodic(const Duration(seconds: 1), (_) {
       setState(() {
         timer--;
         if (timer == 0) {
           getdata();
-          timer = 30;
+          timer = 120;
         }
       });
     });
   }
   void initState() {
+    getdata();
     _decrementCounter();
     super.initState();
   }
@@ -284,19 +287,20 @@ class _AtrasadasState extends State<Atrasadas> {
       numatrasadas = numero;
     });
   }
-  var timer  = 1;
+  var timer  = 4;
   void _decrementCounter() {
     Timer.periodic(const Duration(seconds: 1), (_) {
       setState(() {
         timer--;
         if (timer == 0) {
           getdata();
-          timer = 30;
+          timer = 120;
         }
       });
     });
   }
   void initState() {
+    getdata();
     _decrementCounter();
     super.initState();
   }
@@ -359,19 +363,20 @@ class _ContainerContentState extends State<ContainerContent> {
 
     }
     @override
-    var timer  = 1;
+    var timer  = 5;
     void _decrementCounter() {
       Timer.periodic(const Duration(seconds: 1), (_) {
         setState(() {
           timer--;
           if (timer == 0) {
             getdata();
-            timer = 30;
+            timer = 120;
           }
         });
       });
     }
     void initState() {
+      getdata();
       _decrementCounter();
       super.initState();
     }

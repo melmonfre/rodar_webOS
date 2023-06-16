@@ -15,19 +15,8 @@ class InputDate extends StatefulWidget {
 class _InputDateState extends State<InputDate> {
   DateTime? _selectedDate;
 
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime(2100),
-    );
-
-    if (pickedDate != null) {
-      setState(() {
-        _selectedDate = pickedDate;
-      });
-    }
+   _selectDate(BuildContext context) {
+    final DateTime pickedDate = DateTime.now();
   }
 
   @override
@@ -55,9 +44,7 @@ class _InputDateState extends State<InputDate> {
                   ),
                 ),
                 controller: TextEditingController(
-                  text: _selectedDate != null
-                      ? DateFormat('dd/MM/yyyy').format(_selectedDate!)
-                      : null,
+                  text: DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now())
                 ),
               ),
             ),

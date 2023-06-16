@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -7,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rodarwebos/pages/responsavel/tela_responsavel.dart';
 import 'package:rodarwebos/widgets/foto_assinatura/assinatura.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signature/signature.dart';
 
 class Imagem extends StatefulWidget {
@@ -34,7 +36,7 @@ class _ImagemState extends State<Imagem> {
     setState(() {
       data = result;
     });
-
+    createbase64(data);
     _salvarImagemNaGaleria(data);
   }
 
@@ -49,7 +51,16 @@ class _ImagemState extends State<Imagem> {
       });
     }
   }
-
+  void createbase64(image) {
+      List<int> imageBytes = image;
+      String base64File = base64Encode(imageBytes);
+      print("BASE64 ${base64File}");
+    salvanocache(base64File);
+  }
+  salvanocache(base64Files) async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    opcs.setString("base64assinatura", base64Files);
+  }
   void _limparAssinatura() {
     _controller.clear();
 

@@ -111,7 +111,13 @@ class _OrdemServicoState extends State<OrdemServico> {
         var datahora = localtime.split('T');
         var data = datahora[0].split('-');
         var hora = datahora[1].split(':');
-        var agend = "${data[2]}/${data[1]}/${data[0]} ${int.parse(hora[0])-3}:${hora[1]}";
+        var hr;
+        if(int.parse(hora[0])-3  <0){
+          hr = int.parse(hora[0])-3  + 24;
+        } else {
+          hr = int.parse(hora[0])-3;
+        }
+        var agend = "${data[2]}/${data[1]}/${data[0]} ${hr}:${hora[1]}";
         agendamento = agend;
         print("agendamento $agendamento");
         numero++;

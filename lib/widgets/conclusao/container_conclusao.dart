@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:rodarwebos/widgets/inputs/input_date.dart';
 import 'package:rodarwebos/widgets/inputs/input_motivos.dart';
@@ -24,7 +25,7 @@ class _ContainerConclusaoState extends State<ContainerConclusao> {
   var variaveis = VariaveisResumo();
   String motivoDivergencia = '';
 
-  String dataConclusao = '';
+  String dataConclusao =  DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now());
   String observacoes = '';
   String hodometro = '';
 
@@ -49,17 +50,19 @@ class _ContainerConclusaoState extends State<ContainerConclusao> {
       );
       return false;
     } else{
-      Map<String, dynamic> values = {
-        "dataConclusao" : dataConclusao,
-        "observacoes" : observacoes,
-        "hodometro" : hodometro,
-      };
-      saveoncache(json.encode(values));
+
+      saveoncache();
       return true;
     }
   }
-  Future<void> saveoncache(valor) async {
+  Future<void> saveoncache() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
+    Map<String, dynamic> values = {
+      "dataConclusao" : dataConclusao,
+      "observacoes" : observacoes,
+      "hodometro" : hodometro,
+    };
+    var valor = json.encode(values);
     opcs.setString("conclusaoItens", valor);
   }
   @override
@@ -88,16 +91,12 @@ class _ContainerConclusaoState extends State<ContainerConclusao> {
                     ),
                     InputDate(
                       labelText: 'Data de conclusão da OS',
-                      onChanged: (value) {
-                        setState(() {
-                          dataConclusao = value;
-                        });
-                      },
                     ),
                     InputText(
                       labelText: 'Observações',
                       onChanged: (value) {
                         setState(() {
+                          print("$value");
                           observacoes = value;
                         });
                       },
@@ -106,6 +105,7 @@ class _ContainerConclusaoState extends State<ContainerConclusao> {
                       labelText: 'Hodômetro',  
                       onChanged: (value) {
                         setState(() {
+                          print("$value");
                           hodometro = value;
                         });
                       },
@@ -116,6 +116,7 @@ class _ContainerConclusaoState extends State<ContainerConclusao> {
                       padding: EdgeInsets.all(16.0),
                       child: BotaoProximo(
                         onPressed: () {
+                          saveoncache();
                           // if (validateInputs()) {
                             widget.onPressed();
                           // }

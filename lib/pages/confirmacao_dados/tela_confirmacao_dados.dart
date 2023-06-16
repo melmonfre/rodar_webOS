@@ -2,12 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/confirmacao_dados/tela_confirmacao_dados_assinatura.dart';
-import 'package:rodarwebos/pages/fotos/visita_frustada_anexo.dart';
-import 'package:rodarwebos/widgets/botoes/botao_iniciar_execucao.dart';
-import 'package:rodarwebos/widgets/botoes/botao_visita_frustada.dart';
-import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
 import 'package:rodarwebos/widgets/botoes/botao_confirmar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../widgets/ordem_servico/variaveis_resumo_os.dart';
 
 
 class TelaConfirmacaoDados extends StatefulWidget {
@@ -16,8 +14,7 @@ class TelaConfirmacaoDados extends StatefulWidget {
 }
 
 class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
-  //TODO SUBSTITUIR VARIAVEIS RESUMO
-  var variaveis = VariaveisResumo();
+
   int num =0;
 
   var element;
@@ -51,23 +48,40 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
 
 
 
-  var motivo;
+  var motivo = ''; // ok
   var local_inst_equip;
-  var acessorio;
-  var quantidade_acessorio;
-  var quantidade_acessorio_retirado;
-  var local_inst_acessorio;
-  var deslocamento;
-  var valor_deslocamento;
-  var pedagio;
-  var hodometro;
-  var conclusaotecnicodesc;
-  var data;
+
+  //var acessorio;
+ // var quantidade_acessorio;
+  //var quantidade_acessorio_retirado;
+  //var local_inst_acessorio;
+  var deslocamento; //ok
+  var valor_deslocamento; //ok
+  var pedagio; //ok
+  var hodometro; //ok
+  var conclusaotecnicodesc; //ok
+  var dataconclusao; //ok
+  List checkinsitu = []; //ok
+  List checkoutsitu = [];//ok
+  List nomeschecklist = [];
+  String checklist = '';
   Future<void> getdata() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     print(opcs.getKeys());
     json = opcs.getString("SelectedOS");
     element = jsonDecode(json);
+    var motivos = opcs.getString("motivositens");
+    var mots = jsonDecode(motivos!);
+    List nomesmotivos = mots["nomesmotivos"];
+    List itensmotivos = mots["itensmotivos"];
+    for(int i = 0; i< nomesmotivos.length; i++){
+      if(itensmotivos[i]){
+        motivo = motivo + " ${nomesmotivos[i]}";
+      }
+    }
+    var eqp = opcs.getString("EQProcess");
+    var equip = jsonDecode(eqp!);
+
     os = element['id'];
     int numero =0;
     var veiculo = element['veiculo'];
@@ -100,14 +114,25 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
 
 
     var eq = element['equipamentos'];
+
     eq.forEach((equip) {
       tiposervico = "$tiposervico ${equip["tipo"] }";
-
-      codequip = "$codequip ${equip["id"]}";
+      var eqpment = equip['equipamento'];
+      codequip = "$codequip ${eqpment["codigo"]}";
       localequip = "$localequip ${equip["localInstalacao"]}";
     });
 
-
+    var desloc = opcs.getString('dadosdeslocamento');
+    var dloc = jsonDecode(desloc!);
+    deslocamento = dloc["distanciaPercorrida"];
+    valor_deslocamento = dloc["valor"];
+    pedagio = dloc["pedagio"];
+    var conclus = opcs.getString("conclusaoItens");
+    print(conclus);
+    var conclusion = jsonDecode(conclus!);
+    hodometro = conclusion["hodometro"];
+    dataconclusao = conclusion['dataConclusao'];
+    conclusaotecnicodesc = conclusion['observacoes'];
     List servicos = element['servicos'];
     var serv;
     servicos.forEach((ser) {
@@ -135,6 +160,42 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
     print("agendamento $agendamento");
     numero++;
     print(numero);
+
+
+    var checkin = opcs.getString('checkinitens');
+    var checkinitens = jsonDecode(checkin!);
+    List itenscheckin = checkinitens['itenscheckin'];
+    var checkout = opcs.getString('checkinitens');
+    var checkoutitens = jsonDecode(checkin!);
+    nomeschecklist = checkinitens["nomescheckin"];
+    List itenscheckout = checkinitens['itenscheckin'];
+
+    for(int i = 0; i < itenscheckin.length; i++){
+      var element = itenscheckin[i];
+      var elemento = itenscheckout[i];
+      if(element == 0){
+        checkinsitu.add("OK");
+      } else if(element == 1){
+        checkinsitu.add("Com Defeito");
+      } else if(element == 2){
+        checkinsitu.add("Não Possui");
+      }
+      if(elemento == 0){
+        checkoutsitu.add("OK");
+      } else if(elemento == 1){
+        checkoutsitu.add("Com Defeito");
+      } else if(elemento == 2){
+        checkoutsitu.add("Não Possui");
+      }
+      checklist = checklist + "${nomeschecklist[i]}\n\nAntes: ${checkinsitu[i]}       Depois: ${checkoutsitu[i]}\n\n\n";
+    }
+    itenscheckin.forEach((element) {
+
+    });
+    itenscheckout.forEach((element) {
+
+    });
+
     setState(() {
       num = numero;
     });
@@ -329,7 +390,7 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  local,
+                  "$local",
                   style: TextStyle(
                     fontSize: 14,
                   ),
@@ -375,7 +436,7 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Local de instalação: ${variaveis.local_info_tec}',
+                  'Local de instalação: ${localequip}',
                   style: TextStyle(
                     fontSize: 14,
                   ),
@@ -386,63 +447,64 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
                 height: 1.0,
                 color: Colors.grey[500],
               ),
-              SizedBox(height: 12.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Acessórios',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Acessório: ${variaveis.acessorio}',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Qnt: ${variaveis.qtd_acess}',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Qnt Retirada: ${variaveis.qtd_acess_ret}',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Local de instalação: ${variaveis.local_info_tec}',
-
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 12.0),
-              Container(
-                height: 1.0,
-                color: Colors.grey[500],
-              ),
+              //TODO FAZER ACESSORIO
+              // SizedBox(height: 12.0),
+              // Align(
+              //   alignment: Alignment.centerLeft,
+              //   child: Text(
+              //     'Acessórios',
+              //     style: TextStyle(
+              //       fontSize: 15,
+              //       fontWeight: FontWeight.bold,
+              //     ),
+              //   ),
+              // ),
+              // SizedBox(height: 3.0),
+              // Align(
+              //   alignment: Alignment.centerLeft,
+              //   child: Text(
+              //     'Acessório: ${variaveis.acessorio}',
+              //     style: TextStyle(
+              //       fontSize: 14,
+              //     ),
+              //   ),
+              // ),
+              // SizedBox(height: 3.0),
+              // Align(
+              //   alignment: Alignment.centerLeft,
+              //   child: Text(
+              //     'Qnt: ${variaveis.qtd_acess}',
+              //     style: TextStyle(
+              //       fontSize: 14,
+              //     ),
+              //   ),
+              // ),
+              // SizedBox(height: 3.0),
+              // Align(
+              //   alignment: Alignment.centerLeft,
+              //   child: Text(
+              //     'Qnt Retirada: ${variaveis.qtd_acess_ret}',
+              //     style: TextStyle(
+              //       fontSize: 14,
+              //     ),
+              //   ),
+              // ),
+              // SizedBox(height: 3.0),
+              // Align(
+              //   alignment: Alignment.centerLeft,
+              //   child: Text(
+              //     'Local de instalação: ${variaveis.local_info_tec}',
+              //
+              //     style: TextStyle(
+              //       fontSize: 14,
+              //     ),
+              //   ),
+              // ),
+              // SizedBox(height: 12.0),
+              // Container(
+              //   height: 1.0,
+              //   color: Colors.grey[500],
+              // ),
               SizedBox(height: 12.0),
               Align(
                 alignment: Alignment.centerLeft,
@@ -458,7 +520,7 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Deslocamento: ${variaveis.local_info_tec}',
+                  'Deslocamento: ${deslocamento}',
                   style: TextStyle(
                     fontSize: 14,
                   ),
@@ -468,7 +530,7 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Valor do Deslocamemto: ${variaveis.local_info_tec}',
+                  'Valor do Deslocamento: ${valor_deslocamento}',
                   style: TextStyle(
                     fontSize: 14,
                   ),
@@ -478,7 +540,7 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Pedágio: ${variaveis.local_info_tec}',
+                  'Pedágio: ${pedagio}',
                   style: TextStyle(
                     fontSize: 14,
                   ),
@@ -488,7 +550,7 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Hodômetro: ${variaveis.local_info_tec}',
+                  'Hodômetro: ${hodometro}',
                   style: TextStyle(
                     fontSize: 14,
                   ),
@@ -514,7 +576,7 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Descrição: ${variaveis.local_info_tec}',
+                  'Descrição: ${conclusaotecnicodesc}',
                   style: TextStyle(
                     fontSize: 14,
                   ),
@@ -536,6 +598,16 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
                   ),
                 ),
               ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  '$checklist',
+                  style: TextStyle(
+                    fontSize: 16,
+                    //fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
               SizedBox(height: 20.0),
               // ================================================
               SizedBox(height: 20.0),
@@ -553,7 +625,7 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  variaveis.data,
+                  "${dataconclusao}",
                   style: TextStyle(
                     fontSize: 14,
                   ),

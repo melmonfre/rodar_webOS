@@ -21,11 +21,11 @@ class ContainerResponsavel extends StatefulWidget {
 }
 
 class _ContainerResponsavelState extends State<ContainerResponsavel> {
-  var variaveis = VariaveisResumo();
+  //var variaveis = VariaveisResumo();
   String motivoDivergencia = '';
-  String? nome;
-  String? email;
-  String? telefone;
+  String nome = "guilherme";
+  String email = "Amelissariver@gmail.com";
+  String telefone = "43988522108";
 
   String contatoSelecionado = '';
   bool responsavelAusente = false;
@@ -69,7 +69,7 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                       });
                     },
                   ),
-                  Text('Nome'),
+                  Text('$nome'),
                   Radio(
                     value: 'outro',
                     groupValue: contatoSelecionado,
@@ -94,6 +94,7 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
               ),
               SizedBox(height: 10.0),
               InputText(
+
                   labelText: 'Nome',
                   onChanged: (value) {
                     setState(() {

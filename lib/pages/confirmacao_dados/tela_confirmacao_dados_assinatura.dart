@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/responsavel/tela_responsavel.dart';
 import 'package:rodarwebos/widgets/foto_assinatura/imagem.dart';
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TelaConclusaoDadosAssinatura extends StatefulWidget {
   @override
@@ -9,7 +12,28 @@ class TelaConclusaoDadosAssinatura extends StatefulWidget {
 }
 
 class _TelaConclusaoDadosAssinaturaState extends State<TelaConclusaoDadosAssinatura> {
-  var variaveis = VariaveisResumo();
+  salvanocache() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    var assinatura = opcs.getString("base64assinatura");
+    opcs.setString("assinaturaconfirmacao", assinatura!);
+  }
+  var os;
+  Future<void> getdata() async {
+    var json;
+    var element;
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    json = opcs.getString("SelectedOS");
+    element = jsonDecode(json);
+    setState(() {
+      os = element['id'];
+
+    });
+  }
+
+  void initState() {
+    super.initState();
+    getdata();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +57,7 @@ class _TelaConclusaoDadosAssinaturaState extends State<TelaConclusaoDadosAssinat
               Container(
                 alignment: Alignment.center,
                 child: Text(
-                  variaveis.numero_os.toString(),
+                  "$os",
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -45,6 +69,7 @@ class _TelaConclusaoDadosAssinaturaState extends State<TelaConclusaoDadosAssinat
               ),
               Imagem(
                 onPressed: () {
+                  salvanocache();
                   Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => TelaResponsavel()),

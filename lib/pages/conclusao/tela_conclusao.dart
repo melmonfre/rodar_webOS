@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/confirmacao_dados/tela_confirmacao_dados.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
@@ -6,6 +8,7 @@ import 'package:rodarwebos/widgets/inputs/input_motivos.dart';
 import 'package:rodarwebos/widgets/inputs/input_text.dart';
 import 'package:rodarwebos/widgets/motivos/container_relate_motivos.dart';
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TelaConclusao extends StatefulWidget {
   @override
@@ -13,8 +16,23 @@ class TelaConclusao extends StatefulWidget {
 }
 
 class _TelaConclusaoState extends State<TelaConclusao> {
-  var variaveis = VariaveisResumo();
+  var os;
+  Future<void> getdata() async {
+    var json;
+    var element;
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    json = opcs.getString("SelectedOS");
+    element = jsonDecode(json);
+    setState(() {
+      os = element['id'];
+      print(os);
+    });
+  }
 
+  void initState() {
+    super.initState();
+    getdata();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +55,7 @@ class _TelaConclusaoState extends State<TelaConclusao> {
               Container(
                 alignment: Alignment.center,
                 child: Text(
-                  variaveis.numero_os.toString(),
+                  "$os",
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,

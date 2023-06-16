@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/tela_inicial/tela_inicial.dart';
 import 'package:rodarwebos/widgets/foto_assinatura/imagem.dart';
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
 import 'package:rodarwebos/widgets/responsavel/container_responsavel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TelaResponsavel extends StatefulWidget {
   @override
@@ -10,8 +13,24 @@ class TelaResponsavel extends StatefulWidget {
 }
 
 class _TelaResponsavelState extends State<TelaResponsavel> {
-  var variaveis = VariaveisResumo();
 
+  var os;
+  Future<void> getdata() async {
+    var json;
+    var element;
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    json = opcs.getString("SelectedOS");
+    element = jsonDecode(json);
+    setState(() {
+      os = element['id'];
+
+    });
+  }
+
+  void initState() {
+    super.initState();
+    getdata();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +53,7 @@ class _TelaResponsavelState extends State<TelaResponsavel> {
               Container(
                 alignment: Alignment.center,
                 child: Text(
-                  variaveis.numero_os.toString(),
+                  "$os",
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,

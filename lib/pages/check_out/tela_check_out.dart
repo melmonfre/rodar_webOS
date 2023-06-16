@@ -25,6 +25,7 @@ class _CheckOutTelaState extends State<CheckOutTela> {
   List checklistNome = [];
   List checklistItens = [];
   List ChecklistOBS = [];
+  List checkinsitu = [];
   int tamanho = 0;
   Future<void> getdata() async {
     var json;
@@ -39,6 +40,18 @@ class _CheckOutTelaState extends State<CheckOutTela> {
     getequipamentos().get();
     json = opcs.getString("SelectedOS");
     empresaid = opcs.getInt('sessionid');
+    var checkin = opcs.getString('checkinitens');
+    var checkinitens = jsonDecode(checkin!);
+    List itenscheckin = checkinitens['itenscheckin'];
+    itenscheckin.forEach((element) {
+      if(element == 0){
+        checkinsitu.add("OK");
+      } else if(element == 1){
+        checkinsitu.add("Com Defeito");
+      } else if(element == 2){
+        checkinsitu.add("Não Possui");
+      }
+    });
     element = jsonDecode(json);
     token = opcs.getString("${empresaid}@token")!;
     osid = element['id'];
@@ -107,6 +120,14 @@ class _CheckOutTelaState extends State<CheckOutTela> {
                                             fontSize: 16.0,
                                           ),
                                           textAlign: TextAlign.center,
+                                        ),
+                                        Padding(padding: EdgeInsets.all(4)),
+                                        Text(
+                                          "Situação no Check-in: ${checkinsitu[index]}",
+                                          style: TextStyle(
+                                            fontSize: 16.0,
+                                          ),
+                                          textAlign: TextAlign.left,
                                         ),
                                         SizedBox(height: 5.0),
                                         Column(
