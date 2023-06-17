@@ -22,16 +22,18 @@ class Imagem extends StatefulWidget {
 
 class _ImagemState extends State<Imagem> {
   final SignatureController _controller = SignatureController(
-      penStrokeWidth: 4,
-      penColor: Colors.black,
-      // exportBackgroundColor: Colors.transparent,
-      exportBackgroundColor: Colors.white);
+    penStrokeWidth: 3,
+    penColor: Colors.black,
+    // exportBackgroundColor: Colors.transparent,
+    exportBackgroundColor: Colors.white,
+  );
   Uint8List? data;
 
   Future<void> _criarImagem(context) async {
     Uint8List result = await Navigator.of(context).push(
       MaterialPageRoute(
-          builder: (BuildContext context) => Assinatura(_controller)),
+        builder: (BuildContext context) => Assinatura(_controller),
+      ),
     );
     setState(() {
       data = result;
@@ -55,7 +57,7 @@ class _ImagemState extends State<Imagem> {
   void createbase64(image) {
     List<int> imageBytes = image;
     String base64File = base64Encode(imageBytes);
-    print("BASE64 ${base64File}");
+    print("BASE64 $base64File");
     salvanocache(base64File);
   }
 
@@ -77,60 +79,61 @@ class _ImagemState extends State<Imagem> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 600, // Defina a altura desejada para o widget Imagem
-        child: Scaffold(
-          body: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ListView(
-              children: <Widget>[
-                GestureDetector(
-                  onTap: () {
-                    _criarImagem(context);
-                  },
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      side: new BorderSide(color: Colors.black87, width: 2.0),
-                      borderRadius: BorderRadius.circular(4.0),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(2.0),
-                      child: data != null
-                          ? Image.memory(data!)
-                          : Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text("Clique aqui para assinar"),
-                            ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          floatingActionButton: null,
-          bottomNavigationBar: Container(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            color: Color(0xFF00204E),
-            child: SizedBox(
-              height: 48.0,
-              child: TextButton(
-                onPressed: () {
-                  _limparAssinatura();
-                  widget.onPressed();
+      height: 600, // Defina a altura desejada para o widget Imagem
+      child: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListView(
+            children: <Widget>[
+              GestureDetector(
+                onTap: () {
+                  _criarImagem(context);
                 },
-                style: ButtonStyle(
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24.0),
-                    ),
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    side: new BorderSide(color: Colors.black87, width: 2.0),
+                    borderRadius: BorderRadius.circular(4.0),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(2.0),
+                    child: data != null
+                        ? Image.memory(data!)
+                        : Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text("Clique aqui para assinar"),
+                          ),
                   ),
                 ),
-                child: Text(
-                  'Limpar Assinatura',
-                  style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+            ],
+          ),
+        ),
+        floatingActionButton: null,
+        bottomNavigationBar: Container(
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
+          color: Color(0xFF00204E),
+          child: SizedBox(
+            height: 48.0,
+            child: TextButton(
+              onPressed: () {
+                _limparAssinatura();
+                widget.onPressed();
+              },
+              style: ButtonStyle(
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24.0),
+                  ),
                 ),
+              ),
+              child: Text(
+                'Próximo',
+                style: TextStyle(color: Colors.white, fontSize: 16),
               ),
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

@@ -16,7 +16,6 @@ class _AssinaturaState extends State<Assinatura> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: Column(
         children: [
           Expanded(
