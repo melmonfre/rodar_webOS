@@ -17,40 +17,42 @@ class concluivf{
     var element = jsonDecode(os!);
     var osid = element['id'];
     var DistanciaTec = deslocamento['distanciaPercorrida'];
+    var distanciacalc = deslocamento['distanciaCalculada'];
     var valorDeslocamentoTec = deslocamento['valor'];
     var pedagioTec = deslocamento['pedagio'];
     var motivoDiv = element['motivoDiv'];
     List<String>? base64images = opcs.getStringList("base64vf");
     var localGps = "${opcs.getStringList("latitude")},${opcs.getStringList("longitude")}";
-    if(base64images!.isNotEmpty){
-      if(base64images.length > 1){
-        base64images.forEach((base64image) {
 
-        });
-      }
-      enviamotivosvf(osid, token, base64images, DistanciaTec, valorDeslocamentoTec, pedagioTec, motivoDiv, motivo, localGps);
-    }
-
+    enviamotivosvf(osid, token, DistanciaTec, valorDeslocamentoTec, pedagioTec, motivoDiv, motivo, localGps);
+    enviardiversasfotosvf(osid, token, base64images);
+    enviardeslocamentovf(osid, token, distanciacalc, DistanciaTec, pedagioTec);
 
   }
 
-  enviamotivosvf(osid, token, image,  DistanciaTec,valorDeslocamentoTec, pedagioTec, motivoDiv, motivo, localGps) async {
+  enviamotivosvf(osid, token,  DistanciaTec,valorDeslocamentoTec, pedagioTec, motivoDiv, motivo, localGps) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     final headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
-    final data = '{\n    "base64":[\n        "$image"\n    ],\n    "DistanciaTec":$DistanciaTec,\n    "valorDeslocamentoTec":$valorDeslocamentoTec,\n    "pedagioTec":$pedagioTec,\n    "motivoDiv":$motivoDiv,\n    "motivo":$motivo,\n    "localGps":$localGps,\n    "etapa": "SERVICO_INICIADO"\n  }';
+    var data = '{\n    "base64":[\n        ""\n    ],\n    "DistanciaTec":$DistanciaTec,\n    "valorDeslocamentoTec":$valorDeslocamentoTec,\n    "pedagioTec":$pedagioTec,\n    "motivoDiv":$motivoDiv,\n    "motivo":$motivo,\n    "localGps":$localGps,\n    "etapa": "SERVICO_INICIADO"\n  }';
 
     final url = Uri.parse('${Urlconst().url}ordem_servico/enviarmotivovf/$osid');
 
     final res = await http.post(url, headers: headers, body: data);
     final status = res.statusCode;
     if (status != 200) {
-      opcs.setString("osIDaFinalizarvf", osid);
-      opcs.setString("OSaFinalizarvf", data);
-      throw Exception('http.post error: statusCode= $status');
+      List<String>? ids = opcs.getStringList("osIDaFinalizarvf");
+      if(ids == null){
+        ids = [];
+        ids.add("$osid");
+      }
+      opcs.setStringList("osIDaFinalizarvf", ids);
+      opcs.setString("${osid}@OSaFinalizarvf", data);
+
+      throw Exception('enviamotivosvf http.post error: statusCode= $status');
     }
     print("VISITA FRUSTRADA");
     print(res.body);
@@ -64,16 +66,35 @@ class concluivf{
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
-    final data = '{\n    "base64":[\n        "$image"\n    ], "idsRemove":[], \n  "etapa": "SERVICO_INICIADO"\n  }';
+    final data = '{\n    "base64":        "$image"\n , "idsRemove":[], \n  "etapa": "SERVICO_INICIADO"\n  }';
 
     final url = Uri.parse('${Urlconst().url}ordem_servico/enviardiversasfotosvf/$osid');
 
     final res = await http.post(url, headers: headers, body: data);
     final status = res.statusCode;
     if (status != 200) {
-      opcs.setString("osIDaFinalizarvf", osid);
-      opcs.setString("OSaFinalizarvf", data);
-      throw Exception('http.post error: statusCode= $status');
+      opcs.setString("${osid}@OSaFinalizarvfoto", data);
+      throw Exception('enviardiversasfotosvf http.post error: statusCode= $status');
+    }
+    print(res.body);
+  }
+
+  enviardeslocamentovf(osid, token, distanciaTec, distanciacalc, pedagioTec) async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    final headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    final data = '{"distanciaTec":$distanciacalc,"distanciaTec":$distanciaTec,"pedagioTec":$pedagioTec}';
+
+    final url = Uri.parse('${Urlconst().url}ordem_servico/enviardeslocamento/$osid');
+
+    final res = await http.post(url, headers: headers, body: data);
+    final status = res.statusCode;
+    if (status != 200) {
+      opcs.setString("${osid}@OSaFinalizarvfdeslocamento", data);
+      throw Exception('enviardeslocamentovf http.post error: statusCode= $status');
     }
     print(res.body);
   }

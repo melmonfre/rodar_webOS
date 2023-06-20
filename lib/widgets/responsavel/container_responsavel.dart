@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/coletar_assinatura_responsavel/tela_coleta_assinatura_responsavel.dart';
 import 'package:rodarwebos/pages/tela_inicial/tela_inicial.dart';
+import 'package:rodarwebos/services/OS/ConcluirOS.dart';
 import 'package:rodarwebos/widgets/botoes/botao_coletar_assinatura_responsavel.dart';
 import 'package:rodarwebos/widgets/botoes/botao_enviar.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
@@ -32,7 +33,22 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
   String contatoSelecionado = '';
   bool responsavelAusente = false;
   String motivoAusencia = '';
+  String id = '';
 var osid;
+
+saveoncache() async {
+  SharedPreferences opcs = await SharedPreferences.getInstance();
+
+  Map<String, dynamic> values = {
+      "id" : id,
+      "nome" : nome,
+      "email" : email,
+      "telefone" : telefone,
+      "responsavelAusente": responsavelAusente
+    };
+    opcs.setString("DadosContato",jsonEncode(values));
+}
+  
   Future<void> getdata() async {
     var json;
     var element;
@@ -45,6 +61,7 @@ var osid;
       osid = element['id'];
       try{
         var contacto = contatos[0];
+        id = contacto["id"];
         var contact = contacto["contato"];
         nome = contact['nome'];
         email = contact['email'];
@@ -251,10 +268,12 @@ var osid;
                             context: context,
                             builder: (context) {
                               return AlertDialog(
-                                title: Text('Enviado com sucesso'),
+                                title: Text('Salvo com sucesso'),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
+                                      saveoncache();
+                                      concluiOS().concluir();
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -272,9 +291,12 @@ var osid;
                       )
                     : ColetarAssinaturaResponsavel(
                         onPressed: () {
+
                           if (nome != null ||
                               email != null ||
                               telefone != null) {
+                            saveoncache();
+                            concluiOS().concluir();
                             Navigator.push(
                               context,
                               MaterialPageRoute(

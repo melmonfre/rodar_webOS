@@ -275,13 +275,42 @@ class ContainerManutencao extends StatefulWidget {
 }
 
 class _ContainerManutencaoState extends State<ContainerManutencao> {
-  var variaveis = VariaveisEquipamentos();
+  String? situacaoEquipamento;
+  var EquipamentoNovoIDs;
+  List<String> EquipamentoNovoCodigos = [];
+  var AcessoriosID;
+  var AcessoriosDescricao;
+  var EquipamentosVeiculoIDs;
+  List<String> EquipamentoVeiculoCodigos = [];
+  var localInstalacao;
+  var stringEquipamento;
+  var selecionadonovo;
+  var selecionadoveiculo;
+  var situequip;
+  getdata() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    var json = opcs.getString("equipamentos");
+    var eqp = jsonDecode(json!);
+    setState(() {
+      EquipamentoNovoIDs = eqp["EquipamentoNovoIDs"];
+      EquipamentoNovoCodigos =  List<String>.from(eqp["EquipamentoNovoCodigos"] as List);
+      AcessoriosID = eqp["AcessoriosID"];
+      AcessoriosDescricao = eqp["AcessoriosDescricao"];
+      EquipamentosVeiculoIDs = eqp["EquipamentosVeiculoIDs"];
+      EquipamentoVeiculoCodigos = List<String>.from(eqp["EquipamentoVeiculoCodigos"] as List);
+      localInstalacao = eqp["localInstalacao"];
+      stringEquipamento = eqp["stringEquipamento"];
 
-  String localInstalacao = '';
-
+    });
+  }
+  @override
+  void initState() {
+    getdata();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
-  List<int> codigosEq = variaveis.codigosEq.cast<int>();
+  List<String> codigosEq = EquipamentoVeiculoCodigos;
   
   return Padding(
     padding: EdgeInsets.all(16.0),
@@ -289,15 +318,15 @@ class _ContainerManutencaoState extends State<ContainerManutencao> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Input equipamento
-        DropdownButton<int>(
-          value: variaveis.selectedListItem,
-          onChanged: (int? newValue) {
+        DropdownButton<String>(
+          value: selecionadoveiculo,
+          onChanged: (String? newValue) {
             setState(() {
-              variaveis.selectedListItem = newValue;
+              selecionadoveiculo = newValue;
             });
           },
-          items: codigosEq.map((int item) {
-            return DropdownMenuItem<int>(
+          items: codigosEq.map((String item) {
+            return DropdownMenuItem<String>(
               value: item,
               child: Row(
                 children: [

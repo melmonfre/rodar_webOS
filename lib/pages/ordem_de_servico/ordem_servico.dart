@@ -52,6 +52,11 @@ class _OrdemServicoState extends State<OrdemServico> {
     os = element['id'];
     int numero =0;
         var veiculo = element['veiculo'];
+        var empresaveiculo = veiculo['empresa'];
+        var fotosnecessarias = empresaveiculo['fotosNecessarias'];
+        List<String> referencias = fotosnecessarias.split('\n');
+        print("REFERENCIAS: $referencias");
+        opcs.setStringList("referencias", referencias);
         placa = veiculo['placa'];
         corcarro = veiculo['cor'];
         chassi = veiculo['chassi'];

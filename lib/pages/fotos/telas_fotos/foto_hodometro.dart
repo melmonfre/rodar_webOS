@@ -47,6 +47,7 @@ class _FotoHodometroState extends State<FotoHodometro> {
               AnexoEvidencias(
                 titulo: 'Tirar foto hodometro',
                 onPressed: () {
+                  // TODO obter fotos a partir da lista de referencias
                   salvarfotos().save("FotoHodometro");
                   Navigator.push(
                     context,

@@ -71,10 +71,17 @@ class _VisitaFrustadaResumoState extends State<VisitaFrustadaResumo> {
     var numtel = tel[0];
     telefone = numtel['numero'];
     var cont = element['contatos'];
-    var contacto = cont[0];
-    var contact = contacto["contato"];
-    contatonome = contact['nome'];
-    contatoobs = contact['observacao'];
+    var contacto;
+    try{
+      contacto = cont[0];
+      var contact = contacto["contato"];
+      contatonome = contact['nome'];
+      contatoobs = contact['observacao'];
+    } catch(e){
+      contatonome ="não informado";
+      contatoobs = "";
+    }
+
 
     var eq = element['equipamentos'];
     eq.forEach((equip) {

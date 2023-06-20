@@ -114,7 +114,11 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
     eq.forEach((equip) {
       tiposervico = "$tiposervico ${equip["tipo"]}";
       var eqpment = equip['equipamento'];
-      codequip = "$codequip ${eqpment["codigo"]}";
+      try{
+        codequip = "$codequip ${eqpment["codigo"]}";
+      } catch (e){
+        codequip = "";
+      }
       localequip = "$localequip ${equip["localInstalacao"]}";
     });
 

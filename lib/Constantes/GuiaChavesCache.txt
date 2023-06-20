@@ -24,8 +24,23 @@ conclusaoItens, // Obtem os itens de conclusão preenchidos
 equipamentos,  // Obtem a lista de equipamentos da os em que o usuario está trabalhando
 EQProcess, // Obtem os equipamentos removidos e instalados pelo técnico da os em que o usuário está trabalhando
 dadosdeslocamento, // Obtém os dados de deslocamento preenchidos pelo usuario
+DadosContato // obtem os dados de contato
 
+referencias // obtem a lista de referencias das imagens necessárias
 base64camera, // obtem a lista em Base64 das fotos tiradas na última tela de câmera
 FotoEquipamento, // obtem a lista de fotos do equipamento
 FotoHodometro, // obtem a lista de fotos do hodometro
 FotoInstalacao, //  obtem a lista de fotos da instalação
+base64assinatura // obtem a string base64 da ultima assinatura
+assinaturaconfirmacao // obtem a String base64 da assinatura na tela de confirmação
+assinaturaresponsavel // obtem a assinatura do responsável
+
+
+osIDaFinalizarvf // Retorna os IDS das OS De visita frustrada a Finalizar
+${osid}@OSaFinalizarvf // Retorna o body da Requisição de finalização da OS De visita frustrada a partir do id
+${osid}@OSaFinalizarvfoto // Retorna o body da Requisição de envio de fotos da OS De visita frustrada a partir do id
+osIDaFinalizar // Retorna os IDS das OS a Finalizar
+${osid}@OSaFinalizarenviarimagem@${referencia} // Retorna o body da função enviarimagem das OS a Finalizar
+${osid}@OSaFinalizarenviarreferencias // retorna as referencias da os
+${osid}@OSaFinalizainiciarconfirmacao // retorna o body da função iniciar confirmação
+${osid}@OSaFinalizaenviarconfirmacao // retorna o body da função enviar confirmação

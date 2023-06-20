@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../services/Sincronizar.dart';
 
 class TelaSincronizar extends StatefulWidget {
   const TelaSincronizar({Key? key}) : super(key: key);
@@ -9,6 +12,32 @@ class TelaSincronizar extends StatefulWidget {
 }
 
 class _TelaSincronizarState extends State<TelaSincronizar> {
+  int countafinalizar = 0;
+  int countvf = 0;
+
+  getdata() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    var vfafinalizar = opcs.getStringList('osIDaFinalizarvf');
+    var afinalizar = opcs.getStringList('osIDaFinalizar');
+
+    vfafinalizar?.forEach((osid) {
+      setState(() {
+        countafinalizar ++;
+      });
+
+    });
+    afinalizar?.forEach((osid) {
+      setState(() {
+        countvf ++;
+      });
+
+    });
+  }
+@override
+  void initState() {
+    getdata();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     var variaveis = VariaveisResumo();
@@ -33,7 +62,7 @@ class _TelaSincronizarState extends State<TelaSincronizar> {
             Container(
               alignment: Alignment.center,
               child: Text(
-                'Testando com variável',
+                'Existem $countafinalizar Ordens de serviço a ser sincronizadas',
                 style: TextStyle(fontSize: 19, fontWeight: FontWeight.w600),
               ),
             ),
@@ -42,7 +71,7 @@ class _TelaSincronizarState extends State<TelaSincronizar> {
             Container(
               alignment: Alignment.center,
               child: Text(
-                'texto teste',
+                'Existem $countvf Visitas frustradas a ser sincronizadas',
                 style: TextStyle(fontSize: 19, fontWeight: FontWeight.w600),
               ),
             ),
@@ -69,7 +98,7 @@ class _BotaoSincronizarState extends State<_BotaoSincronizar> {
         width: MediaQuery.of(context).size.width - 20.0,
         child: ElevatedButton(
           onPressed: () {
-            // Função a ser executada ao pressionar o botão
+            SincronizarOS().sincronize();
           },
           style: ElevatedButton.styleFrom(
             padding: EdgeInsets.symmetric(vertical: 12.0),
