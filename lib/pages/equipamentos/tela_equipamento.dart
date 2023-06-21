@@ -15,13 +15,11 @@ class Equipamentos extends StatefulWidget {
 }
 
 class _EquipamentosState extends State<Equipamentos> {
-
-
   var control = ""; // Definindo o tipo de tela - estatico somente para testes
   var json;
   var element;
   var os;
-    getdata() async {
+  getdata() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     json = opcs.getString("SelectedOS");
     element = jsonDecode(json);
@@ -68,9 +66,12 @@ class _EquipamentosState extends State<Equipamentos> {
                 ),
               ),
               SizedBox(height: 16.0),
-              if (control.toLowerCase().contains("manut")) ContainerManutencao(),
-              if (control.toLowerCase().contains("retirada")) ContainerRetirada(),
-              if (control.toLowerCase().contains("instal")) ContainerInstalacao(),
+              if (control.toLowerCase().contains("manut"))
+                ContainerManutencao(),
+              if (control.toLowerCase().contains("retirada"))
+                ContainerRetirada(),
+              if (control.toLowerCase().contains("instal"))
+                ContainerInstalacao(),
               if (control.toLowerCase().contains("troca")) ContainerTroca(),
             ],
           ),
@@ -79,7 +80,6 @@ class _EquipamentosState extends State<Equipamentos> {
     );
   }
 }
-
 
 class ContainerRetirada extends StatefulWidget {
   @override
@@ -94,7 +94,7 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
   var AcessoriosDescricao;
   var EquipamentosVeiculoIDs;
   List<String> EquipamentoVeiculoCodigos = [];
-  var localInstalacao;
+  String? localInstalacao;
   var stringEquipamento;
   var selecionadonovo;
   var selecionadoveiculo;
@@ -105,11 +105,13 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
     var eqp = jsonDecode(json!);
     setState(() {
       EquipamentoNovoIDs = eqp["EquipamentoNovoIDs"];
-      EquipamentoNovoCodigos =  List<String>.from(eqp["EquipamentoNovoCodigos"] as List);
+      EquipamentoNovoCodigos =
+          List<String>.from(eqp["EquipamentoNovoCodigos"] as List);
       AcessoriosID = eqp["AcessoriosID"];
       AcessoriosDescricao = eqp["AcessoriosDescricao"];
       EquipamentosVeiculoIDs = eqp["EquipamentosVeiculoIDs"];
-      EquipamentoVeiculoCodigos = List<String>.from(eqp["EquipamentoVeiculoCodigos"] as List);
+      EquipamentoVeiculoCodigos =
+          List<String>.from(eqp["EquipamentoVeiculoCodigos"] as List);
       localInstalacao = eqp["localInstalacao"];
       stringEquipamento = eqp["stringEquipamento"];
 
@@ -117,6 +119,7 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
       //var mapveiculo = Map.fromIterables(EquipamentosVeiculoIDs, EquipamentoVeiculoCodigos );
     });
   }
+
   @override
   void initState() {
     getdata();
@@ -125,150 +128,154 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
 
   @override
   Widget build(BuildContext context) {
-  List<String> codigosEq = EquipamentoVeiculoCodigos;
-  
-  return Padding(
-    padding: EdgeInsets.all(16.0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Input equipamento
-        DropdownButton<String>(
-          value: selecionadoveiculo,
-          onChanged: (String? newValue) {
-            setState(() {
-              selecionadoveiculo = newValue;
-            });
-          },
-          items: codigosEq.map((String item) {
-            return DropdownMenuItem<String>(
-              value: item,
-              child: Row(
-                children: [
-                  Icon(Icons.arrow_right),
-                  SizedBox(width: 5.0),
-                  Text(item.toString()),
-                ],
-              ),
-            );
-          }).toList(),
-          hint: Text('Equipamento'),
-        ),
-        SizedBox(height: 16.0),
+    List<String> codigosEq = EquipamentoVeiculoCodigos;
 
-        Text(
-          'Situação do equipamento - RETIRADA',
-          style: TextStyle(
-            fontSize: 14.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 8.0),
-        Column(
-          children: <Widget>[
-            RadioListTile<String>(
-              title: Text(
-                'OK',
-                style: TextStyle(fontSize: 14.0),
-              ),
-              value: 'OK',
-              groupValue: situacaoEquipamento,
-              onChanged: (String? value) {
-                setState(() {
-                  situacaoEquipamento = value;
-                });
-              },
-            ),
-            RadioListTile<String>(
-              title: Text(
-                'Com defeito',
-                style: TextStyle(fontSize: 14.0),
-              ),
-              value: 'Com defeito',
-              groupValue: situacaoEquipamento,
-              onChanged: (String? value) {
-                setState(() {
-                  situacaoEquipamento = value;
-                });
-              },
-            ),
-          ],
-        ),
-        SizedBox(height: 16.0),
-        // Input local de instalação
-        Text(
-          'Local de instalação',
-          style: TextStyle(
-            fontSize: 14.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 8.0),
-        Container(
-          width: double.infinity,
-          child: TextField(
-            textAlignVertical: TextAlignVertical.center,
-            decoration: InputDecoration(
-              hintText: localInstalacao,
-              border: OutlineInputBorder(),
-            ),
-            onSubmitted: (value) {
+    return Padding(
+      padding: EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Input equipamento
+          DropdownButton<String>(
+            value: selecionadoveiculo,
+            onChanged: (String? newValue) {
               setState(() {
-                localInstalacao = value;
+                selecionadoveiculo = newValue;
               });
             },
-          ),
-        ),
-        SizedBox(height: 8.0),
-        BotaoProximo(
-          onPressed: () {
-            if (situacaoEquipamento != null &&
-                      localInstalacao.isNotEmpty) {
-              var eqremovid;
-              for (int i =0; i< EquipamentoVeiculoCodigos.length; i++) {
-                if(EquipamentoVeiculoCodigos[i] == selecionadoveiculo){
-                  eqremovid = EquipamentosVeiculoIDs[i];
-                }
-              }
-              Map<String, dynamic> equipamentos = {
-                "EquipamentoInstaladoID": "",
-                "EquipamentoInstaladoCodigo": "",
-                "EquipamentosRemovidoID":eqremovid,
-                "EquipamentoRemovidoCodigo": selecionadoveiculo,
-                "localInstalacao" : localInstalacao,
-              };
-              getequipamentos().setEquipamento(equipamentos);
-                    Navigator.push(
-                      context,
-                      //TODO ROTA Acessorios()
-                      MaterialPageRoute(builder: (context) => FotoHodometro()),
-                    );
-                  } else {
-              // Exibir uma mensagem de erro informando que todas as respostas devem ser preenchidas
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: Text('Erro'),
-                    content: Text('Por favor, preencha todas as respostas.'),
-                    actions: [
-                      TextButton(
-                        child: Text('OK'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  );
-                },
+            items: codigosEq.map((String item) {
+              return DropdownMenuItem<String>(
+                value: item,
+                child: Row(
+                  children: [
+                    Icon(Icons.arrow_right),
+                    SizedBox(width: 5.0),
+                    Text(item.toString()),
+                  ],
+                ),
               );
-            }
-          },
-        )
-      ],
-    ),);
+            }).toList(),
+            hint: Text('Equipamento'),
+          ),
+          SizedBox(height: 16.0),
+
+          Text(
+            'Situação do equipamento - RETIRADA',
+            style: TextStyle(
+              fontSize: 14.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 8.0),
+          Column(
+            children: <Widget>[
+              RadioListTile<String>(
+                title: Text(
+                  'OK',
+                  style: TextStyle(fontSize: 14.0),
+                ),
+                value: 'OK',
+                groupValue: situacaoEquipamento,
+                onChanged: (String? value) {
+                  setState(() {
+                    situacaoEquipamento = value;
+                  });
+                },
+              ),
+              RadioListTile<String>(
+                title: Text(
+                  'Com defeito',
+                  style: TextStyle(fontSize: 14.0),
+                ),
+                value: 'Com defeito',
+                groupValue: situacaoEquipamento,
+                onChanged: (String? value) {
+                  setState(() {
+                    situacaoEquipamento = value;
+                  });
+                },
+              ),
+            ],
+          ),
+          SizedBox(height: 16.0),
+          // Input local de instalação
+          Text(
+            'Local de instalação',
+            style: TextStyle(
+              fontSize: 14.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 8.0),
+          Container(
+            width: double.infinity,
+            child: TextField(
+              textAlignVertical: TextAlignVertical.center,
+              decoration: InputDecoration(
+                hintText: localInstalacao,
+                border: OutlineInputBorder(),
+              ),
+              onChanged: (String? value) {
+                setState(() {
+                  localInstalacao = value;
+                });
+              },
+              onSubmitted: (value) {
+                localInstalacao = value;
+              },
+            ),
+          ),
+          SizedBox(height: 8.0),
+          BotaoProximo(
+            onPressed: () {
+              if (situacaoEquipamento != null && localInstalacao != null) {
+                var eqremovid;
+                for (int i = 0; i < EquipamentoVeiculoCodigos.length; i++) {
+                  if (EquipamentoVeiculoCodigos[i] == selecionadoveiculo) {
+                    eqremovid = EquipamentosVeiculoIDs[i];
+                  }
+                }
+                Map<String, dynamic> equipamentos = {
+                  "EquipamentoInstaladoID": "",
+                  "EquipamentoInstaladoCodigo": "",
+                  "EquipamentosRemovidoID": eqremovid,
+                  "EquipamentoRemovidoCodigo": selecionadoveiculo,
+                  "localInstalacao": localInstalacao,
+                };
+                getequipamentos().setEquipamento(equipamentos);
+                Navigator.push(
+                  context,
+                  //TODO ROTA Acessorios()
+                  MaterialPageRoute(builder: (context) => FotoHodometro()),
+                );
+              } else {
+                // Exibir uma mensagem de erro informando que todas as respostas devem ser preenchidas
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('Erro'),
+                      content: Text('Por favor, preencha todas as respostas.'),
+                      actions: [
+                        TextButton(
+                          child: Text('OK'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
+            },
+          )
+        ],
+      ),
+    );
   }
 }
+
 class ContainerManutencao extends StatefulWidget {
   @override
   State<ContainerManutencao> createState() => _ContainerManutencaoState();
@@ -282,7 +289,7 @@ class _ContainerManutencaoState extends State<ContainerManutencao> {
   var AcessoriosDescricao;
   var EquipamentosVeiculoIDs;
   List<String> EquipamentoVeiculoCodigos = [];
-  var localInstalacao;
+  String? localInstalacao;
   var stringEquipamento;
   var selecionadonovo;
   var selecionadoveiculo;
@@ -293,110 +300,117 @@ class _ContainerManutencaoState extends State<ContainerManutencao> {
     var eqp = jsonDecode(json!);
     setState(() {
       EquipamentoNovoIDs = eqp["EquipamentoNovoIDs"];
-      EquipamentoNovoCodigos =  List<String>.from(eqp["EquipamentoNovoCodigos"] as List);
+      EquipamentoNovoCodigos =
+          List<String>.from(eqp["EquipamentoNovoCodigos"] as List);
       AcessoriosID = eqp["AcessoriosID"];
       AcessoriosDescricao = eqp["AcessoriosDescricao"];
       EquipamentosVeiculoIDs = eqp["EquipamentosVeiculoIDs"];
-      EquipamentoVeiculoCodigos = List<String>.from(eqp["EquipamentoVeiculoCodigos"] as List);
+      EquipamentoVeiculoCodigos =
+          List<String>.from(eqp["EquipamentoVeiculoCodigos"] as List);
       localInstalacao = eqp["localInstalacao"];
       stringEquipamento = eqp["stringEquipamento"];
-
     });
   }
+
   @override
   void initState() {
     getdata();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-  List<String> codigosEq = EquipamentoVeiculoCodigos;
-  
-  return Padding(
-    padding: EdgeInsets.all(16.0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Input equipamento
-        DropdownButton<String>(
-          value: selecionadoveiculo,
-          onChanged: (String? newValue) {
-            setState(() {
-              selecionadoveiculo = newValue;
-            });
-          },
-          items: codigosEq.map((String item) {
-            return DropdownMenuItem<String>(
-              value: item,
-              child: Row(
-                children: [
-                  Icon(Icons.arrow_right),
-                  SizedBox(width: 5.0),
-                  Text(item.toString()),
-                ],
-              ),
-            );
-          }).toList(),
-          hint: Text('Equipamento'),
-        ),
-        SizedBox(height: 16.0),
-        // Input local de instalação
-        Text(
-          'Local de instalação - MANUTENÇÃO',
-          style: TextStyle(
-            fontSize: 14.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 8.0),
-        Container(
-          width: double.infinity,
-          child: TextField(
-            textAlignVertical: TextAlignVertical.center,
-            decoration: InputDecoration(
-              hintText: localInstalacao,
-              border: OutlineInputBorder(),
-            ),
-            onSubmitted: (value) {
+    List<String> codigosEq = EquipamentoVeiculoCodigos;
+
+    return Padding(
+      padding: EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Input equipamento
+          DropdownButton<String>(
+            value: selecionadoveiculo,
+            onChanged: (String? newValue) {
               setState(() {
-                localInstalacao = value;
+                selecionadoveiculo = newValue;
               });
             },
+            items: codigosEq.map((String item) {
+              return DropdownMenuItem<String>(
+                value: item,
+                child: Row(
+                  children: [
+                    Icon(Icons.arrow_right),
+                    SizedBox(width: 5.0),
+                    Text(item.toString()),
+                  ],
+                ),
+              );
+            }).toList(),
+            hint: Text('Equipamento'),
           ),
-        ),
-        SizedBox(height: 8.0),
-        BotaoProximo(
-          onPressed: () {
-            if (localInstalacao.isNotEmpty) {
-              Navigator.push(
-                context,
+          SizedBox(height: 16.0),
+          // Input local de instalação
+          Text(
+            'Local de instalação - MANUTENÇÃO',
+            style: TextStyle(
+              fontSize: 14.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 8.0),
+          Container(
+            width: double.infinity,
+            child: TextField(
+              textAlignVertical: TextAlignVertical.center,
+              decoration: InputDecoration(
+                hintText: localInstalacao,
+                border: OutlineInputBorder(),
+              ),
+              onChanged: (String? value) {
+                setState(() {
+                  localInstalacao = value;
+                });
+              },
+              onSubmitted: (value) {
+                localInstalacao = value;
+              },
+            ),
+          ),
+          SizedBox(height: 8.0),
+          BotaoProximo(
+            onPressed: () {
+              if (localInstalacao != null) {
+                Navigator.push(
+                  context,
                   //TODO ROTA Acessorios()
-                MaterialPageRoute(builder: (context) => FotoHodometro()),
-              );
-            } else {
-              // Exibir uma mensagem de erro informando que todas as respostas devem ser preenchidas
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: Text('Erro'),
-                    content: Text('Por favor, preencha todas as respostas.'),
-                    actions: [
-                      TextButton(
-                        child: Text('OK'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
-            }
-          },
-        )
-      ],
-    ),);
+                  MaterialPageRoute(builder: (context) => FotoHodometro()),
+                );
+              } else {
+                // Exibir uma mensagem de erro informando que todas as respostas devem ser preenchidas
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('Erro'),
+                      content: Text('Por favor, preencha todas as respostas.'),
+                      actions: [
+                        TextButton(
+                          child: Text('OK'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
+            },
+          )
+        ],
+      ),
+    );
   }
 }
 
@@ -415,7 +429,7 @@ class _ContainerTrocaState extends State<ContainerTroca> {
   var AcessoriosDescricao;
   var EquipamentosVeiculoIDs;
   List<String> EquipamentoVeiculoCodigos = [];
-  var localInstalacao;
+  String? localInstalacao;
   var stringEquipamento;
   var selecionadonovo;
   var selecionadoveiculo;
@@ -426,191 +440,199 @@ class _ContainerTrocaState extends State<ContainerTroca> {
     var eqp = jsonDecode(json!);
     setState(() {
       EquipamentoNovoIDs = eqp["EquipamentoNovoIDs"];
-      EquipamentoNovoCodigos =  List<String>.from(eqp["EquipamentoNovoCodigos"] as List);
+      EquipamentoNovoCodigos =
+          List<String>.from(eqp["EquipamentoNovoCodigos"] as List);
       AcessoriosID = eqp["AcessoriosID"];
       AcessoriosDescricao = eqp["AcessoriosDescricao"];
       EquipamentosVeiculoIDs = eqp["EquipamentosVeiculoIDs"];
-      EquipamentoVeiculoCodigos = List<String>.from(eqp["EquipamentoVeiculoCodigos"] as List);
+      EquipamentoVeiculoCodigos =
+          List<String>.from(eqp["EquipamentoVeiculoCodigos"] as List);
       localInstalacao = eqp["localInstalacao"];
       stringEquipamento = eqp["stringEquipamento"];
-
     });
   }
+
   @override
   void initState() {
     getdata();
     super.initState();
   }
-  Widget build(BuildContext context) {
-  return Padding(
-    padding: EdgeInsets.all(16.0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Input equipamento
-        DropdownButton<String>(
-          value: selecionadonovo,
-          onChanged: (String? newValue) {
-            setState(() {
-              selecionadonovo = newValue;
-            });
-          },
-          items: EquipamentoNovoCodigos.map((item) {
-            return DropdownMenuItem<String>(
-              value: item,
-              child: Row(
-                children: [
-                  Icon(Icons.arrow_right),
-                  SizedBox(width: 5.0),
-                  Text("$item"),
-                ],
-              ),
-            );
-          }).toList(),
-          hint: Text('Equipamento'),
-        ),
-        SizedBox(height: 16.0),
-        DropdownButton<String>(
-          value: selecionadoveiculo,
-          onChanged: (String? newValue) {
-            setState(() {
-              selecionadoveiculo = newValue;
-            });
-          },
-          items: EquipamentoVeiculoCodigos.map((item) {
-            return DropdownMenuItem<String>(
-              value: item,
-              child: Row(
-                children: [
-                  Icon(Icons.arrow_right),
-                  SizedBox(width: 5.0),
-                  Text("$item"),
-                ],
-              ),
-            );
-          }).toList(),
-          hint: Text('Equipamento Retirado'),
-        ),
-        SizedBox(height: 16,),
-        Text(
-          'Situação do equipamento - TROCA',
-          style: TextStyle(
-            fontSize: 14.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 8.0),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            RadioListTile<String>(
-              title: Text(
-                'OK',
-                style: TextStyle(fontSize: 14.0),
-              ),
-              value: 'OK',
-              groupValue: situacaoEquipamento,
-              onChanged: (String? value) {
-                setState(() {
-                  situacaoEquipamento = value;
-                });
-              },
-            ),
-            RadioListTile<String>(
-              title: Text(
-                'Com defeito',
-                style: TextStyle(fontSize: 14.0),
-              ),
-              value: 'Com defeito',
-              groupValue: situacaoEquipamento,
-              onChanged: (String? value) {
-                setState(() {
-                  situacaoEquipamento = value;
-                });
-              },
-            ),
-          ],
-        ),
-        SizedBox(height: 16.0),
-        // Input local de instalação
-        Text(
-          'Local de instalação',
-          style: TextStyle(
-            fontSize: 14.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 8.0),
-        Container(
-          width: double.infinity,
-          child: TextField(
-            textAlignVertical: TextAlignVertical.center,
-            decoration: InputDecoration(
-              hintText: localInstalacao,
-              border: OutlineInputBorder(),
-            ),
-            onSubmitted: (value) {
-              setState(() {
-                localInstalacao = value;
-              });
-            },
-          ),
-        ),
-        SizedBox(height: 8.0),
-        BotaoProximo(
-          onPressed: () {
-            if (situacaoEquipamento != null &&
-                      localInstalacao.isNotEmpty) {
-              var eqremovid;
-              for (int i =0; i< EquipamentoVeiculoCodigos.length; i++) {
-                if(EquipamentoVeiculoCodigos[i] == selecionadoveiculo){
-                  eqremovid = EquipamentosVeiculoIDs[i];
-                }
-              }
 
-              var eqnovosid;
-              for (int i =0; i< EquipamentoNovoCodigos.length; i++) {
-                if(EquipamentoNovoCodigos[i] == selecionadonovo){
-                  eqnovosid = EquipamentoNovoIDs[i];
-                }
-              }
-              Map<String, dynamic> equipamentos = {
-                "EquipamentoInstaladoID": eqnovosid,
-                "EquipamentoInstaladoCodigo": selecionadonovo,
-                "EquipamentosRemovidoID":eqremovid,
-                "EquipamentoRemovidoCodigo": selecionadoveiculo,
-                "localInstalacao" : localInstalacao,
-              };
-              getequipamentos().setEquipamento(equipamentos);
-                    Navigator.push(
-                      context,
-                      //TODO ROTA Acessorios()
-                      MaterialPageRoute(builder: (context) => FotoHodometro()),
-                    );
-                  } else {
-              // Exibir uma mensagem de erro informando que todas as respostas devem ser preenchidas
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: Text('Erro'),
-                    content: Text('Por favor, preencha todas as respostas.'),
-                    actions: [
-                      TextButton(
-                        child: Text('OK'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
+  Widget build(BuildContext context) {
+    return Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Input equipamento
+            DropdownButton<String>(
+              value: selecionadonovo,
+              onChanged: (String? newValue) {
+                setState(() {
+                  selecionadonovo = newValue;
+                });
+              },
+              items: EquipamentoNovoCodigos.map((item) {
+                return DropdownMenuItem<String>(
+                  value: item,
+                  child: Row(
+                    children: [
+                      Icon(Icons.arrow_right),
+                      SizedBox(width: 5.0),
+                      Text("$item"),
                     ],
+                  ),
+                );
+              }).toList(),
+              hint: Text('Equipamento'),
+            ),
+            SizedBox(height: 16.0),
+            DropdownButton<String>(
+              value: selecionadoveiculo,
+              onChanged: (String? newValue) {
+                setState(() {
+                  selecionadoveiculo = newValue;
+                });
+              },
+              items: EquipamentoVeiculoCodigos.map((item) {
+                return DropdownMenuItem<String>(
+                  value: item,
+                  child: Row(
+                    children: [
+                      Icon(Icons.arrow_right),
+                      SizedBox(width: 5.0),
+                      Text("$item"),
+                    ],
+                  ),
+                );
+              }).toList(),
+              hint: Text('Equipamento Retirado'),
+            ),
+            SizedBox(
+              height: 16,
+            ),
+            Text(
+              'Situação do equipamento - TROCA',
+              style: TextStyle(
+                fontSize: 14.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 8.0),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                RadioListTile<String>(
+                  title: Text(
+                    'OK',
+                    style: TextStyle(fontSize: 14.0),
+                  ),
+                  value: 'OK',
+                  groupValue: situacaoEquipamento,
+                  onChanged: (String? value) {
+                    setState(() {
+                      situacaoEquipamento = value;
+                    });
+                  },
+                ),
+                RadioListTile<String>(
+                  title: Text(
+                    'Com defeito',
+                    style: TextStyle(fontSize: 14.0),
+                  ),
+                  value: 'Com defeito',
+                  groupValue: situacaoEquipamento,
+                  onChanged: (String? value) {
+                    setState(() {
+                      situacaoEquipamento = value;
+                    });
+                  },
+                ),
+              ],
+            ),
+            SizedBox(height: 16.0),
+            // Input local de instalação
+            Text(
+              'Local de instalação',
+              style: TextStyle(
+                fontSize: 14.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 8.0),
+            Container(
+              width: double.infinity,
+              child: TextField(
+                textAlignVertical: TextAlignVertical.center,
+                decoration: InputDecoration(
+                  hintText: localInstalacao,
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (String? value) {
+                setState(() {
+                  localInstalacao = value;
+                });
+              },
+              onSubmitted: (value) {
+                localInstalacao = value;
+              },
+              ),
+            ),
+            SizedBox(height: 8.0),
+            BotaoProximo(
+              onPressed: () {
+                if (situacaoEquipamento != null && localInstalacao != null) {
+                  var eqremovid;
+                  for (int i = 0; i < EquipamentoVeiculoCodigos.length; i++) {
+                    if (EquipamentoVeiculoCodigos[i] == selecionadoveiculo) {
+                      eqremovid = EquipamentosVeiculoIDs[i];
+                    }
+                  }
+
+                  var eqnovosid;
+                  for (int i = 0; i < EquipamentoNovoCodigos.length; i++) {
+                    if (EquipamentoNovoCodigos[i] == selecionadonovo) {
+                      eqnovosid = EquipamentoNovoIDs[i];
+                    }
+                  }
+                  Map<String, dynamic> equipamentos = {
+                    "EquipamentoInstaladoID": eqnovosid,
+                    "EquipamentoInstaladoCodigo": selecionadonovo,
+                    "EquipamentosRemovidoID": eqremovid,
+                    "EquipamentoRemovidoCodigo": selecionadoveiculo,
+                    "localInstalacao": localInstalacao,
+                  };
+                  getequipamentos().setEquipamento(equipamentos);
+                  Navigator.push(
+                    context,
+                    //TODO ROTA Acessorios()
+                    MaterialPageRoute(builder: (context) => FotoHodometro()),
                   );
-                },
-              );
-            }
-          },
-        )
-      ],
-    ));
+                } else {
+                  // Exibir uma mensagem de erro informando que todas as respostas devem ser preenchidas
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text('Erro'),
+                        content:
+                            Text('Por favor, preencha todas as respostas.'),
+                        actions: [
+                          TextButton(
+                            child: Text('OK'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
+              },
+            )
+          ],
+        ));
   }
 }
 
@@ -622,15 +644,13 @@ class ContainerInstalacao extends StatefulWidget {
 }
 
 class _ContainerInstalacaoState extends State<ContainerInstalacao> {
-
-
   var EquipamentoNovoIDs;
   List<String> EquipamentoNovoCodigos = [];
   var AcessoriosID;
   var AcessoriosDescricao;
   var EquipamentosVeiculoIDs;
   List<String> EquipamentoVeiculoCodigos = [];
-  var localInstalacao;
+  String? localInstalacao;
   var stringEquipamento;
   var selecionadonovo;
   var selecionadoveiculo;
@@ -640,92 +660,98 @@ class _ContainerInstalacaoState extends State<ContainerInstalacao> {
     var eqp = jsonDecode(json!);
     setState(() {
       EquipamentoNovoIDs = eqp["EquipamentoNovoIDs"];
-      EquipamentoNovoCodigos =  List<String>.from(eqp["EquipamentoNovoCodigos"] as List);
+      EquipamentoNovoCodigos =
+          List<String>.from(eqp["EquipamentoNovoCodigos"] as List);
       AcessoriosID = eqp["AcessoriosID"];
       AcessoriosDescricao = eqp["AcessoriosDescricao"];
       EquipamentosVeiculoIDs = eqp["EquipamentosVeiculoIDs"];
-      EquipamentoVeiculoCodigos = List<String>.from(eqp["EquipamentoVeiculoCodigos"] as List);
+      EquipamentoVeiculoCodigos =
+          List<String>.from(eqp["EquipamentoVeiculoCodigos"] as List);
       localInstalacao = eqp["localInstalacao"];
       stringEquipamento = eqp["stringEquipamento"];
     });
   }
+
   @override
   void initState() {
     getdata();
     super.initState();
   }
+
   Widget build(BuildContext context) {
-  return Padding(
-    padding: EdgeInsets.all(16.0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Input equipamento
-        DropdownButton<String>(
-          value: selecionadonovo,
-          onChanged: (String? newValue) {
-            setState(() {
-              selecionadonovo = newValue;
-            });
-          },
-          items: EquipamentoNovoCodigos.map((String item) {
-            return DropdownMenuItem<String>(
-              value: item,
-              child: Row(
-                children: [
-                  Icon(Icons.arrow_right),
-                  SizedBox(width: 5.0),
-                  Text(item),
-                ],
-              ),
-            );
-          }).toList(),
-          hint: Text('Equipamento'),
-        ),
-        SizedBox(height: 16.0),
-        // Input local de instalação
-        Text(
-          'Local de instalação - INSTALAÇÃO',
-          style: TextStyle(
-            fontSize: 14.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 8.0),
-        Container(
-          width: double.infinity,
-          child: TextField(
-            textAlignVertical: TextAlignVertical.center,
-            decoration: InputDecoration(
-              hintText: localInstalacao,
-              border: OutlineInputBorder(),
-            ),
-            onSubmitted: (value) {
+    return Padding(
+      padding: EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Input equipamento
+          DropdownButton<String>(
+            value: selecionadonovo,
+            onChanged: (String? newValue) {
               setState(() {
-                localInstalacao = value;
+                selecionadonovo = newValue;
               });
             },
+            items: EquipamentoNovoCodigos.map((String item) {
+              return DropdownMenuItem<String>(
+                value: item,
+                child: Row(
+                  children: [
+                    Icon(Icons.arrow_right),
+                    SizedBox(width: 5.0),
+                    Text(item),
+                  ],
+                ),
+              );
+            }).toList(),
+            hint: Text('Equipamento'),
           ),
-        ),
-        SizedBox(height: 8.0),
+          SizedBox(height: 16.0),
+          // Input local de instalação
+          Text(
+            'Local de instalação - INSTALAÇÃO',
+            style: TextStyle(
+              fontSize: 14.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 8.0),
+          Container(
+            width: double.infinity,
+            child: TextField(
+              textAlignVertical: TextAlignVertical.center,
+              decoration: InputDecoration(
+                hintText: localInstalacao,
+                border: OutlineInputBorder(),
+              ),
+              onChanged: (String? value) {
+                setState(() {
+                  localInstalacao = value;
+                });
+              },
+              onSubmitted: (value) {
+                localInstalacao = value;
+              },
+            ),
+          ),
+          SizedBox(height: 8.0),
           BotaoProximo(
-    
             onPressed: () {
               var eqnovosid;
-              for (int i =0; i< EquipamentoNovoCodigos.length; i++) {
-                if(EquipamentoNovoCodigos[i] == selecionadonovo){
+              for (int i = 0; i < EquipamentoNovoCodigos.length; i++) {
+                if (EquipamentoNovoCodigos[i] == selecionadonovo) {
                   eqnovosid = EquipamentoNovoIDs[i];
                 }
               }
               Map<String, dynamic> equipamentos = {
                 "EquipamentoInstaladoID": eqnovosid,
                 "EquipamentoInstaladoCodigo": selecionadonovo,
-                "EquipamentosRemovidoID":"",
+                "EquipamentosRemovidoID": "",
                 "EquipamentoRemovidoCodigo": "",
-                "localInstalacao" : localInstalacao,
+                "localInstalacao": localInstalacao,
               };
               getequipamentos().setEquipamento(equipamentos);
-              if (localInstalacao.isNotEmpty) {
+              if (localInstalacao !=null) {
                 Navigator.push(
                   context,
                   //TODO ROTA Acessorios()

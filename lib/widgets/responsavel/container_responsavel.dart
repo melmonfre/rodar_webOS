@@ -26,9 +26,9 @@ class ContainerResponsavel extends StatefulWidget {
 
 class _ContainerResponsavelState extends State<ContainerResponsavel> {
   String motivoDivergencia = '';
-  String nome = "";
-  String email = "";
-  String telefone = "";
+  String? nome ;
+  String? email;
+  String? telefone;
 
   String contatoSelecionado = '';
   bool responsavelAusente = false;
@@ -148,7 +148,7 @@ saveoncache() async {
                       labelText: 'Nome',
                       initialValue:
                           nome, //valor inicial do preenchimento automatico
-                      onChanged: (value) {
+                      onChanged: (String? value) {
                         if (mounted) {
                           setState(() {
                             nome = value;
@@ -170,13 +170,18 @@ saveoncache() async {
                           });
                         }
                       },
+                      onChanged: (String? value) {
+                        setState(() {
+                            email = value;
+                          });
+                      },
                       enabled:
                           false, // Desabilitar o campo preenchido automaticamente
                     ),
                     InputText(
                       labelText: 'Telefone',
                       initialValue: telefone,
-                      onChanged: (value) {
+                      onChanged: (String? value) {
                         if (mounted) {
                           // Verificar se o widget ainda está montado
                           setState(() {
