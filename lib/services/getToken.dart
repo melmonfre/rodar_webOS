@@ -16,6 +16,8 @@ import 'OS/GetChecklistOS.dart';
 class getToken {
   void obter(var token) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
+    var idvelho = opcs.getInt("sessionid");
+    zerarcache(idvelho);
     var retorno;
     var bearer;
 
@@ -32,6 +34,8 @@ class getToken {
     var empresa = jsonEncode(emp);
     setempresas(empresa);
     var empresaid = emp['id'];
+    opcs.setInt("sessionid", empresaid);
+
     print(empresaid);
     opcs.setString("${empresaid}@token", bearer);
    sincronizar(empresaid);
