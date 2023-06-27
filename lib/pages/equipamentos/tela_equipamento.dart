@@ -297,6 +297,8 @@ class _ContainerManutencaoState extends State<ContainerManutencao> {
   getdata() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     var json = opcs.getString("equipamentos");
+    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+    print(json);
     var eqp = jsonDecode(json!);
     setState(() {
       EquipamentoNovoIDs = eqp["EquipamentoNovoIDs"];
@@ -335,7 +337,7 @@ class _ContainerManutencaoState extends State<ContainerManutencao> {
                 selecionadoveiculo = newValue;
               });
             },
-            items: codigosEq.map((String item) {
+            items: EquipamentoVeiculoCodigos.map((item) {
               return DropdownMenuItem<String>(
                 value: item,
                 child: Row(

@@ -16,34 +16,42 @@ class getequipamentos{
     List<String> eqnovoscod =[];
     var localInstalacao;
     var stringEquipamento;
-    eqnovos.forEach((eq) {
-      localInstalacao = eq['localInstalacao'];
-      stringEquipamento = eq['stringEquipamento'];
-      var equip = eq['equipamento'];
-      eqnovosid.add(equip['id']);
-      eqnovoscod.add(equip['codigo']);
-      print(eqnovoscod);
-      print(eqnovosid);
-    });
+    try{
+      eqnovos.forEach((eq) {
+        localInstalacao = eq['localInstalacao'];
+        stringEquipamento = eq['stringEquipamento'];
+        var equip = eq['equipamento'];
+        eqnovosid.add(equip['id']);
+        eqnovoscod.add(equip['codigo']);
+      });
+    } catch(Exception) {
+    }
+
 
 
     List acessorios =element['acessorios'];
     List accid =[];
     List acdesc =[];
-    acessorios.forEach((acc) {
-      var acess = acc['acessorio'];
-      accid.add(acess['id']);
-      acdesc.add(acess['descricao']);
-    });
+    try{
+      acessorios.forEach((acc) {
+        var acess = acc['acessorio'];
+        accid.add(acess['id']);
+        acdesc.add(acess['descricao']);
+      });
+    } catch(Exception) {
+    }
+
 
     var veiculo = element['veiculo'];
     List eqveiculo =veiculo["equipamentos"];
     List eqveiculoid =[];
     List<String> eqveiculocod =[];
-    eqveiculo.forEach((eq) {
+    try{eqveiculo.forEach((eq) {
       eqveiculoid.add(eq['id']);
       eqveiculocod.add(eq['codigo']);
-    });
+    });} catch(Exception) {
+    }
+
    var equipamentos = {
       "EquipamentoNovoIDs": eqnovosid,
       "EquipamentoNovoCodigos": eqnovoscod,
@@ -55,7 +63,6 @@ class getequipamentos{
       "stringEquipamento": stringEquipamento,
     };
    opcs.setString("equipamentos", jsonEncode(equipamentos));
-    print(equipamentos);
   }
   setEquipamento(Map<String, dynamic> equip) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();

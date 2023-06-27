@@ -31,7 +31,6 @@ class _FuturasState extends State<Futuras> {
     int numero =0;
     varfuturas.forEach((element) {
       numero++;
-      print(numero);
     });
 
 
@@ -43,13 +42,13 @@ class _FuturasState extends State<Futuras> {
   var timer  = 1;
   void _decrementCounter() {
     Timer.periodic(const Duration(seconds: 1), (_) {
-      setState(() {
+      try{setState(() {
         timer--;
         if (timer == 0) {
           getdata();
           timer = 5;
         }
-      });
+      });} catch (e){}
     });
   }
   void initState() {
@@ -114,7 +113,6 @@ class _AmanhaState extends State<Amanha> {
     int numero =0;
     varamanha.forEach((element) {
       numero++;
-      print(numero);
     });
     setState(() {
       numamanha = numero;
@@ -124,13 +122,14 @@ class _AmanhaState extends State<Amanha> {
   var timer  = 2;
   void _decrementCounter() {
     Timer.periodic(const Duration(seconds: 1), (_) {
-      setState(() {
+      try {
+        setState(() {
         timer--;
         if (timer == 0) {
           getdata();
           timer = 5;
         }
-      });
+      });} catch(e){}
     });
   }
   void initState() {
@@ -197,7 +196,6 @@ class _HojeState extends State<Hoje> {
     int numero =0;
     vardodia.forEach((element) {
       numero++;
-      print(numero);
     });
     setState(() {
       numdodia = numero;
@@ -208,13 +206,15 @@ class _HojeState extends State<Hoje> {
   var timer  = 3;
   void _decrementCounter() {
     Timer.periodic(const Duration(seconds: 1), (_) {
-      setState(() {
-        timer--;
-        if (timer == 0) {
-          getdata();
-          timer = 5;
-        }
-      });
+      try {
+        setState(() {
+          timer--;
+          if (timer == 0) {
+            getdata();
+            timer = 5;
+          }
+        });
+      } catch (e) {}
     });
   }
   void initState() {
@@ -281,7 +281,6 @@ class _AtrasadasState extends State<Atrasadas> {
     int numero =0;
     varatrasadas.forEach((element) {
       numero++;
-      print(numero);
     });
     setState(() {
       numatrasadas = numero;
@@ -290,13 +289,15 @@ class _AtrasadasState extends State<Atrasadas> {
   var timer  = 4;
   void _decrementCounter() {
     Timer.periodic(const Duration(seconds: 1), (_) {
-      setState(() {
-        timer--;
-        if (timer == 0) {
-          getdata();
-          timer = 5;
-        }
-      });
+      try {
+        setState(() {
+          timer--;
+          if (timer == 0) {
+            getdata();
+            timer = 5;
+          }
+        });
+      } catch (e){}
     });
   }
   void initState() {

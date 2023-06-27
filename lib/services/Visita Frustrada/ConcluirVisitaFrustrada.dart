@@ -24,10 +24,9 @@ class concluivf{
     List<String>? base64images = opcs.getStringList("base64vf");
     var localGps = "${opcs.getStringList("latitude")},${opcs.getStringList("longitude")}";
 
-    enviamotivosvf(osid, token, DistanciaTec, valorDeslocamentoTec, pedagioTec, motivoDiv, motivo, localGps);
     enviardiversasfotosvf(osid, token, base64images);
     enviardeslocamentovf(osid, token, distanciacalc, DistanciaTec, pedagioTec);
-
+    enviamotivosvf(osid, token, DistanciaTec, valorDeslocamentoTec, pedagioTec, motivoDiv, motivo, localGps);
   }
 
   enviamotivosvf(osid, token,  DistanciaTec,valorDeslocamentoTec, pedagioTec, motivoDiv, motivo, localGps) async {

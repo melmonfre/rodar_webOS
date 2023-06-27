@@ -26,7 +26,6 @@ class getToken {
     if (res.statusCode != 200)
       throw Exception('http.get error: statusCode= ${res.statusCode}');
     retorno = jsonDecode(res.body);
-    print(retorno['token']);
     bearer = retorno['token'];
     var dados = await GetDadoslogin().fazlogin(bearer);
     var data = jsonDecode(dados);
@@ -36,7 +35,6 @@ class getToken {
     var empresaid = emp['id'];
     opcs.setInt("sessionid", empresaid);
 
-    print(empresaid);
     opcs.setString("${empresaid}@token", bearer);
    sincronizar(empresaid);
     opcs.setString("${empresaid}@login", dados);
@@ -92,21 +90,17 @@ class getToken {
       try{
         motivos = await GetMotivosOS().obter(empresaid, osid);
         if(motivos != null){
-          print("OS $osid");
-          print("Motivos: ${motivos}");
           opcs.setString("${osid}@motivos", motivos);
         }
       } catch(e) {
         opcs.remove("${osid}@motivos");
       }
     } catch(e){
-      print("isso não é um erro");
     }
   }
   getempresas() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     List<String>? listaempresas = opcs.getStringList("empresas");
-    print(listaempresas);
     return listaempresas;
   }
 
@@ -119,7 +113,6 @@ class getToken {
   Future<void> setempresas(empresa) async {
     List<String> empresas = [];
     SharedPreferences opcs = await SharedPreferences.getInstance();
-    print("EMPRESA $empresa");
     if (opcs.getStringList("empresas") == null) {
       empresas.add(empresa);
       opcs.setStringList("empresas", empresas);

@@ -27,12 +27,13 @@ class SincronizarOS{
     idsVF?.forEach((osid) {
       var body;
 
-      body = opcs.getString("${osid}@OSaFinalizarvf");
-      enviamotivosvf(body, osid);
+
       body = opcs.getString("${osid}@OSaFinalizarvfoto");
       enviardiversasfotosvf(body, osid);
       body = opcs.getString("${osid}@OSaFinalizarvfdeslocamento");
       enviardeslocamento(osid, body);
+      body = opcs.getString("${osid}@OSaFinalizarvf");
+      enviamotivosvf(body, osid);
 
     });
 

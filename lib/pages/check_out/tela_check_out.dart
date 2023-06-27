@@ -55,7 +55,6 @@ class _CheckOutTelaState extends State<CheckOutTela> {
     element = jsonDecode(json);
     token = opcs.getString("${empresaid}@token")!;
     osid = element['id'];
-    print(check);
     check = opcs.getString("${osid}@checklist");
     checklist = jsonDecode(check);
     checklist.forEach((element) {
@@ -66,7 +65,6 @@ class _CheckOutTelaState extends State<CheckOutTela> {
         checklistItens.add(3);
         tamanho = checklistID.length;
       });
-      print(checklistNome);
     });
   }
   void initState() {
@@ -140,7 +138,6 @@ class _CheckOutTelaState extends State<CheckOutTela> {
                                                 groupValue: checklistItens[index],
                                                 onChanged:  (value) {
                                                   setState(() {
-                                                    print(value);
                                                     if(checklistItens.asMap().containsKey(index)){
                                                       checklistItens[index] = value;
                                                     } else {
@@ -160,7 +157,6 @@ class _CheckOutTelaState extends State<CheckOutTela> {
                                                 groupValue: checklistItens[index],
                                                 onChanged:  (value) {
                                                   setState(() {
-                                                    print(value);
                                                     if(checklistItens.asMap().containsKey(index)){
                                                       checklistItens[index] = value;
                                                     } else {
@@ -180,7 +176,6 @@ class _CheckOutTelaState extends State<CheckOutTela> {
                                                 groupValue: checklistItens[index],
                                                 onChanged:  (value) {
                                                   setState(() {
-                                                    print(value);
                                                     if(checklistItens.asMap().containsKey(index)){
                                                       checklistItens[index] = value;
                                                     } else {
