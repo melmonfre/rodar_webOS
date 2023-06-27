@@ -222,7 +222,7 @@ salvanocache(base64Files) async {
   images.forEach((image) {
     List<int> imageBytes = image.readAsBytesSync();
     String base64File = base64Encode(imageBytes);
-    base64Files.add(base64File);
+    base64Files.add('"data:image/jpg;base64,$base64File"');
   });
   salvanocache(base64Files);
   }

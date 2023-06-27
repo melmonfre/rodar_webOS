@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,19 +25,21 @@ class concluivf{
     List<String>? base64images = opcs.getStringList("base64vf");
     var localGps = "${opcs.getStringList("latitude")},${opcs.getStringList("longitude")}";
 
-    enviardiversasfotosvf(osid, token, base64images);
-    enviardeslocamentovf(osid, token, distanciacalc, DistanciaTec, pedagioTec);
-    enviamotivosvf(osid, token, DistanciaTec, valorDeslocamentoTec, pedagioTec, motivoDiv, motivo, localGps);
+    await enviardiversasfotosvf(osid, token, base64images);
+
+    await enviardeslocamentovf(osid, token, DistanciaTec, valorDeslocamentoTec, pedagioTec);
+
+    await enviamotivosvf(osid, token, motivo, localGps);
   }
 
-  enviamotivosvf(osid, token,  DistanciaTec,valorDeslocamentoTec, pedagioTec, motivoDiv, motivo, localGps) async {
+  enviamotivosvf(osid, token, motivo, localGps) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     final headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
-    var data = '{\n    "base64":[\n        ""\n    ],\n    "DistanciaTec":$DistanciaTec,\n    "valorDeslocamentoTec":$valorDeslocamentoTec,\n    "pedagioTec":$pedagioTec,\n    "motivoDiv":$motivoDiv,\n    "motivo":$motivo,\n    "localGps":$localGps,\n    "etapa": "SERVICO_INICIADO"\n  }';
+    var data = '{"motivo":"$motivo","localGps":"$localGps"}';
 
     final url = Uri.parse('${Urlconst().url}ordem_servico/enviarmotivovf/$osid');
 
@@ -58,34 +61,36 @@ class concluivf{
   }
 
 
-  enviardiversasfotosvf(osid, token, image) async {
+  enviardiversasfotosvf(osid, token, List<String>?image) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     final headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
-    final data = '{\n    "base64":        "$image"\n , "idsRemove":[], \n  "etapa": "SERVICO_INICIADO"\n  }';
-
-    final url = Uri.parse('${Urlconst().url}ordem_servico/enviardiversasfotosvf/$osid');
+    final data = '{"base64":$image,"idsRemove":[]}';
+    print(data);
+    final url = Uri.parse('${Urlconst().url}ordem_servico/enviardiversasfotos/$osid');
 
     final res = await http.post(url, headers: headers, body: data);
     final status = res.statusCode;
     if (status != 200) {
       opcs.setString("${osid}@OSaFinalizarvfoto", data);
+      print("RESPOSTA: ${res}");
+      print("RESPOSTA ${res.body}");
       throw Exception('enviardiversasfotosvf http.post error: statusCode= $status');
     }
     print(res.body);
   }
 
-  enviardeslocamentovf(osid, token, distanciaTec, distanciacalc, pedagioTec) async {
+  enviardeslocamentovf(osid, token, distanciaTec, valorDeslocamentoTec, pedagioTec) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     final headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
-    final data = '{"distanciaTec":$distanciacalc,"distanciaTec":$distanciaTec,"pedagioTec":$pedagioTec}';
+    final data = '{"distanciaTec":$distanciaTec,"valorDeslocamentoTec":$valorDeslocamentoTec,"pedagioTec":$pedagioTec}';
 
     final url = Uri.parse('${Urlconst().url}ordem_servico/enviardeslocamento/$osid');
 

@@ -297,8 +297,6 @@ class _ContainerManutencaoState extends State<ContainerManutencao> {
   getdata() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     var json = opcs.getString("equipamentos");
-    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-    print(json);
     var eqp = jsonDecode(json!);
     setState(() {
       EquipamentoNovoIDs = eqp["EquipamentoNovoIDs"];
@@ -659,6 +657,8 @@ class _ContainerInstalacaoState extends State<ContainerInstalacao> {
   getdata() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     var json = opcs.getString("equipamentos");
+    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaa");
+    print(json);
     var eqp = jsonDecode(json!);
     setState(() {
       EquipamentoNovoIDs = eqp["EquipamentoNovoIDs"];

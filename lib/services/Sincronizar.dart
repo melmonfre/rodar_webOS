@@ -144,7 +144,7 @@ class SincronizarOS{
     };
     var data = body ;
 
-    final url = Uri.parse('${Urlconst().url}ordem_servico/enviardiversasfotosvf/$osid');
+    final url = Uri.parse('${Urlconst().url}ordem_servico/enviardiversasfotos/$osid');
 
     final res = await http.post(url, headers: headers, body: data);
     final status = res.statusCode;

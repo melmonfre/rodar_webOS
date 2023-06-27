@@ -58,7 +58,7 @@ class _ImagemState extends State<Imagem> {
     List<int> imageBytes = image;
     String base64File = base64Encode(imageBytes);
     print("BASE64 $base64File");
-    salvanocache(base64File);
+    salvanocache('"data:image/png;base64,$base64File"');
   }
 
   salvanocache(base64Files) async {
