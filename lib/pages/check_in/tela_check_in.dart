@@ -40,10 +40,8 @@ class _CheckInTelaState extends State<CheckInTela> {
     element = jsonDecode(json);
     token = opcs.getString("${empresaid}@token")!;
     osid = element['id'];
-    print(check);
     check = opcs.getString("${osid}@checklist");
     var motivos = opcs.getString("${osid}@motivos");
-    print("MOTIVOOOOOOOOOOOOSSSSSS $motivos");
     checklist = jsonDecode(check);
     checklist.forEach((element) {
       setState(() {
@@ -53,7 +51,6 @@ class _CheckInTelaState extends State<CheckInTela> {
         checklistItens.add(3);
         tamanho = checklistID.length;
       });
-      print(checklistNome);
     });
   }
 

@@ -1,7 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:rodarwebos/widgets/drawer/drawer.dart';
 import 'package:rodarwebos/widgets/Tela%20Inicial/Containeres_Tela_inicial.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../services/getToken.dart';
 
 class TelaInicial extends StatefulWidget {
   @override
@@ -11,10 +16,30 @@ class TelaInicial extends StatefulWidget {
 class _TelaInicialState extends State<TelaInicial> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
   GlobalKey<RefreshIndicatorState>();
+  Future<void> getdata() async {
 
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    var empresaid = opcs.getInt("sessionid");
+    getToken().sincronizar(empresaid);
+
+  }
   @override
+  var timer  = 5;
+  void _decrementCounter() {
+    Timer.periodic(const Duration(seconds: 1), (_) {
+      try{setState(() {
+        timer--;
+        if (timer == 0) {
+          getdata();
+          timer = 5;
+        }
+      });
+      } catch(e){}
+    });
+  }
   void initState() {
-    _refreshIndicatorKey.currentState?.show();
+    getdata();
+    _decrementCounter();
     super.initState();
   }
   @override

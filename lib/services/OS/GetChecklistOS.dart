@@ -19,7 +19,6 @@ class GetChecklistOS{
     var res = await http.get(url, headers: headers);
     if (res.statusCode != 200) throw Exception('http.get error: statusCode= ${res.statusCode}');
     else{
-      print("CHECKLIST: ${res.body}");
       String source = Utf8Decoder().convert(res.bodyBytes);
       return source;
     }
