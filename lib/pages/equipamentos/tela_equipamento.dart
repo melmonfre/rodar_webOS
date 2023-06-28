@@ -58,21 +58,26 @@ class _EquipamentosState extends State<Equipamentos> {
               Container(
                 alignment: Alignment.center,
                 child: Text(
-                  "$os",
+                  "$os", // Exibe o valor da variável "os"
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-              SizedBox(height: 16.0),
-              if (control.toLowerCase().contains("manut"))
-                ContainerManutencao(),
-              if (control.toLowerCase().contains("retirada"))
-                ContainerRetirada(),
-              if (control.toLowerCase().contains("instal"))
-                ContainerInstalacao(),
-              if (control.toLowerCase().contains("troca")) ContainerTroca(),
+              SizedBox(height: 16.0), // Espaçamento vertical
+              if (control.toLowerCase().contains(
+                  "manut")) // Verifica se a variável "control" contém a palavra "manut" (em minúsculas)
+                ContainerManutencao(), // Exibe o widget ContainerManutencao
+              if (control.toLowerCase().contains(
+                  "retirada")) // Verifica se a variável "control" contém a palavra "retirada" (em minúsculas)
+                ContainerRetirada(), // Exibe o widget ContainerRetirada
+              if (control.toLowerCase().contains(
+                  "instal")) // Verifica se a variável "control" contém a palavra "instal" (em minúsculas)
+                ContainerInstalacao(), // Exibe o widget ContainerInstalacao
+              if (control.toLowerCase().contains(
+                  "troca")) // Verifica se a variável "control" contém a palavra "troca" (em minúsculas)
+                ContainerTroca(), // Exibe o widget ContainerTroca
             ],
           ),
         ),
@@ -137,27 +142,30 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
         children: [
           // Input equipamento
           DropdownButton<String>(
-            value: selecionadoveiculo,
+            value: selecionadoveiculo, // Valor selecionado no dropdown
             onChanged: (String? newValue) {
               setState(() {
-                selecionadoveiculo = newValue;
+                selecionadoveiculo =
+                    newValue; // Atualiza o valor selecionado no estado
               });
             },
             items: codigosEq.map((String item) {
               return DropdownMenuItem<String>(
-                value: item,
+                value: item, // Valor do item do dropdown
                 child: Row(
                   children: [
-                    Icon(Icons.arrow_right),
+                    Icon(Icons
+                        .arrow_right), // Ícone exibido antes do item do dropdown
                     SizedBox(width: 5.0),
-                    Text(item.toString()),
+                    Text(item.toString()), // Texto do item do dropdown
                   ],
                 ),
               );
             }).toList(),
-            hint: Text('Equipamento'),
+            hint: Text(
+                'Equipamento'), // Texto exibido quando nenhum valor está selecionado
           ),
-          SizedBox(height: 16.0),
+          SizedBox(height: 16.0), // Espaçamento vertical
 
           Text(
             'Situação do equipamento - RETIRADA',
@@ -171,27 +179,31 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
             children: <Widget>[
               RadioListTile<String>(
                 title: Text(
-                  'OK',
+                  'OK', // Texto exibido para a opção "OK"
                   style: TextStyle(fontSize: 14.0),
                 ),
-                value: 'OK',
-                groupValue: situacaoEquipamento,
+                value: 'OK', // Valor associado à opção "OK"
+                groupValue:
+                    situacaoEquipamento, // Valor selecionado atualmente no grupo de opções
                 onChanged: (String? value) {
                   setState(() {
-                    situacaoEquipamento = value;
+                    situacaoEquipamento =
+                        value; // Atualiza o valor selecionado no estado
                   });
                 },
               ),
               RadioListTile<String>(
                 title: Text(
-                  'Com defeito',
+                  'Com defeito', // Texto exibido para a opção "Com defeito"
                   style: TextStyle(fontSize: 14.0),
                 ),
-                value: 'Com defeito',
-                groupValue: situacaoEquipamento,
+                value: 'Com defeito', // Valor associado à opção "Com defeito"
+                groupValue:
+                    situacaoEquipamento, // Valor selecionado atualmente no grupo de opções
                 onChanged: (String? value) {
                   setState(() {
-                    situacaoEquipamento = value;
+                    situacaoEquipamento =
+                        value; // Atualiza o valor selecionado no estado
                   });
                 },
               ),
@@ -229,24 +241,31 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
           BotaoProximo(
             onPressed: () {
               if (situacaoEquipamento != null && localInstalacao != null) {
+                // Verifica se a situação do equipamento e o local de instalação foram selecionados
                 var eqremovid;
                 for (int i = 0; i < EquipamentoVeiculoCodigos.length; i++) {
                   if (EquipamentoVeiculoCodigos[i] == selecionadoveiculo) {
-                    eqremovid = EquipamentosVeiculoIDs[i];
+                    eqremovid = EquipamentosVeiculoIDs[
+                        i]; // Armazena o ID do equipamento removido correspondente ao veículo selecionado
                   }
                 }
                 Map<String, dynamic> equipamentos = {
                   "EquipamentoInstaladoID": "",
                   "EquipamentoInstaladoCodigo": "",
-                  "EquipamentosRemovidoID": eqremovid,
-                  "EquipamentoRemovidoCodigo": selecionadoveiculo,
-                  "localInstalacao": localInstalacao,
+                  "EquipamentosRemovidoID":
+                      eqremovid, // Armazena o ID do equipamento removido
+                  "EquipamentoRemovidoCodigo":
+                      selecionadoveiculo, // Armazena o código do equipamento removido (veículo selecionado)
+                  "localInstalacao":
+                      localInstalacao, // Armazena o local de instalação selecionado
                 };
-                getequipamentos().setEquipamento(equipamentos);
+                getequipamentos().setEquipamento(
+                    equipamentos); // Define os equipamentos selecionados no objeto getequipamentos()
                 Navigator.push(
                   context,
-                  //TODO ROTA Acessorios()
-                  MaterialPageRoute(builder: (context) => FotoHodometro()),
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          FotoHodometro()), // Navega para a próxima tela (FotoHodometro)
                 );
               } else {
                 // Exibir uma mensagem de erro informando que todas as respostas devem ser preenchidas
@@ -569,13 +588,13 @@ class _ContainerTrocaState extends State<ContainerTroca> {
                   border: OutlineInputBorder(),
                 ),
                 onChanged: (String? value) {
-                setState(() {
+                  setState(() {
+                    localInstalacao = value;
+                  });
+                },
+                onSubmitted: (value) {
                   localInstalacao = value;
-                });
-              },
-              onSubmitted: (value) {
-                localInstalacao = value;
-              },
+                },
               ),
             ),
             SizedBox(height: 8.0),
@@ -751,7 +770,7 @@ class _ContainerInstalacaoState extends State<ContainerInstalacao> {
                 "localInstalacao": localInstalacao,
               };
               getequipamentos().setEquipamento(equipamentos);
-              if (localInstalacao !=null) {
+              if (localInstalacao != null) {
                 Navigator.push(
                   context,
                   //TODO ROTA Acessorios()

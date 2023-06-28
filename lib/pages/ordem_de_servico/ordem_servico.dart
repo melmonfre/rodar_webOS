@@ -7,15 +7,14 @@ import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OrdemServico extends StatefulWidget {
-  OrdemServico({Key? key})
-      : super(key: key);
+  OrdemServico({Key? key}) : super(key: key);
 
   @override
   _OrdemServicoState createState() => _OrdemServicoState();
 }
 
 class _OrdemServicoState extends State<OrdemServico> {
-  int num =0;
+  int num = 0;
 
   var element;
   var agendamento; //ok
@@ -32,13 +31,13 @@ class _OrdemServicoState extends State<OrdemServico> {
 
   //cliente
   var cliente; //ok
-  var empresa;//ok
-  var telefone;//ok
+  var empresa; //ok
+  var telefone; //ok
   //contatos
   var contatonome; //ok
   var contatoobs; //ok
   //servicos ok
-  var servico;//ok
+  var servico; //ok
   //equipamentos
   var tiposervico = "";
   var codequip = "";
@@ -50,92 +49,110 @@ class _OrdemServicoState extends State<OrdemServico> {
     json = opcs.getString("SelectedOS");
     element = jsonDecode(json);
     os = element['id'];
-    int numero =0;
-        var veiculo = element['veiculo'];
-        var empresaveiculo = veiculo['empresa'];
-        var fotosnecessarias = empresaveiculo['fotosNecessarias'];
-        List<String> referencias = fotosnecessarias.split('\n');
-        print("REFERENCIAS: $referencias");
-        opcs.setStringList("referencias", referencias);
-        placa = veiculo['placa'];
-        corcarro = veiculo['cor'];
-        chassi = veiculo['chassi'];
-        modelo = veiculo['modelo'];
-        var pt = veiculo['plataforma'];
-        ano = veiculo['ano'];
-        renavam = veiculo['renavan'];
-        plataforma = pt['nome'];
-        var clie = veiculo['cliente'];
-        var epss = clie['pessoa'];
-        cliente = epss['nome'];
-        var emp = epss['empresa'];
-        empresa = emp['nome'];
-        var tel = emp['telefones'];
-        var numtel = tel[0];
-        telefone = numtel['numero'];
-        var cont = element['contatos'];
-        try{
-          var contacto = cont[0];
-          var contact = contacto["contato"];
-          contatonome = contact['nome'];
-          contatoobs = contact['observacao'];
-        } catch(e){
-          contatonome ="Não informado";
-          contatoobs = "";
-        }
+    int numero = 0;
+    var veiculo = element['veiculo'];
+    var empresaveiculo = veiculo['empresa'];
+    var fotosnecessarias = empresaveiculo['fotosNecessarias'];
+    List<String> referencias = fotosnecessarias.split('\n');
+    print("REFERENCIAS: $referencias");
+    opcs.setStringList("referencias", referencias);
+    placa = veiculo['placa'];
+    corcarro = veiculo['cor'];
+    chassi = veiculo['chassi'];
+    modelo = veiculo['modelo'];
+    var pt = veiculo['plataforma'];
+    ano = veiculo['ano'];
+    renavam = veiculo['renavan'];
+    plataforma = pt['nome'];
+    var clie = veiculo['cliente'];
+    var epss = clie['pessoa'];
+    cliente = epss['nome'];
+    var emp = epss['empresa'];
+    empresa = emp['nome'];
+    var tel = emp['telefones'];
+    var numtel = tel[0];
+    telefone = numtel['numero'];
+    var cont = element['contatos'];
+    try {
+      var contacto = cont[0];
+      var contact = contacto["contato"];
+      contatonome = contact['nome'];
+      contatoobs = contact['observacao'];
+    } catch (e) {
+      contatonome = "Não informado";
+      contatoobs = "";
+    }
 
+    var eq = element['equipamentos'];
+    eq.forEach((equip) {
+      tiposervico = "$tiposervico ${equip["tipo"]}";
 
-        var eq = element['equipamentos'];
-        eq.forEach((equip) {
-          tiposervico = "$tiposervico ${equip["tipo"] }";
+      codequip = "$codequip ${equip["id"]}";
+      localequip = "$localequip ${equip["localInstalacao"]}";
+    });
 
-          codequip = "$codequip ${equip["id"]}";
-          localequip = "$localequip ${equip["localInstalacao"]}";
-        });
+    List servicos =
+        element['servicos']; // Obtém a lista de serviços do elemento atual
+    var serv; // Declaração da variável serv
+    servicos.forEach((ser) {
+      serv = ser[
+          'servico']; // Obtém o valor da chave 'servico' de cada elemento da lista servicos e armazena em serv
+    });
+    servico = serv[
+        'descricao']; // Armazena o valor da chave 'descricao' do objeto serv em servico
 
+    if (tiposervico == "") {
+      // Verifica se a variável tiposervico está vazia
+      opcs.setString("servico",
+          servico); // Define o valor da chave 'servico' no SharedPreferences como servico
+    } else {
+      opcs.setString("servico",
+          tiposervico); // Define o valor da chave 'servico' no SharedPreferences como tiposervico
+    }
 
-        List servicos = element['servicos'];
-        var serv;
-        servicos.forEach((ser) {
-          serv = ser['servico'];
-        });
-        servico = serv['descricao'];
-        if(tiposervico == ""){
-          opcs.setString("servico", servico);
-        } else {
-          opcs.setString("servico", tiposervico);
-        }
-        var end = element['endereco'];
-        var bairro = end['bairro'];
-        var cit = end['cidade'];
-        var cidade = cit['nome'];
-        var rua = end['rua'];
-        var numerocasa = end['numero'];
-        local = "rua:${rua} numero:${numerocasa}, ${bairro}, ${cidade}";
-        var localtime = element['dataInstalacao'];
-        var datahora = localtime.split('T');
-        var data = datahora[0].split('-');
-        var hora = datahora[1].split(':');
-        var hr;
-        if(int.parse(hora[0])-3  <0){
-          hr = int.parse(hora[0])-3  + 24;
-        } else {
-          hr = int.parse(hora[0])-3;
-        }
-        var agend = "${data[2]}/${data[1]}/${data[0]} ${hr}:${hora[1]}";
-        agendamento = agend;
-        print("agendamento $agendamento");
-        numero++;
-        print(numero);
+    var end = element['endereco']; // Obtém o objeto endereco do elemento atual
+    var bairro = end['bairro']; // Obtém o valor da chave 'bairro' do objeto end
+    var cit = end['cidade']; // Obtém o objeto cidade do objeto end
+    var cidade = cit['nome']; // Obtém o valor da chave 'nome' do objeto cit
+    var rua = end['rua']; // Obtém o valor da chave 'rua' do objeto end
+    var numerocasa =
+        end['numero']; // Obtém o valor da chave 'numero' do objeto end
+    local =
+        "rua:${rua} numero:${numerocasa}, ${bairro}, ${cidade}"; // Monta a string local com as informações de endereço
+
+    var localtime = element[
+        'dataInstalacao']; // Obtém o valor da chave 'dataInstalacao' do elemento atual
+    var datahora =
+        localtime.split('T'); // Divide a string em data e hora com base no 'T'
+    var data =
+        datahora[0].split('-'); // Divide a parte de data em ano, mês e dia
+    var hora = datahora[1]
+        .split(':'); // Divide a parte de hora em hora, minuto e segundo
+    var hr; // Declaração da variável hr
+    if (int.parse(hora[0]) - 3 < 0) {
+      hr = int.parse(hora[0]) - 3 + 24; // Realiza um ajuste de fuso horário
+    } else {
+      hr = int.parse(hora[0]) - 3;
+    }
+    var agend =
+        "${data[2]}/${data[1]}/${data[0]} ${hr}:${hora[1]}"; // Formata a data e hora em uma string
+    agendamento = agend; // Atribui a string formatada à variável agendamento
+
+    print("agendamento $agendamento"); // Imprime o valor atual de agendamento
+    numero++; // Incrementa o valor da variável numero
+    print(numero); // Imprime o valor atual de numero
+
     setState(() {
       num = numero;
     });
   }
+
   @override
   void initState() {
     getdata();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -158,7 +175,7 @@ class _OrdemServicoState extends State<OrdemServico> {
               Container(
                 alignment: Alignment.center,
                 child: Text(
-                 os.toString(),
+                  os.toString(),
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,

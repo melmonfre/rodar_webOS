@@ -53,7 +53,7 @@ class _BotaoIniciarExecucaoServicoState
           context,
           MaterialPageRoute(builder: (context) => CheckInTela()),
         );
-      },
+      }, 
       style: ElevatedButton.styleFrom(
         primary: Color(0xFF00204E), // Cor do botão
         shadowColor: Colors.black.withOpacity(0.2), // Cor da sombra

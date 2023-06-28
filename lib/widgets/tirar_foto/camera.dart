@@ -12,14 +12,17 @@ class CameraButton extends StatefulWidget {
 }
 
 class _CameraButtonState extends State<CameraButton> {
-  List<File> _images = [];
-  List<String> _imageNames = [];
-  List<double> _imageSizes = [];
-  List<String> base64Files = [];
-salvanocache(base64Files) async {
-  SharedPreferences opcs = await SharedPreferences.getInstance();
-  opcs.setStringList("base64camera", base64Files);
-}
+  List<File> _images = []; // Lista de arquivos de imagens selecionadas
+  List<String> _imageNames = []; // Lista de nomes das imagens
+  List<double> _imageSizes = []; // Lista de tamanhos das imagens
+  List<String> base64Files =
+      []; // Lista de strings base64 das imagens convertidas
+
+  salvanocache(base64Files) async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    opcs.setStringList("base64camera",
+        base64Files); // Salva a lista de strings base64 no cache
+  }
 
   Future<void> _takePicture(ImageSource source) async {
     final picker = ImagePicker();
@@ -33,10 +36,12 @@ salvanocache(base64Files) async {
           .split('/')
           .last; // Obter o nome do arquivo corretamente
       setState(() {
-        _images.add(image);
-        _imageNames.add(fileName);
-        _imageSizes.add(imageSize.toDouble());
-        createbase64(_images);
+        _images.add(image); // Adiciona a imagem à lista de imagens
+        _imageNames
+            .add(fileName); // Adiciona o nome do arquivo à lista de nomes
+        _imageSizes.add(imageSize
+            .toDouble()); // Adiciona o tamanho da imagem à lista de tamanhos
+        createbase64(_images); // Converte as imagens em strings base64
       });
 
       // Salvar a imagem na galeria
@@ -48,11 +53,12 @@ salvanocache(base64Files) async {
   }
 
   String _truncateFileName(String fileName) {
-    const maxLength = 10;
-    const lineBreakAt = 5;
+    const maxLength = 10; // Comprimento máximo do nome do arquivo truncado
+    const lineBreakAt =
+        5; // Índice de quebra de linha no nome do arquivo truncado
 
     if (fileName.length <= maxLength) {
-      return fileName;
+      return fileName; // Retorna o nome completo se for menor ou igual ao comprimento máximo
     } else {
       final extensionIndex = fileName.lastIndexOf('.');
       final name = fileName.substring(0, extensionIndex);
@@ -60,14 +66,18 @@ salvanocache(base64Files) async {
       final truncatedName = name.substring(0, lineBreakAt) +
           '\n' +
           name.substring(lineBreakAt, maxLength - extension.length);
-      return truncatedName + '...' + extension;
+      return truncatedName +
+          '...' +
+          extension; // Retorna o nome truncado com reticências e extensão
     }
   }
 
   Widget _buildThumbnail(int index) {
-    final image = _images[index];
-    final imageName = _imageNames[index];
-    final imageSize = _getImageSize(index);
+    final image = _images[index]; // Imagem do índice especificado
+    final imageName =
+        _imageNames[index]; // Nome da imagem do índice especificado
+    final imageSize =
+        _getImageSize(index); // Tamanho da imagem do índice especificado
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16),
@@ -79,18 +89,19 @@ salvanocache(base64Files) async {
             height: 60,
             width: 60,
             fit: BoxFit.cover,
-          ),
+          ), // Exibe a imagem como miniatura
           SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '',
+                  '', // Texto vazio
                   style: TextStyle(fontSize: 11),
                 ),
                 Text(
-                  _truncateFileName(imageName),
+                  _truncateFileName(
+                      imageName), // Exibe o nome truncado da imagem
                   style: TextStyle(fontSize: 11),
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
@@ -100,12 +111,13 @@ salvanocache(base64Files) async {
           ),
           SizedBox(width: 1),
           Text(
-            imageSize,
+            imageSize, // Exibe o tamanho da imagem
             style: TextStyle(fontSize: 11),
           ),
           SizedBox(width: 5),
           BotaoCancelar(
-            onPressed: () => _clearPicture(index),
+            onPressed: () => _clearPicture(
+                index), // Chama a função para limpar a imagem ao clicar no botão de cancelar
             index: index,
           ),
         ],
@@ -116,23 +128,23 @@ salvanocache(base64Files) async {
   String _getImageSize(int index) {
     if (index >= 0 && index < _imageSizes.length) {
       final fileSize = _imageSizes[index] / 1024; // Tamanho em kilobytes
-      return '${fileSize.toStringAsFixed(2)} KB';
+      return '${fileSize.toStringAsFixed(2)} KB'; // Retorna o tamanho formatado com duas casas decimais e a unidade "KB"
     } else {
-      return '';
+      return ''; // Retorna uma string vazia se o índice estiver fora dos limites
     }
   }
 
   void _clearPicture(int index) {
     setState(() {
       if (index >= 0 && index < _images.length) {
-        _images.removeAt(index);
-        _imageNames.removeAt(index);
-        _imageSizes.removeAt(index);
+        _images.removeAt(index); // Remove a imagem da lista
+        _imageNames.removeAt(index); // Remove o nome da imagem da lista
+        _imageSizes.removeAt(index); // Remove o tamanho da imagem da lista
 
-        // Atualiza o índice da imagem
+        // Atualiza o índice da imagem nas demais imagens
         for (int i = index; i < _images.length; i++) {
-          _imageNames[i] =
-              _imageNames[i].replaceAll('image_$index', 'image_$i');
+          _imageNames[i] = _imageNames[i].replaceAll('image_$index',
+              'image_$i'); // Substitui o índice antigo pelo novo no nome da imagem
         }
       }
     });
@@ -219,11 +231,11 @@ salvanocache(base64Files) async {
   }
 
   void createbase64(List<File> images) {
-  images.forEach((image) {
-    List<int> imageBytes = image.readAsBytesSync();
-    String base64File = base64Encode(imageBytes);
-    base64Files.add(base64File);
-  });
-  salvanocache(base64Files);
+    images.forEach((image) {
+      List<int> imageBytes = image.readAsBytesSync();
+      String base64File = base64Encode(imageBytes);
+      base64Files.add(base64File);
+    });
+    salvanocache(base64Files);
   }
 }

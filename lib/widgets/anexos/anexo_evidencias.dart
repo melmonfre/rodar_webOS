@@ -47,12 +47,14 @@ class _AnexoEvidenciasState extends State<AnexoEvidencias> {
             child: Row(
               children: [
                 Expanded(
+                  // Chamada de widget de camera
                   child: CameraButton(),
                 ),
               ],
             ),
           ),
           SizedBox(height: 16),
+          // Chamada para widget de botao, passando a rota
           BotaoProximo(
             onPressed: widget.onPressed,
           ),
