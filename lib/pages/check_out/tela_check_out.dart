@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:rodarwebos/pages/check_in/variaveis_options.dart';
 import 'package:rodarwebos/pages/equipamentos/tela_equipamento.dart';
 import 'package:rodarwebos/pages/motivos/tela_relate_motivos.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
@@ -19,8 +18,6 @@ class CheckOutTela extends StatefulWidget {
 }
 
 class _CheckOutTelaState extends State<CheckOutTela> {
-  SelectedOptions selectedOptions =
-  SelectedOptions(); // Instância da classe SelectedOptions
   List checklistID =[];
   List checklistNome = [];
   List checklistItens = [];
