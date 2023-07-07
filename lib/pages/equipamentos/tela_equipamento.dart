@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/acessorios/tela_acessorios.dart';
 import 'package:rodarwebos/services/GetEquipamento.dart';
+import 'package:rodarwebos/services/conclus%C3%A3o/salvareqptecnico.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -92,6 +93,7 @@ class ContainerRetirada extends StatefulWidget {
 }
 
 class _ContainerRetiradaState extends State<ContainerRetirada> {
+  String Control = "RETIRADA";
   String? situacaoEquipamento;
   var EquipamentoNovoIDs;
   List<String> EquipamentoNovoCodigos = [];
@@ -104,7 +106,9 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
   var selecionadonovo;
   var selecionadoveiculo;
   var situequip;
-  getdata() async {
+  var eqnovodoc;
+  var eqveiculodoc;
+    getdata() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     var json = opcs.getString("equipamentos");
     var eqp = jsonDecode(json!);
@@ -119,7 +123,8 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
           List<String>.from(eqp["EquipamentoVeiculoCodigos"] as List);
       localInstalacao = eqp["localInstalacao"];
       stringEquipamento = eqp["stringEquipamento"];
-
+      eqnovodoc = eqp["EquipamentoNovoDocumento"];
+      eqveiculodoc = eqp["EquipamentoVeiculoDocumento"];
       //var mapanovo = Map.fromIterables(EquipamentoNovoIDs, EquipamentoNovoCodigos);
       //var mapveiculo = Map.fromIterables(EquipamentosVeiculoIDs, EquipamentoVeiculoCodigos );
     });
@@ -243,24 +248,29 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
               if (situacaoEquipamento != null && localInstalacao != null) {
                 // Verifica se a situação do equipamento e o local de instalação foram selecionados
                 var eqremovid;
+                var eqremoviddoc;
                 for (int i = 0; i < EquipamentoVeiculoCodigos.length; i++) {
                   if (EquipamentoVeiculoCodigos[i] == selecionadoveiculo) {
-                    eqremovid = EquipamentosVeiculoIDs[
-                        i]; // Armazena o ID do equipamento removido correspondente ao veículo selecionado
+                    eqremovid = EquipamentosVeiculoIDs[i]; // Armazena o ID do equipamento removido correspondente ao veículo selecionado
+                    eqremoviddoc = eqveiculodoc[i];
                   }
                 }
                 Map<String, dynamic> equipamentos = {
                   "EquipamentoInstaladoID": "",
                   "EquipamentoInstaladoCodigo": "",
+                  "EquipamentoInstaladoDocumento":"",
                   "EquipamentosRemovidoID":
                       eqremovid, // Armazena o ID do equipamento removido
                   "EquipamentoRemovidoCodigo":
                       selecionadoveiculo, // Armazena o código do equipamento removido (veículo selecionado)
+                  "EquipamentoRemovidoDocumento":eqremoviddoc,
                   "localInstalacao":
                       localInstalacao, // Armazena o local de instalação selecionado
+                  "control":Control,
                 };
                 getequipamentos().setEquipamento(
                     equipamentos); // Define os equipamentos selecionados no objeto getequipamentos()
+                salvareqtec().enviar();
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -400,6 +410,7 @@ class _ContainerManutencaoState extends State<ContainerManutencao> {
           BotaoProximo(
             onPressed: () {
               if (localInstalacao != null) {
+                salvareqtec().enviar();
                 Navigator.push(
                   context,
                   //TODO ROTA Acessorios()
@@ -453,6 +464,9 @@ class _ContainerTrocaState extends State<ContainerTroca> {
   var selecionadonovo;
   var selecionadoveiculo;
   var situequip;
+  var eqnovodoc;
+  var eqveiculodoc;
+  var Control = "TROCA";
   getdata() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     var json = opcs.getString("equipamentos");
@@ -468,6 +482,9 @@ class _ContainerTrocaState extends State<ContainerTroca> {
           List<String>.from(eqp["EquipamentoVeiculoCodigos"] as List);
       localInstalacao = eqp["localInstalacao"];
       stringEquipamento = eqp["stringEquipamento"];
+      eqnovodoc = eqp["EquipamentoNovoDocumento"];
+      eqveiculodoc = eqp["EquipamentoVeiculoDocumento"];
+
     });
   }
 
@@ -602,26 +619,35 @@ class _ContainerTrocaState extends State<ContainerTroca> {
               onPressed: () {
                 if (situacaoEquipamento != null && localInstalacao != null) {
                   var eqremovid;
+                  var eqremoviddoc;
                   for (int i = 0; i < EquipamentoVeiculoCodigos.length; i++) {
                     if (EquipamentoVeiculoCodigos[i] == selecionadoveiculo) {
-                      eqremovid = EquipamentosVeiculoIDs[i];
+                      eqremovid = EquipamentosVeiculoIDs[i]; // Armazena o ID do equipamento removido correspondente ao veículo selecionado
+                      eqremoviddoc = eqveiculodoc[i];
                     }
                   }
-
                   var eqnovosid;
+                  var eqnovosdoc;
                   for (int i = 0; i < EquipamentoNovoCodigos.length; i++) {
                     if (EquipamentoNovoCodigos[i] == selecionadonovo) {
                       eqnovosid = EquipamentoNovoIDs[i];
+                      eqnovosdoc = eqnovodoc[i];
                     }
                   }
                   Map<String, dynamic> equipamentos = {
                     "EquipamentoInstaladoID": eqnovosid,
                     "EquipamentoInstaladoCodigo": selecionadonovo,
-                    "EquipamentosRemovidoID": eqremovid,
-                    "EquipamentoRemovidoCodigo": selecionadoveiculo,
-                    "localInstalacao": localInstalacao,
+                    "EquipamentoInstaladoDocumento":eqnovosdoc,
+                    "EquipamentosRemovidoID":
+                    eqremovid, // Armazena o ID do equipamento removido
+                    "EquipamentoRemovidoCodigo":
+                    selecionadoveiculo, // Armazena o código do equipamento removido (veículo selecionado)
+                    "EquipamentoRemovidoDocumento":eqremoviddoc,
+                    "localInstalacao":localInstalacao, // Armazena o local de instalação selecionado
+                    "control":Control,
                   };
                   getequipamentos().setEquipamento(equipamentos);
+                  salvareqtec().enviar();
                   Navigator.push(
                     context,
                     //TODO ROTA Acessorios()
@@ -673,6 +699,10 @@ class _ContainerInstalacaoState extends State<ContainerInstalacao> {
   var stringEquipamento;
   var selecionadonovo;
   var selecionadoveiculo;
+var Control = "INSTALACAO";
+  var eqnovodoc;
+  var eqveiculodoc;
+
   getdata() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     var json = opcs.getString("equipamentos");
@@ -690,6 +720,8 @@ class _ContainerInstalacaoState extends State<ContainerInstalacao> {
           List<String>.from(eqp["EquipamentoVeiculoCodigos"] as List);
       localInstalacao = eqp["localInstalacao"];
       stringEquipamento = eqp["stringEquipamento"];
+      eqnovodoc = eqp["EquipamentoNovoDocumento"];
+      eqveiculodoc = eqp["EquipamentoVeiculoDocumento"];
     });
   }
 
@@ -759,20 +791,28 @@ class _ContainerInstalacaoState extends State<ContainerInstalacao> {
           BotaoProximo(
             onPressed: () {
               var eqnovosid;
+              var eqnovosdoc;
               for (int i = 0; i < EquipamentoNovoCodigos.length; i++) {
                 if (EquipamentoNovoCodigos[i] == selecionadonovo) {
                   eqnovosid = EquipamentoNovoIDs[i];
+                  eqnovosdoc = eqnovodoc[i];
                 }
               }
               Map<String, dynamic> equipamentos = {
                 "EquipamentoInstaladoID": eqnovosid,
                 "EquipamentoInstaladoCodigo": selecionadonovo,
+                "EquipamentoInstaladoDocumento":eqnovosdoc,
                 "EquipamentosRemovidoID": "",
                 "EquipamentoRemovidoCodigo": "",
+              "EquipamentoRemovidoDocumento":"",
                 "localInstalacao": localInstalacao,
+                "control":Control,
+
               };
               getequipamentos().setEquipamento(equipamentos);
+
               if (localInstalacao != null) {
+                salvareqtec().enviar();
                 Navigator.push(
                   context,
                   //TODO ROTA Acessorios()

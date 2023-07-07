@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/responsavel/tela_responsavel.dart';
+import 'package:rodarwebos/services/conclus%C3%A3o/confirmaostecnicoassinatura.dart';
 import 'package:rodarwebos/widgets/foto_assinatura/imagem.dart';
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -68,8 +69,9 @@ class _TelaConclusaoDadosAssinaturaState extends State<TelaConclusaoDadosAssinat
 
               ),
               Imagem(
-                onPressed: () {
-                  salvanocache();
+                onPressed: () async {
+                  await salvanocache();
+                  confirmassinatura().enviar();
                   Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => TelaResponsavel()),

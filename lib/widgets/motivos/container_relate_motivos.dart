@@ -5,6 +5,8 @@ import 'package:rodarwebos/pages/conclusao/tela_conclusao.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../services/OS/GetMotivosOS.dart';
+
 class ContainerRelateMotivos extends StatefulWidget {
   @override
   _ContainerRelateMotivosState createState() => _ContainerRelateMotivosState();
@@ -24,7 +26,12 @@ class _ContainerRelateMotivosState extends State<ContainerRelateMotivos> {
     json = opcs.getString("SelectedOS");
     element = jsonDecode(json);
     osid = element['id'];
+    var empresaid = opcs.getInt("sessionid");
     var mot = opcs.getString("${osid}@motivos");
+    if(mot == null){
+      mot = await GetMotivosOS().obter(empresaid, osid);
+      opcs.setString("${osid}@motivos", mot!);
+    }
     print(mot);
     List motivos = jsonDecode(mot!);
     motivos.forEach((m) {

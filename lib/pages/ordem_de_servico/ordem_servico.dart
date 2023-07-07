@@ -60,10 +60,14 @@ class _OrdemServicoState extends State<OrdemServico> {
     corcarro = veiculo['cor'];
     chassi = veiculo['chassi'];
     modelo = veiculo['modelo'];
-    var pt = veiculo['plataforma'];
     ano = veiculo['ano'];
     renavam = veiculo['renavan'];
-    plataforma = pt['nome'];
+    var pt = veiculo['plataforma'];
+    try{
+      plataforma = pt['nome'];
+    } catch(e){
+      plataforma = "outro";
+    }
     var clie = veiculo['cliente'];
     var epss = clie['pessoa'];
     cliente = epss['nome'];

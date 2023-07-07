@@ -14,6 +14,7 @@ class getequipamentos{
     List eqnovos = element['equipamentos'];
     List eqnovosid =[];
     List<String> eqnovoscod =[];
+    List<String> eqnovodoc = [];
     var localInstalacao;
     var stringEquipamento;
     try{
@@ -23,6 +24,7 @@ class getequipamentos{
         var equip = eq['equipamento'];
         eqnovosid.add(equip['id']);
         eqnovoscod.add(equip['codigo']);
+        eqnovodoc.add(equip['documento']);
       });
     } catch(Exception) {
     }
@@ -45,20 +47,24 @@ class getequipamentos{
     var veiculo = element['veiculo'];
     List eqveiculo =veiculo["equipamentos"];
     List eqveiculoid =[];
+    List eqveiculoDoc =[];
     List<String> eqveiculocod =[];
     try{eqveiculo.forEach((eq) {
       eqveiculoid.add(eq['id']);
       eqveiculocod.add(eq['codigo']);
+      eqveiculoDoc.add(eq['documento']);
     });} catch(Exception) {
     }
 
    var equipamentos = {
       "EquipamentoNovoIDs": eqnovosid,
       "EquipamentoNovoCodigos": eqnovoscod,
+      "EquipamentoNovoDocumento": eqnovodoc,
       "AcessoriosID":accid,
       "AcessoriosDescricao":acdesc,
       "EquipamentosVeiculoIDs":eqveiculoid,
       "EquipamentoVeiculoCodigos": eqveiculocod,
+      "EquipamentoVeiculoDocumento": eqveiculoDoc,
       "localInstalacao" : localInstalacao,
       "stringEquipamento": stringEquipamento,
     };

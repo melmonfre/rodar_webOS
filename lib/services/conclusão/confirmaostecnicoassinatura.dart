@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../Constantes/Urlconst.dart';
 
 class confirmassinatura{
   enviar() async {
@@ -7,15 +11,19 @@ class confirmassinatura{
 
     var empresaid = opcs.getInt('sessionid');
     var token = opcs.getString("${empresaid}@token");
+    var base64 = opcs.getString("assinaturaconfirmacao");
+    var json = opcs.getString("SelectedOS");
+    var element = jsonDecode(json!);
+    var  osid = element['id'];
     final headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
 
-    final data = '{\n    "base64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAS...",\n    "referencia": "Assinatura Tecnico",\n    "etapa": "CONCLUSAO"\n}';
+    final data = '{\n    "base64": "$base64",\n    "referencia": "Assinatura Tecnico",\n    "etapa": "CONCLUSAO"\n}';
 
-    final url = Uri.parse('https://siger.winksys.com.br:8443/v2/ordem_servico/confirmaostecnico/108527');
+    final url = Uri.parse('${Urlconst().url}ordem_servico/confirmaostecnico/$osid');
 
     final res = await http.post(url, headers: headers, body: data);
     final status = res.statusCode;

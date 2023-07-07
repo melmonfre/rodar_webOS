@@ -1,0 +1,8 @@
+class syncoff{
+  criarjson(){
+
+  }
+  criadadoscheckin(){
+
+  }
+}

@@ -29,12 +29,66 @@ class _loginState extends State<login> {
     Color.fromARGB(255, 4, 30, 70),
   ];
 
+  var link;
 
+  Future<void> linkmanual() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title:  Text('Inserir Link Manualmente'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+            TextField(
+
+            decoration:
+            InputDecoration(border: InputBorder.none,
+                icon: Icon(Icons.link),
+                hintText: 'Informe o link'),
+              onChanged: (text) {
+               setState(() {
+                 link = text;
+               });
+              },
+          ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('concluir'),
+              onPressed: () async {
+                Navigator.of(context).pop();
+                _showSingleAnimationDialog(context, Indicator.ballSpinFadeLoader);
+                  var linkExterno;
+                  String? initialLink = link;
+                  if (initialLink != null || initialLink != "") {
+                    linkExterno = initialLink;
+                    if (linkExterno != null|| linkExterno != "") {
+                      var divid = linkExterno?.split("/auth/");
+                      print(divid);
+                      var token = divid?[1];
+                      print('Link externo: $linkExterno');
+                      print('token $token');
+                      await getToken().obter(token);
+                    }
+                  }
+                vaiprapaginainicial();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
   getToken tokenInstance = getToken(); //instanciando a classe getToken
   static const Utf8Codec utf8 = Utf8Codec();
   List nomes = [];
   List ids = [];
   List imagens = [];
+  var urso;
   List Nomeempresa = [];
   bool error = false;
   _showSingleAnimationDialog(BuildContext context, Indicator indicator) {
@@ -63,6 +117,7 @@ class _loginState extends State<login> {
    } catch (e){
      error = true;
    }
+
    if(error == true){
      ids.add(0);
      Nomeempresa.add("ERRO");
@@ -108,7 +163,6 @@ class _loginState extends State<login> {
   Future<void> setsession(id) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     opcs.setInt("sessionid", id);
-
   }
 
   vaiprapaginainicial() async {
@@ -128,7 +182,14 @@ class _loginState extends State<login> {
 
   bool isLoading = false;
   @override
+  Future<void> geturso() async {
+    Uint8List data = (await rootBundle.load('assets/bear.png'))
+        .buffer
+        .asUint8List();
+    setState(() =>  urso = data);
+  }
   void initState() {
+    geturso();
     setState(() {
       preenchelogin();
     });
@@ -136,6 +197,7 @@ class _loginState extends State<login> {
   }
   @override
   Widget build(BuildContext context) {
+    int tamanho = ids.length;
     var token = widget.token;
     altura = MediaQuery.of(context).size.height;
     largura = MediaQuery.of(context).size.width;
@@ -195,7 +257,7 @@ class _loginState extends State<login> {
                   child:Container(
                     child: ListView.builder(
                       padding: const EdgeInsets.all(8),
-                      itemCount: ids.length,
+                      itemCount: tamanho,
                       itemBuilder: (BuildContext context, int index)
                       {
                         return Container(
@@ -205,7 +267,7 @@ class _loginState extends State<login> {
 
                           ),
                           child: Container(
-                            height: 100,
+                            height: 130,
                             decoration: BoxDecoration(
                               color: Colors.white,
                               //color: Colors.transparent,
@@ -252,13 +314,23 @@ class _loginState extends State<login> {
                                             overflow: TextOverflow.ellipsis,
                                         ),
                                         Padding(padding: EdgeInsets.only(top: 5)),
+                                        TextButton(
+                                          style: ButtonStyle(
+                                            foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                                          ),
+                                          onPressed: () {
+                                            linkmanual();
+                                          },
+                                          child: Text('Inserir link manualmente'),
+                                        )
                                       ],
-                                    )
+                                    ),
                                   ],
                                 )
                             ),
                           ),
                         );
+
                       },
                     ),
                   ),

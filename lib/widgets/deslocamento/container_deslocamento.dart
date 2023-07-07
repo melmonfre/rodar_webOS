@@ -7,7 +7,6 @@ import 'package:rodarwebos/widgets/deslocamento/variaveis_container_deslocamento
 import 'package:rodarwebos/widgets/inputs/input_motivos.dart';
 import 'package:rodarwebos/widgets/inputs/input_number.dart';
 import 'package:rodarwebos/widgets/inputs/input_text.dart';
-import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../pages/check_out/tela_check_out.dart';

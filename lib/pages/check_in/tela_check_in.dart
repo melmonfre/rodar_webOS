@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:rodarwebos/pages/equipamentos/tela_equipamento.dart';
 import 'package:rodarwebos/services/conclus%C3%A3o/checkin.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
@@ -22,6 +23,19 @@ class _CheckInTelaState extends State<CheckInTela> {
   List checklistItens = [];
   List ChecklistOBS = [];
   int tamanho = 0;
+  var latitude;
+  var longitude;
+
+  void getLocation() async {
+    LocationPermission permission = await Geolocator.requestPermission();
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.low);
+    print(position.latitude);
+    print(position.longitude);
+    setState(() {
+      latitude = position.latitude;
+      longitude = position.longitude;
+    });
+  }
   Future<void> getdata() async {
     var json;
     var osid;
@@ -39,6 +53,10 @@ class _CheckInTelaState extends State<CheckInTela> {
     token = opcs.getString("${empresaid}@token")!;
     osid = element['id'];
     check = opcs.getString("${osid}@checklist");
+    if(check == null){
+      check = await GetChecklistOS().obter(empresaid, osid);
+      opcs.setString("${osid}@checklist", check);
+    }
     print(check);
     var motivos = opcs.getString("${osid}@motivos");
     checklist = jsonDecode(check);
@@ -55,6 +73,7 @@ class _CheckInTelaState extends State<CheckInTela> {
 
   void initState() {
     getdata();
+    getLocation();
     super.initState();
   }
 
@@ -226,7 +245,7 @@ class _CheckInTelaState extends State<CheckInTela> {
   Future<void> checkNavigation(jsoncheckin) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     await opcs.setString("checkinitens", jsoncheckin);
-    await enviacheckin().enviar();
+     enviacheckin().enviar();
     if (checklistItens.length != checklistID.length) {
       showDialog(
         context: context,

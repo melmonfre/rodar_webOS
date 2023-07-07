@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/equipamentos/tela_equipamento.dart';
 import 'package:rodarwebos/pages/motivos/tela_relate_motivos.dart';
+import 'package:rodarwebos/services/conclus%C3%A3o/checkout.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:rodarwebos/widgets/check_in/container_check_in.dart';
 import 'package:rodarwebos/widgets/check_in/container_observacao_adicional.dart';
@@ -234,6 +235,7 @@ class _CheckOutTelaState extends State<CheckOutTela> {
   }
   Future<void> checkNavigation(jsoncheckin) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
+    enviacheckout().enviar();
     opcs.setString("checkoutitens", jsoncheckin);
     if (checklistItens.length != checklistID.length) {
       showDialog(

@@ -14,7 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'OS/GetChecklistOS.dart';
 
 class getToken {
-  void obter(var token) async {
+  Future<String> obter(var token) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     var idvelho = opcs.getInt("sessionid");
     zerarcache(idvelho);
@@ -38,6 +38,8 @@ class getToken {
     opcs.setString("${empresaid}@token", bearer);
    sincronizar(empresaid);
     opcs.setString("${empresaid}@login", dados);
+
+    return ("Sucesso");
   }
 
   sincronizar(empresaid) async {
@@ -85,7 +87,8 @@ class getToken {
           opcs.setString("${osid}@checklist", check);
         }
       } catch(e) {
-        opcs.remove("${osid}@checklist");
+        check = await GetChecklistOS().obter(empresaid, osid);
+        opcs.setString("${osid}@checklist", check);
       }
       try{
         motivos = await GetMotivosOS().obter(empresaid, osid);
@@ -93,7 +96,8 @@ class getToken {
           opcs.setString("${osid}@motivos", motivos);
         }
       } catch(e) {
-        opcs.remove("${osid}@motivos");
+        motivos = await GetMotivosOS().obter(empresaid, osid);
+        opcs.setString("${osid}@motivos", motivos);
       }
     } catch(e){
     }

@@ -1,7 +1,32 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../Constantes/Urlconst.dart';
 class enviarfoto{
   enviar() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    var os = opcs.getString("SelectedOS");
+    var element = jsonDecode(os!);
+    var osid = element['id'];
+
+    String ref = "";
+    List<String>? FotoHodometro = opcs.getStringList('FotoHodometro');
+    ref = "Tirar foto hodometro";
+    enviarimagem(osid, FotoHodometro?[0], ref, 1);
+
+    List<String>? FotoInstalacao = opcs.getStringList('FotoInstalacao');
+    ref = "Tirar foto da instalação";
+    enviarimagem(osid, FotoInstalacao?[0], ref, 2);
+
+    List<String>? FotoEquipamento = opcs.getStringList('FotoEquipamento');
+    ref = "Tirar do equipamento";
+    enviarimagem(osid, FotoEquipamento?[0], ref, 3);
+
+  }
+
+  enviarimagem(osid, imagem, referencia, int indice) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
 
     var empresaid = opcs.getInt('sessionid');
@@ -12,9 +37,9 @@ class enviarfoto{
       'Authorization': 'Bearer $token',
     };
 
-    final data = '{\n    "base64": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAZABkAAD/2wBDAAkGBwgHBgkIBw...",\n    "etapa": "ACESSORIOS", \n    "indice": 1, \n    "referencia": "Tirar foto hodometro" \n}';
+    var data = '{"base64": "$imagem",\n"etapa": "ACESSORIOS"\n, "indice": $indice,\n"referencia": "$referencia"}';
 
-    final url = Uri.parse('https://siger.winksys.com.br:8443/v2/ordem_servico/enviarfotos/108527');
+    final url = Uri.parse('${Urlconst().url}ordem_servico/enviarfotos/108527');
 
     final res = await http.post(url, headers: headers, body: data);
     final status = res.statusCode;

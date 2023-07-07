@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../Constantes/Urlconst.dart';
 
 class enviardocconfirmacaopresencial{
   enviar() async {
@@ -7,15 +11,27 @@ class enviardocconfirmacaopresencial{
 
     var empresaid = opcs.getInt('sessionid');
     var token = opcs.getString("${empresaid}@token");
+    var json = opcs.getString("SelectedOS");
+    var element = jsonDecode(json!);
+    var  osid = element['id'];
+    var datacon = opcs.getString("DadosContato");
+    var contato = jsonDecode(datacon!);
+    var tipoenvio;
+    var assinatura = opcs.getString("assinaturaresponsavel");
+    if (contato['responsavelAusente']){
+      tipoenvio = "email";
+    } else{
+      tipoenvio = "presencial";
+    }
     final headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
 
-      final data = '{\n    "id": 5175,\n    "nome": "Guilherme",\n    "tipoEnvio": "presencial",\n    "idOs": 108527,\n    "documento": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD...",\n    "referencia": "Documento Frente", \n    "etapa": "REENVIO_RESPONSAVEL"\n}';
+      final data = '{\n    "id": ${contato['id']},\n    "nome": "${contato['nome']}",\n    "tipoEnvio": "$tipoenvio",\n    "idOs": $osid,\n    "documento": "$assinatura",\n    "referencia": "Documento Frente", \n    "etapa": "REENVIO_RESPONSAVEL"\n}';
 
-      final url = Uri.parse('https://siger.winksys.com.br:8443/v2/ordem_servico/envia_documento');
+    final url = Uri.parse('${Urlconst().url}ordem_servico/envia_documento');
 
       final res = await http.post(url, headers: headers, body: data);
       final status = res.statusCode;

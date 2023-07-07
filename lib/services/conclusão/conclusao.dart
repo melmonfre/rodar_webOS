@@ -1,21 +1,30 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-class conclusao{
+import '../../Constantes/Urlconst.dart';
+
+class enviaconclusao{
   enviar()async{
     SharedPreferences opcs = await SharedPreferences.getInstance();
 
     var empresaid = opcs.getInt('sessionid');
     var token = opcs.getString("${empresaid}@token");
+    var json = opcs.getString("SelectedOS");
+    var element = jsonDecode(json!);
+    var  osid = element['id'];
+    var itensconcjson = opcs.getString("conclusaoItens");
+    var itenscon = jsonDecode(itensconcjson!);
+
     final headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
+    final data = '{"dataConclusaoOs": "${itenscon["dataConclusao"]}","observacaoOs": "${itenscon["observacoes"]}","hodometro": ${itenscon["hodometro"]},"etapa": "DESLOCAMENTO"\n}';
 
-    final data = '{\n    "dataConclusaoOs": "2023-06-29T16:36:27.119Z",\n    "observacaoOs": "Concluido com sucesso",\n    "hodometro": 0,\n    "etapa": "DESLOCAMENTO"\n}';
-
-    final url = Uri.parse('https://siger.winksys.com.br:8443/v2/ordem_servico/dadosos/108527');
+    final url = Uri.parse('${Urlconst().url}ordem_servico/dadosos/$osid');
 
     final res = await http.post(url, headers: headers, body: data);
     final status = res.statusCode;

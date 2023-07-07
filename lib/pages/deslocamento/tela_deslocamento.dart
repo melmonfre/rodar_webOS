@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/check_out/tela_check_out.dart';
+import 'package:rodarwebos/services/conclus%C3%A3o/salvardeslocamento.dart';
 import 'package:rodarwebos/widgets/deslocamento/container_deslocamento.dart';
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
 
@@ -35,7 +36,7 @@ class _TelaDeslocamentoState extends State<TelaDeslocamento> {
               ContainerDeslocamento(
                 titulo: "Deslocamento",
                 onPressed: () {
-
+                  salvardeslocamento().enviar();
                   Navigator.push(
                     context,
                     MaterialPageRoute(
