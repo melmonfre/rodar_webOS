@@ -18,7 +18,7 @@ class syncoff{
     required DocumentosResponsavel documentosResponsavel,
     required AssinaturaResponsavel assinaturaResponsavel,
      */
-    JsonConclusao teste = new JsonConclusao();
+    JsonConclusao teste;
 
   }
 }
