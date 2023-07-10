@@ -31,7 +31,6 @@ class JsonConclusao {
     required this.assinaturaResponsavel,
   });
 
-//todo mac os
 }
 
 class Acessorios {
