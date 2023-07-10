@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../services/Sincronizar.dart';
+import '../../services/Sincronizar/Sincronizar.dart';
 
 class TelaSincronizar extends StatefulWidget {
   const TelaSincronizar({Key? key}) : super(key: key);
