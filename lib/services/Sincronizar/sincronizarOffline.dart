@@ -2,7 +2,5 @@ class syncoff{
   criarjson(){
 
   }
-  criadadoscheckin(){
-
-  }
 }
+
