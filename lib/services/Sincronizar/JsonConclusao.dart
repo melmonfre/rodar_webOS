@@ -1,3 +1,4 @@
+
 class JsonConclusao {
   Checkin checkin;
   Equipamentos equipamentos;
@@ -179,7 +180,7 @@ class CheckoutIten {
 class Dados {
   DateTime dataConclusaoOs;
   String observacaoOs;
-  int hodometro;
+  double hodometro;
   String etapa;
 
   Dados({
@@ -192,9 +193,9 @@ class Dados {
 }
 
 class Deslocamento {
-  int distanciaTec;
-  int valorDeslocamentoTec;
-  int pedagioTec;
+  double distanciaTec;
+  double valorDeslocamentoTec;
+  double pedagioTec;
   String motivoDiv;
   String etapa;
 
@@ -271,8 +272,8 @@ class EquipamentoTec {
 class Tecnico {
   int id;
   Pessoa pessoa;
-  int valorHora;
-  int kmAtendimento;
+  double valorHora;
+  double kmAtendimento;
   bool funcionario;
 
   Tecnico({
