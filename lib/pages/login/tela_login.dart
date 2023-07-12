@@ -9,7 +9,7 @@ import 'package:rodarwebos/services/getToken.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import "package:flutter/material.dart";
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-
+import 'package:qrscan/qrscan.dart' as scanner;
 import '../../widgets/login/container_login.dart';
 
 class login extends StatefulWidget {
@@ -33,6 +33,7 @@ class _loginState extends State<login> {
 
   var link;
 
+
   Future<void> linkmanual() async {
     return showDialog<void>(
       context: context,
@@ -48,12 +49,28 @@ class _loginState extends State<login> {
                       border: InputBorder.none,
                       icon: Icon(Icons.link),
                       hintText: 'Informe o link'),
+                  style: TextStyle(color: Colors.black),
                   onChanged: (text) {
                     setState(() {
                       link = text;
                     });
                   },
                 ),
+                Text("ou faça a leitura do código QR",
+                  style: TextStyle(color: Colors.black54),
+                    ),
+
+
+                    IconButton(
+                      iconSize: 72,
+                      icon: const Icon(Icons.qr_code_rounded),
+                      color: Color.fromARGB(255, 4, 30, 70),
+                      onPressed: () async {
+                        link = await scanner.scan();
+                      },
+                    ),
+
+
               ],
             ),
           ),
@@ -241,6 +258,19 @@ class _loginState extends State<login> {
                   ),
                 ),
                 SizedBox(height: 40),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    FloatingActionButton(
+                      onPressed: () {
+                        linkmanual();
+                      },
+                      backgroundColor: Color.fromARGB(255, 2, 107, 128),
+                      child: const Icon(Icons.login_rounded),
+                    ),
+                  ],
+                ),
                 Container(
                   height: altura * .50,
                   margin: EdgeInsets.all(altura *
@@ -350,22 +380,8 @@ class _loginState extends State<login> {
                     ),
                   ),
                 ),
-                // botao flutuante
-                Padding(
-                  padding: EdgeInsets.only(
-                      bottom: 0,
-                      right: 16), 
-                  child: Align(
-                    alignment: Alignment.bottomRight,
-                    child: FloatingActionButton(
-                      onPressed: () {
-                        linkmanual();
-                      },
-                      backgroundColor: Colors.blue,
-                      child: const Icon(Icons.link),
-                    ),
-                  ),
-                ),
+
+
               ],
             ),
           ),
