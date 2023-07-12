@@ -178,9 +178,9 @@ class _ContainerDeslocamentoState extends State<ContainerDeslocamento> {
                       padding: EdgeInsets.all(16.0),
                       child: BotaoProximo(
                         onPressed: () {
-                          if (disCalc != null &&
-                              valor != null &&
-                              pedagio != null) {
+                          if (disCalc == null ||
+                              valor == null ||
+                              pedagio == null) {
                             Map<String, dynamic> values = {
                               "latitude": latitude,
                               "longitude": longitude,
