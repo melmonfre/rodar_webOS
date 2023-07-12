@@ -73,7 +73,9 @@ class getequipamentos{
   setEquipamento(Map<String, dynamic> equip) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     var eqp = jsonEncode(equip);
-    opcs.setString("EQProcess", eqp);
+    List<String>? eqlist = opcs.getStringList("EQProcess");
+    eqlist?.add(eqp);
+    opcs.setStringList("EQProcess", eqlist!);
 
 /*    Map<String, dynamic> equipamentos = {
 

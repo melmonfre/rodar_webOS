@@ -22,6 +22,7 @@ class _EquipamentosState extends State<Equipamentos> {
   var os;
   getdata() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
+    opcs.setStringList("EQProcess", []);
     json = opcs.getString("SelectedOS");
     element = jsonDecode(json);
     os = element['id'];
