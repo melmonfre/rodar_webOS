@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:rodarwebos/pages/deslocamento/tela_deslocamento.dart';
 import 'package:rodarwebos/widgets/botoes/botao_cancelar.dart';
+import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CameraButton extends StatefulWidget {
@@ -225,10 +227,44 @@ class _CameraButtonState extends State<CameraButton> {
               },
             ),
           ),
+          SizedBox(height: 16,),
+          BotaoProximo(
+            onPressed: () {
+              if (_images.isNotEmpty) {
+                // Avance para a próxima tela
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TelaDeslocamento(),
+                  ),
+                );
+              } else {
+                // Exiba um alerta informando ao usuário para inserir pelo menos uma foto
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Alerta'),
+                      content: Text('Por favor, insira pelo menos uma foto.'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('OK'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
+            },
+          ),
         ],
       ),
     );
   }
+  
 
   void createbase64(List<File> images) {
     images.forEach((image) {

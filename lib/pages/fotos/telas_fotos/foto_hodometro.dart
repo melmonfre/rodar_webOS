@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rodarwebos/pages/deslocamento/tela_deslocamento.dart';
 import 'package:rodarwebos/pages/fotos/telas_fotos/foto_instalacao.dart';
 import 'package:rodarwebos/widgets/anexos/anexo_evidencias.dart';
 import 'package:rodarwebos/widgets/equipamentos/container_equipamento.dart';
@@ -14,6 +15,26 @@ class FotoHodometro extends StatefulWidget {
 
 class _FotoHodometroState extends State<FotoHodometro> {
   var variaveis = VariaveisResumo();
+  List<String> referencias = []; // Adicione uma lista de referências
+
+  int referenciaIndex = 0; // Índice da referência atua
+
+  void proximaTela() {
+    if (referenciaIndex < referencias.length - 1) {
+      setState(() {
+        referenciaIndex++;
+      });
+    } else {
+      // Última tela, redirecione para a próxima página
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TelaDeslocamento(),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,23 +65,38 @@ class _FotoHodometroState extends State<FotoHodometro> {
                 ),
               ),
               SizedBox(height: 16.0),
-              AnexoEvidencias(
-                titulo: 'Tirar foto hodometro',
-                onPressed: () {
-                  // TODO obter fotos a partir da lista de referencias
-                  salvarfotos().save("FotoHodometro");
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => FotoInstalacao(),
-                    ),
-                  );
-                },
-              ),
+              _buildTelaReferencia(),
             ],
           ),
         ),
       ),
     );
+  }
+  Widget _buildTelaReferencia() {
+    if (referencias.isNotEmpty && referenciaIndex < referencias.length) {
+      String referenciaAtual = referencias[referenciaIndex];
+      return Column(
+        children: [
+          Text(
+            referenciaAtual,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 16.0),
+          AnexoEvidencias(
+            titulo: referenciaAtual,
+            onPressed: proximaTela,
+          ),
+        ],
+      );
+    } else {
+      // Sem referências, retorne a tela original
+      return AnexoEvidencias(
+        titulo: 'Tirar foto btr',
+        onPressed: proximaTela,
+      );
+    }
   }
 }

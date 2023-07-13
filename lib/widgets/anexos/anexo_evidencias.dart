@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rodarwebos/pages/deslocamento/tela_deslocamento.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:rodarwebos/widgets/tirar_foto/camera.dart';
 
@@ -16,6 +17,49 @@ class AnexoEvidencias extends StatefulWidget {
 }
 
 class _AnexoEvidenciasState extends State<AnexoEvidencias> {
+
+bool fotosInseridas = false;
+
+  void adicionarFoto() {
+    // Lógica para adicionar uma foto
+    // ...
+    // Atualize a variável fotosInseridas para true quando uma foto for adicionada
+    setState(() {
+      fotosInseridas = true;
+    });
+  }
+
+void avancarTela() {
+    if (fotosInseridas) {
+      // Avance para a próxima tela
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TelaDeslocamento(),
+        ),
+      );
+    } else {
+      // Exiba um alerta informando ao usuário para inserir pelo menos uma foto
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Alerta'),
+            content: Text('Por favor, insira pelo menos uma foto.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -53,11 +97,7 @@ class _AnexoEvidenciasState extends State<AnexoEvidencias> {
               ],
             ),
           ),
-          SizedBox(height: 16),
-          // Chamada para widget de botao, passando a rota
-          BotaoProximo(
-            onPressed: widget.onPressed,
-          ),
+          
         ],
       ),
     );
