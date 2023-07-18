@@ -21,9 +21,7 @@ class _AnexoEvidenciasState extends State<AnexoEvidencias> {
 bool fotosInseridas = false;
 
   void adicionarFoto() {
-    // Lógica para adicionar uma foto
-    // ...
-    // Atualize a variável fotosInseridas para true quando uma foto for adicionada
+
     setState(() {
       fotosInseridas = true;
     });
@@ -96,8 +94,11 @@ void avancarTela() {
                 ),
               ],
             ),
+            
           ),
-          
+          BotaoProximo( 
+                onPressed: widget.onPressed,
+                ),
         ],
       ),
     );
