@@ -9,7 +9,6 @@ import 'package:rodarwebos/widgets/inputs/input_number.dart';
 import 'package:rodarwebos/widgets/inputs/input_text.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../pages/check_out/tela_check_out.dart';
 
 class ContainerDeslocamento extends StatefulWidget {
   final String titulo;
@@ -25,7 +24,6 @@ class ContainerDeslocamento extends StatefulWidget {
 }
 
 class _ContainerDeslocamentoState extends State<ContainerDeslocamento> {
-  var variaveis = VariaveisDeslocamento();
   String motivoDivergencia = '';
   double? disCalc;
   double? disper;
@@ -33,7 +31,7 @@ class _ContainerDeslocamentoState extends State<ContainerDeslocamento> {
   double? pedagio;
   var latitude;
   var longitude;
-
+  var osid;
   void getLocation() async {
     Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.low);
     print(position.latitude);
@@ -50,11 +48,10 @@ class _ContainerDeslocamentoState extends State<ContainerDeslocamento> {
   }
   Future<void> getdata() async {
     var json;
-    var osid;
+
     var element;
     var empresaid;
     var token;
-    List checklist = [];
 
     SharedPreferences opcs = await SharedPreferences.getInstance();
     json = opcs.getString("SelectedOS");
@@ -92,7 +89,7 @@ class _ContainerDeslocamentoState extends State<ContainerDeslocamento> {
               Container(
                 alignment: Alignment.center,
                 child: Text(
-                  variaveis.numero_os.toString(),
+                  "$osid",
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,

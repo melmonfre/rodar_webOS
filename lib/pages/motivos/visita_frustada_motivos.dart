@@ -4,12 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/tela_inicial/tela_inicial.dart';
 import 'package:rodarwebos/services/Visita%20Frustrada/ConcluirVisitaFrustrada.dart';
 import 'package:rodarwebos/widgets/botoes/botao_enviar.dart';
-import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:rodarwebos/widgets/inputs/input_motivos.dart';
-import 'package:rodarwebos/widgets/inputs/input_text.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class VisitaFrustadaMotivo extends StatefulWidget {
@@ -23,7 +20,6 @@ class _VisitaFrustadaMotivoState extends State<VisitaFrustadaMotivo> {
   var osid;
   var element;
   Future<void> getdata() async {
-    List checklist = [];
     SharedPreferences opcs = await SharedPreferences.getInstance();
     json = opcs.getString("SelectedOS");
     element = jsonDecode(json);
