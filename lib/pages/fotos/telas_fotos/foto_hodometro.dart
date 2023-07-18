@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/deslocamento/tela_deslocamento.dart';
 import 'package:rodarwebos/pages/fotos/telas_fotos/foto_instalacao.dart';
@@ -5,6 +7,7 @@ import 'package:rodarwebos/widgets/anexos/anexo_evidencias.dart';
 import 'package:rodarwebos/widgets/equipamentos/container_equipamento.dart';
 
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../services/salvaFotos.dart';
 
@@ -14,15 +17,15 @@ class FotoHodometro extends StatefulWidget {
 }
 
 class _FotoHodometroState extends State<FotoHodometro> {
-  var variaveis = VariaveisResumo();
   List<String> referencias = []; // Adicione uma lista de referências
 
-  int referenciaIndex = 0; // Índice da referência atua
-
+  int referenciaIndex = -1; // Índice da referência atua
+  var osid;
   void proximaTela() {
     if (referenciaIndex < referencias.length - 1) {
       setState(() {
         referenciaIndex++;
+        salvarfotos().save("${referencias[referenciaIndex]}");
       });
     } else {
       // Última tela, redirecione para a próxima página
@@ -34,7 +37,22 @@ class _FotoHodometroState extends State<FotoHodometro> {
       );
     }
   }
+  getdata() async {
+    var json;
+    var element;
 
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+     referencias = opcs.getStringList('referencias')!;
+    json = opcs.getString("SelectedOS");
+    element = jsonDecode(json);
+    osid = element['id'];
+    proximaTela();
+  }
+  @override
+  void initState() {
+    getdata();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,8 +74,7 @@ class _FotoHodometroState extends State<FotoHodometro> {
             children: [
               Container(
                 alignment: Alignment.center,
-                child: Text(
-                  variaveis.numero_os.toString(),
+                child: Text("$osid",
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,

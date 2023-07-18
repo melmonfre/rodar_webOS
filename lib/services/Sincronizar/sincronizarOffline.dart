@@ -29,6 +29,7 @@ class syncoff{
     List<CheckoutIten> listcheckout = [];
     List<Equipamento> listequipamento = [];
     List<Telefone> tel = [];
+    List<Arquivo> files = [];
     var jsonconclusao = JsonConclusao(checkin: checkin, equipamentos: equipamentos, acessorios: acessorios, arquivos: arquivos, deslocamento: deslocamento, checkout: checkout, motivosManutencao: motivosManutencao, dados: dados, assinaturaTecnico: assinaturaTecnico, presencial: presencial, notificacaoResponsavel: notificacaoResponsavel, confirmacaoPresencial: confirmacaoPresencial, documentosResponsavel: documentosResponsavel, assinaturaResponsavel: assinaturaResponsavel);
     var checkinitem = CheckinIten(id: 0, descricao: '', situacaoAntes: 0);
     var checkoutitem = CheckoutIten(id: 0, descricao: '', situacaoDepois: 0);
@@ -52,6 +53,8 @@ class syncoff{
     var token = opcs.getString("${empresaid}@token");
     var json = opcs.getString("SelectedOS");
     var element = jsonDecode(json!);
+    tecnico = element['tecnico'];
+
     var  osid = element['id'];
     var jsoncheckin = opcs.getString("checkinitens");
     var datacheckin = jsonDecode(jsoncheckin!);
@@ -103,20 +106,67 @@ class syncoff{
         equitec.documento = "${eqs['EquipamentoRemovidoDocumento']}";
         equitec.status = "INSTALADO";
         equitec.cancelado = false;
+        equitec.tecnico = tecnico;
+        equitec.localInstalacaoTec = "${eqs['localInstalacao']}";
 
         equipamento.id = eqs['EquipamentosRemovidoID'];
         equipamento.situacaoTec = true;
         equipamento.tipoTec = "RETIRADA";
+        equipamento.equipamentoTec = equitec;
 
+
+      }else if(eqs["control"] == "INSTALACAO"){
+        equitec.id =  eqs['EquipamentoInstaladoID'];
+        equitec.numero = "";
+        equitec.codigo = "${eqs['EquipamentoInstaladoCodigo']}";
+        equitec.documento = "${eqs['EquipamentoInstaladoDocumento']}";
+        equitec.status = "DISPONIVEL";
+        equitec.cancelado = false;
+        equitec.tecnico = tecnico;
+        equitec.localInstalacaoTec = "${eqs['localInstalacao']}";
+
+        equipamento.id = eqs['EquipamentoInstaladoID'];
+        equipamento.situacaoTec = true;
+        equipamento.tipoTec = "INSTALACAO";
+        equipamento.equipamentoTec = equitec;
+      } else if(eqs["control"] == "TROCA"){
+        equitec.id =  eqs['EquipamentoInstaladoID'];
+        equitec.numero = "";
+        equitec.codigo = "${eqs['EquipamentoInstaladoCodigo']}";
+        equitec.documento = "${eqs['EquipamentoInstaladoDocumento']}";
+        equitec.status = "DISPONIVEL";
+        equitec.cancelado = false;
+        equitec.tecnico = tecnico;
+        equitec.localInstalacaoTec = "${eqs['localInstalacao']}";
+
+        equipamento.id = eqs['EquipamentoInstaladoID'];
+        equipamento.situacaoTec = true;
+        equipamento.tipoTec = "TROCA";
+        equipamento.equipamentoTec = equitec;
+      } else {
+        equitec.id =  eqs['EquipamentosRemovidoID'];
+        equitec.numero = "";
+        equitec.codigo = "${eqs['EquipamentoRemovidoCodigo']}";
+        equitec.documento = "${eqs['EquipamentoRemovidoDocumento']}";
+        equitec.status = "INSTALADO";
+        equitec.cancelado = false;
+        equitec.tecnico = tecnico;
+        equitec.localInstalacaoTec = "${eqs['localInstalacao']}";
+
+        equipamento.id = eqs['EquipamentosRemovidoID'];
+        equipamento.situacaoTec = true;
+        equipamento.tipoTec = "MANUTENCAO";
+        equipamento.equipamentoTec = equitec;
       }
-
+      jsonconclusao.acessorios.id = equipamento.id = eqs['EquipamentosRemovidoID'];
+      jsonconclusao.acessorios.etapaApp = "ACESSORIOS";
+      jsonconclusao.acessorios.acessorios = [];
     });
-
-
-
     jsonconclusao.equipamentos.id = osid;
     jsonconclusao.equipamentos.etapaApp = "SERVICO_INICIADO";
 
+
+    jsonconclusao.arquivos.arquivos = files;
     /*
     required Checkin checkin,
     required Equipamentos equipamentos,

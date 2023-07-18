@@ -61,7 +61,11 @@ class _VisitaFrustadaResumoState extends State<VisitaFrustadaResumo> {
     var pt = veiculo['plataforma'];
     ano = veiculo['ano'];
     renavam = veiculo['renavan'];
-    plataforma = pt['nome'];
+    try{
+      plataforma = pt['nome'];
+    } catch(e){
+      plataforma = "outro";
+    }
     var clie = veiculo['cliente'];
     var epss = clie['pessoa'];
     cliente = epss['nome'];

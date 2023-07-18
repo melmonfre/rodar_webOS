@@ -246,7 +246,13 @@ class _CheckInTelaState extends State<CheckInTela> {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     await opcs.setString("checkinitens", jsoncheckin);
      enviacheckin().enviar();
-    if (checklistItens.length != checklistID.length) {
+     bool error = false;
+     for (int i = 0; i <checklistItens.length; i++){
+       if(checklistItens[i] == 3){
+         error = true;
+       }
+     }
+    if (error) {
       showDialog(
         context: context,
         builder: (BuildContext context) {

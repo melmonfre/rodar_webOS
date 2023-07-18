@@ -236,8 +236,14 @@ class _CheckOutTelaState extends State<CheckOutTela> {
   Future<void> checkNavigation(jsoncheckin) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     enviacheckout().enviar();
-    opcs.setString("checkoutitens", jsoncheckin);
-    if (checklistItens.length != checklistID.length) {
+
+    bool error = false;
+    for (int i = 0; i <checklistItens.length; i++){
+      if(checklistItens[i] == 3){
+        error = true;
+      }
+    }
+    if (error) {
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -257,6 +263,7 @@ class _CheckOutTelaState extends State<CheckOutTela> {
         },
       );
     } else {
+      opcs.setString("checkoutitens", jsoncheckin);
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => RelateMotivo()),

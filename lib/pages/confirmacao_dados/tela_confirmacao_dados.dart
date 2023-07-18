@@ -76,8 +76,7 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
         motivo = motivo + " ${nomesmotivos[i]}";
       }
     }
-    var eqp = opcs.getString("EQProcess");
-    var equip = jsonDecode(eqp!);
+
 
     os = element['id'];
     int numero = 0;
@@ -89,7 +88,11 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
     var pt = veiculo['plataforma'];
     ano = veiculo['ano'];
     renavam = veiculo['renavan'];
-    plataforma = pt['nome'];
+    try{
+      plataforma = pt['nome'];
+    } catch(e){
+      plataforma = "outro";
+    }
     var clie = veiculo['cliente'];
     var epss = clie['pessoa'];
     cliente = epss['nome'];
@@ -112,14 +115,17 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
     var eq = element['equipamentos'];
 
     eq.forEach((equip) {
-      tiposervico = "$tiposervico ${equip["tipo"]}";
+      tiposervico = "$tiposervico \n ${equip["tipo"]}";
       var eqpment = equip['equipamento'];
       try{
-        codequip = "$codequip ${eqpment["codigo"]}";
+        codequip = "$codequip \n ${eqpment["codigo"]}";
       } catch (e){
         codequip = "";
       }
-      localequip = "$localequip ${equip["localInstalacao"]}";
+      if(equip["localInstalacao"] != null){
+        localequip = "$localequip ${equip["localInstalacao"]}";
+      }
+
     });
 
     var desloc = opcs.getString('dadosdeslocamento');
@@ -188,7 +194,7 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
         checkoutsitu.add("Não Possui");
       }
       checklist = checklist +
-          "${nomeschecklist[i]}\n${antesText} ${checkinsitu[i]}       Depois: ${checkoutsitu[i]}\n\n\n";
+          "${nomeschecklist[i]}\n${antesText} ${checkinsitu[i]}\nDepois: ${checkoutsitu[i]}\n\n\n";
     }
     itenscheckin.forEach((element) {});
     itenscheckout.forEach((element) {});
