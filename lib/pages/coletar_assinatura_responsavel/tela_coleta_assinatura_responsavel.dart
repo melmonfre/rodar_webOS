@@ -71,7 +71,7 @@ class _TelaColetarAssinaturaResponsavelState extends State<TelaColetarAssinatura
               Imagem(
                 onPressed: () {
                   salvanocache();
-                  concluiOS().concluir();
+                  concluiOS().concluir(os);
                   Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => TelaInicial()),

@@ -278,7 +278,7 @@ saveoncache() async {
                                   TextButton(
                                     onPressed: () {
                                       saveoncache();
-                                      concluiOS().concluir();
+                                      concluiOS().concluir(osid);
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -301,7 +301,7 @@ saveoncache() async {
                               email != null ||
                               telefone != null) {
                             saveoncache();
-                            concluiOS().concluir();
+                            concluiOS().concluir(osid);
                             Navigator.push(
                               context,
                               MaterialPageRoute(

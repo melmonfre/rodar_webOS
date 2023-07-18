@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
+import '../../Constantes/Urlconst.dart';
 import 'JsonConclusao.dart';
 
 class syncoff{
@@ -30,6 +32,7 @@ class syncoff{
     List<Equipamento> listequipamento = [];
     List<Telefone> tel = [];
     List<Arquivo> files = [];
+    var file = Arquivo(base64: "", referencia: "", remover: 0, indice: 0, etapa: "");
     var jsonconclusao = JsonConclusao(checkin: checkin, equipamentos: equipamentos, acessorios: acessorios, arquivos: arquivos, deslocamento: deslocamento, checkout: checkout, motivosManutencao: motivosManutencao, dados: dados, assinaturaTecnico: assinaturaTecnico, presencial: presencial, notificacaoResponsavel: notificacaoResponsavel, confirmacaoPresencial: confirmacaoPresencial, documentosResponsavel: documentosResponsavel, assinaturaResponsavel: assinaturaResponsavel);
     var checkinitem = CheckinIten(id: 0, descricao: '', situacaoAntes: 0);
     var checkoutitem = CheckoutIten(id: 0, descricao: '', situacaoDepois: 0);
@@ -165,8 +168,86 @@ class syncoff{
     jsonconclusao.equipamentos.id = osid;
     jsonconclusao.equipamentos.etapaApp = "SERVICO_INICIADO";
 
+    List referencias = opcs.getStringList('referencias')!;
+    var indice = 0;
+    referencias.forEach((foto) {
+
+      List fotos = opcs.getStringList("$foto")!;
+      fotos.forEach((ft) {
+        file.referencia = foto;
+        file.base64 = ft;
+        file.etapa = "FOTOS";
+        file.remover =0;
+        file.indice = indice;
+        indice ++;
+        files.add(file);
+      });
+    });
 
     jsonconclusao.arquivos.arquivos = files;
+    var dadosdeslocamento = opcs.getString("dadosdeslocamento");
+    var desloc = jsonDecode(dadosdeslocamento!);
+    var DistanciaTec = desloc['distanciaPercorrida'];
+    var valorDeslocamentoTec = desloc['valor'];
+    var pedagioTec = desloc['pedagio'];
+    var motivoDiv = desloc['motivoDiv'];
+
+    jsonconclusao.deslocamento.etapa = "DESLOCAMENTO";
+    jsonconclusao.deslocamento.pedagioTec = pedagioTec;
+    jsonconclusao.deslocamento.distanciaTec = DistanciaTec;
+    jsonconclusao.deslocamento.motivoDiv = motivoDiv;
+    jsonconclusao.deslocamento.valorDeslocamentoTec = valorDeslocamentoTec;
+
+
+    var mots = opcs.getString("motivositens");
+    jsonconclusao.motivosManutencao.motivos = jsonDecode(mots!);
+    var itensconcjson = opcs.getString("conclusaoItens");
+    var itenscon = jsonDecode(itensconcjson!);
+
+    jsonconclusao.dados.etapa = "CONCLUSAO";
+    jsonconclusao.dados.hodometro = itenscon["hodometro"];
+    jsonconclusao.dados.dataConclusaoOs = itenscon["dataConclusao"];
+    jsonconclusao.dados.observacaoOs = "${itenscon["observacoes"]}";
+
+
+    var datacon = opcs.getString("DadosContato");
+    var contato = jsonDecode(datacon!);
+    var assinatura = opcs.getString("assinaturaresponsavel");
+    var base64 = opcs.getString("assinaturaconfirmacao");
+
+    var tipoenvio;
+    if (contato['responsavelAusente']){
+      tipoenvio = "email";
+      jsonconclusao.presencial = false;
+    } else{
+      tipoenvio = "presencial";
+      jsonconclusao.presencial = true;
+    }
+    jsonconclusao.confirmacaoPresencial.etapa = "CONCLUSAO";
+    jsonconclusao.confirmacaoPresencial.id = contato['id'];
+    jsonconclusao.confirmacaoPresencial.nome = contato['nome'];
+    jsonconclusao.confirmacaoPresencial.email = contato['email'];
+    jsonconclusao.confirmacaoPresencial.telefone = contato['telefone'];
+    jsonconclusao.confirmacaoPresencial.tipoEnvio =  tipoenvio;
+    jsonconclusao.confirmacaoPresencial.idOs = osid;
+    jsonconclusao.confirmacaoPresencial.documento = "";
+    jsonconclusao.confirmacaoPresencial.referencia = "";
+    jsonconclusao.confirmacaoPresencial.assinatura = base64!;
+    jsonconclusao.confirmacaoPresencial.observacaoCliente = "";
+
+    jsonconclusao.assinaturaResponsavel.etapa = "ASSINATURA_RESPONSAVEL";
+    jsonconclusao.assinaturaResponsavel.id = contato['id'];
+    jsonconclusao.assinaturaResponsavel.nome = contato['nome'];
+    jsonconclusao.assinaturaResponsavel.email = contato['email'];
+    jsonconclusao.assinaturaResponsavel.telefone = contato['telefone'];
+    jsonconclusao.assinaturaResponsavel.tipoEnvio =  tipoenvio;
+    jsonconclusao.assinaturaResponsavel.idOs = osid;
+    jsonconclusao.assinaturaResponsavel.documento = "";
+    jsonconclusao.assinaturaResponsavel.referencia = "";
+    jsonconclusao.assinaturaResponsavel.assinatura = assinatura!;
+    jsonconclusao.assinaturaResponsavel.observacaoCliente = "";
+
+    jsonconclusao.documentosResponsavel.documentoFrente = jsonconclusao.assinaturaResponsavel;
     /*
     required Checkin checkin,
     required Equipamentos equipamentos,
@@ -183,9 +264,39 @@ class syncoff{
     required DocumentosResponsavel documentosResponsavel,
     required AssinaturaResponsavel assinaturaResponsavel,
      */
+    opcs.setString("${osid}@OSaFinalizardata", jsonEncode(jsonconclusao));
+  }
+  enviar(osid)async{
+    SharedPreferences opcs = await SharedPreferences.getInstance();
 
+    var empresaid = opcs.getInt('sessionid');
+    var token = opcs.getString("${empresaid}@token");
 
+    final headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    final data = opcs.getString("${osid}@OSaFinalizardata");
+    final url = Uri.parse('${Urlconst().url}ordem_servico/sincronizacaoordemservico');
 
+    final res = await http.post(url, headers: headers, body: data);
+    final status = res.statusCode;
+    if (status != 200){
+      List<String>? ids = opcs.getStringList("osIDaFinalizar");
+      if(ids == null){
+        ids = [];
+        ids.add("$osid");
+      }
+      opcs.setStringList("osIDaFinalizar", ids);
+      throw Exception('http.post error: statusCode= $status');
+    } else{
+      opcs.remove("${osid}@OSaFinalizardata");
+      List<String>? ids = opcs.getStringList("osIDaFinalizar");
+      ids?.remove(osid);
+      opcs.setStringList("osIDaFinalizar", ids!);
+    }
+    print(res.body);
   }
 }
 
