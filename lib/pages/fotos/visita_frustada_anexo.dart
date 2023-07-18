@@ -6,6 +6,7 @@ import 'package:rodarwebos/services/salvaFotos.dart';
 import 'package:rodarwebos/widgets/anexos/anexo_evidencias.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
 class VisitaFrustadaAnexo extends StatefulWidget {
   @override
   _VisitaFrustadaAnexoState createState() => _VisitaFrustadaAnexoState();
