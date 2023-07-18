@@ -228,32 +228,32 @@ class _CameraButtonState extends State<CameraButton> {
             ),
           ),
           SizedBox(height: 16,),
-          BotaoProximo(
-            onPressed: () {
-              if (_images.isNotEmpty) {
-                // Avance para a próxima tela
-              } else {
-                // Exiba um alerta informando ao usuário para inserir pelo menos uma foto
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text('Alerta'),
-                      content: Text('Por favor, insira pelo menos uma foto.'),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text('OK'),
-                        ),
-                      ],
-                    );
-                  },
-                );
-              }
-            },
-          ),
+          // BotaoProximo(
+          //   onPressed: () {
+          //     if (_images.isNotEmpty) {
+          //       // Avance para a próxima tela
+          //     } else {
+          //       // Exiba um alerta informando ao usuário para inserir pelo menos uma foto
+          //       showDialog(
+          //         context: context,
+          //         builder: (BuildContext context) {
+          //           return AlertDialog(
+          //             title: Text('Alerta'),
+          //             content: Text('Por favor, insira pelo menos uma foto.'),
+          //             actions: [
+          //               TextButton(
+          //                 onPressed: () {
+          //                   Navigator.of(context).pop();
+          //                 },
+          //                 child: Text('OK'),
+          //               ),
+          //             ],
+          //           );
+          //         },
+          //       );
+          //     }
+          //   },
+          // ),
         ],
       ),
     );

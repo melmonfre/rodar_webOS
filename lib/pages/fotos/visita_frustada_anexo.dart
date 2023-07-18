@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/deslocamento/visita_frustada_deslocamento.dart';
 import 'package:rodarwebos/services/salvaFotos.dart';
 import 'package:rodarwebos/widgets/anexos/anexo_evidencias.dart';
+import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -67,6 +68,17 @@ class _VisitaFrustadaAnexoState extends State<VisitaFrustadaAnexo> {
                 AnexoEvidencias(
                   titulo: 'Anexar Evidências',
                   onPressed: () {
+                    salvarfotos().save("base64vf");
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => VisitaFrustadaDeslocamento(),
+                      ),
+                    );
+                  },
+                ),
+                BotaoProximo( 
+                onPressed: () {
                     salvarfotos().save("base64vf");
                     Navigator.push(
                       context,

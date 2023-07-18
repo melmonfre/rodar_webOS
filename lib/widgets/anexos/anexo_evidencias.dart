@@ -96,8 +96,11 @@ void avancarTela() {
                 ),
               ],
             ),
+            
           ),
-          
+          BotaoProximo( 
+                onPressed: widget.onPressed,
+                ),
         ],
       ),
     );
