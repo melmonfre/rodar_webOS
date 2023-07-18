@@ -230,9 +230,7 @@ class _CameraButtonState extends State<CameraButton> {
           SizedBox(height: 16,),
           BotaoProximo(
             onPressed: () {
-              if (_images.isNotEmpty) {
-                // Avance para a próxima tela
-              } else {
+              if (!_images.isNotEmpty) {
                 // Exiba um alerta informando ao usuário para inserir pelo menos uma foto
                 showDialog(
                   context: context,
