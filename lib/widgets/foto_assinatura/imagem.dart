@@ -49,7 +49,7 @@ class _ImagemState extends State<Imagem> {
 
     if (imgFile.path != null) {
       GallerySaver.saveImage(imgFile.path).then((a) {
-        print('salvo');
+
       });
     }
   }
