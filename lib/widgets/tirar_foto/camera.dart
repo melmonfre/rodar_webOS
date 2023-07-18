@@ -232,12 +232,6 @@ class _CameraButtonState extends State<CameraButton> {
             onPressed: () {
               if (_images.isNotEmpty) {
                 // Avance para a próxima tela
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => TelaDeslocamento(),
-                  ),
-                );
               } else {
                 // Exiba um alerta informando ao usuário para inserir pelo menos uma foto
                 showDialog(
