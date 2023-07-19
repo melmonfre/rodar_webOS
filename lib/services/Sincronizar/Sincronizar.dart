@@ -8,9 +8,7 @@ import '../../Constantes/Urlconst.dart';
 class SincronizarOS{
   sincronize() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
-    var referencias = opcs.getStringList('referencias');
     List<String>? ids = opcs.getStringList('osIDaFinalizar');
-
     ids?.forEach((osid) {
       syncoff().enviar(osid);
     });

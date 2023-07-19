@@ -2,6 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/tela_inicial/tela_inicial.dart';
+import 'package:rodarwebos/services/conclus%C3%A3o/confirmacaopresencial.dart';
+import 'package:rodarwebos/services/conclus%C3%A3o/envianotificacaocontato.dart';
+import 'package:rodarwebos/services/conclus%C3%A3o/enviardocumentopresencial.dart';
+import 'package:rodarwebos/services/conclus%C3%A3o/reenviarconfirmacao.dart';
 import 'package:rodarwebos/widgets/foto_assinatura/imagem.dart';
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
 import 'package:rodarwebos/widgets/responsavel/container_responsavel.dart';
@@ -64,6 +68,10 @@ class _TelaResponsavelState extends State<TelaResponsavel> {
 
               ),
               ContainerResponsavel(onPressed: () {
+                envianot().enviar();
+                reenvianot().enviar();
+                confirmacaopresencial().enviar();
+                enviardocconfirmacaopresencial().enviar();
                   Navigator.push(
                     context,
                     MaterialPageRoute(

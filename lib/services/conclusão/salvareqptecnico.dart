@@ -60,6 +60,8 @@ class salvareqtec{
         "cancelado"	:	false
 
       };
+
+
       Map<String, dynamic> equipaments = {
         "id": eqs["EquipamentosRemovidoID"],
         "tipo": "INSTALACAO",

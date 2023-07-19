@@ -67,7 +67,7 @@ class _TelaConclusaoState extends State<TelaConclusao> {
                 //todo salvardados
 
                 onPressed: () {
-
+                  enviaconclusao().enviar();
                   Navigator.push(
                     context,
                     MaterialPageRoute(
