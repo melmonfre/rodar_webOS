@@ -17,18 +17,16 @@ class AnexoEvidencias extends StatefulWidget {
 }
 
 class _AnexoEvidenciasState extends State<AnexoEvidencias> {
-
-bool fotosInseridas = false;
+  bool fotoInserida = false;
 
   void adicionarFoto() {
-
     setState(() {
-      fotosInseridas = true;
+      fotoInserida = true;
     });
   }
 
-void avancarTela() {
-    if (fotosInseridas) {
+  void avancarTela() {
+    if (fotoInserida) {
       // Avance para a próxima tela
       Navigator.push(
         context,
@@ -37,13 +35,13 @@ void avancarTela() {
         ),
       );
     } else {
-      // Exiba um alerta informando ao usuário para inserir pelo menos uma foto
+      // Exiba um alerta informando ao usuário para inserir uma foto
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Alerta'),
-            content: Text('Por favor, insira pelo menos uma foto.'),
+            content: Text('Por favor, insira uma foto.'),
             actions: [
               TextButton(
                 onPressed: () {
@@ -89,16 +87,15 @@ void avancarTela() {
             child: Row(
               children: [
                 Expanded(
-                  // Chamada de widget de camera
-                  child: CameraButton(),
+                  // Chamada de widget de câmera, só é habilitado se fotoInserida for falso
+                  child: fotoInserida ? SizedBox() : CameraButton(),
                 ),
               ],
             ),
-            
           ),
-          BotaoProximo( 
-                onPressed: widget.onPressed,
-                ),
+          BotaoProximo(
+            onPressed: fotoInserida ? widget.onPressed : avancarTela,
+          ),
         ],
       ),
     );

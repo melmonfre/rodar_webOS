@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class BotaoCancelar extends StatelessWidget {
   final VoidCallback onPressed;
-  final int index;
+  
 
-  BotaoCancelar({required this.onPressed, required this.index});
+  BotaoCancelar({required this.onPressed});
 
   @override
   Widget build(BuildContext context) {

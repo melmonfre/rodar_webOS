@@ -111,7 +111,7 @@ class _FotoHodometroState extends State<FotoHodometro> {
     } else {
       // Sem referências, retorne a tela original
       return AnexoEvidencias(
-        titulo: 'Tirar foto btr',
+        titulo: 'Tirar foto ',
         onPressed: proximaTela,
       );
     }
