@@ -9,6 +9,9 @@ import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CameraButton extends StatefulWidget {
+  final Function(bool) onFotoSelected;
+
+  CameraButton({required this.onFotoSelected});
   @override
   _CameraButtonState createState() => _CameraButtonState();
 }
@@ -43,6 +46,7 @@ class _CameraButtonState extends State<CameraButton> {
       _imageSize = imageSize.toDouble(); // Define o tamanho da imagem selecionada
       createbase64(_image); // Converte a imagem em string base64
     });
+    widget.onFotoSelected(true);
 
     // Salvar a imagem na galeria
     final directory = await getApplicationDocumentsDirectory();
@@ -139,6 +143,7 @@ class _CameraButtonState extends State<CameraButton> {
     if (_image != null) {
       _image = null; // Remove a imagem selecionada
     }
+    widget.onFotoSelected(false);
   });
 }
 

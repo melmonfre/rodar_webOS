@@ -86,10 +86,13 @@ class _AnexoEvidenciasState extends State<AnexoEvidencias> {
             ),
             child: Row(
               children: [
-                Expanded(
-                  // Chamada de widget de câmera, só é habilitado se fotoInserida for falso
-                  child: fotoInserida ? SizedBox() : CameraButton(),
-                ),
+                Expanded(child: CameraButton(
+                  onFotoSelected: (hasFoto) {
+                    setState(() {
+                      fotoInserida = hasFoto;
+                    });
+                  },
+                )),
               ],
             ),
           ),
