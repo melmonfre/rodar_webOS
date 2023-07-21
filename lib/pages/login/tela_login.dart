@@ -31,9 +31,36 @@ class _loginState extends State<login> {
     Color.fromARGB(255, 4, 30, 70),
   ];
 
-  var link;
+  var link = null;
+  var texto = "ou faça a leitura do código QR";
 
 
+  Future<void> validalink() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Erro'),
+          content: const SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Link inválido, tente novamente'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
   Future<void> linkmanual() async {
     return showDialog<void>(
       context: context,
@@ -48,7 +75,7 @@ class _loginState extends State<login> {
                   decoration: InputDecoration(
                       border: InputBorder.none,
                       icon: Icon(Icons.link),
-                      hintText: 'Informe o link'),
+                      hintText:  link != null ? link :  'Informe o link'),
                   style: TextStyle(color: Colors.black),
                   onChanged: (text) {
                     setState(() {
@@ -56,7 +83,7 @@ class _loginState extends State<login> {
                     });
                   },
                 ),
-                Text("ou faça a leitura do código QR",
+                Text("$texto",
                   style: TextStyle(color: Colors.black54),
                     ),
 
@@ -67,6 +94,10 @@ class _loginState extends State<login> {
                       color: Color.fromARGB(255, 4, 30, 70),
                       onPressed: () async {
                         link = await scanner.scan();
+                        setState(() {
+                          link;
+                          texto = "Link: " + link;
+                        });
                       },
                     ),
 
@@ -78,23 +109,28 @@ class _loginState extends State<login> {
             TextButton(
               child: const Text('concluir'),
               onPressed: () async {
-                Navigator.of(context).pop();
-                _showSingleAnimationDialog(
-                    context, Indicator.ballSpinFadeLoader);
-                var linkExterno;
-                String? initialLink = link;
-                if (initialLink != null || initialLink != "") {
-                  linkExterno = initialLink;
-                  if (linkExterno != null || linkExterno != "") {
-                    var divid = linkExterno?.split("/auth/");
-                    print(divid);
-                    var token = divid?[1];
-                    print('Link externo: $linkExterno');
-                    print('token $token');
-                    await getToken().obter(token);
-                  }
-                }
-                vaiprapaginainicial();
+
+               if(link == null || !link.toString().contains("siger.winksys.com.br")) {
+                 validalink();
+               } else {
+                 Navigator.of(context).pop();
+                 _showSingleAnimationDialog(
+                     context, Indicator.ballSpinFadeLoader);
+                 var linkExterno;
+                 String? initialLink = link;
+                 if (initialLink != null || initialLink != "") {
+                   linkExterno = initialLink;
+                   if (linkExterno != null || linkExterno != "") {
+                     var divid = linkExterno?.split("/auth/");
+                     print(divid);
+                     var token = divid?[1];
+                     print('Link externo: $linkExterno');
+                     print('token $token');
+                     await getToken().obter(token);
+                   }
+                 }
+                 vaiprapaginainicial();
+               }
               },
             ),
           ],

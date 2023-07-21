@@ -296,6 +296,9 @@ class syncoff{
       ids?.remove(osid);
       opcs.setStringList("osIDaFinalizar", ids!);
     }
+    print(res.reasonPhrase);
+    print(res.request);
+    print(res.headers);
     print(res.body);
   }
 }
