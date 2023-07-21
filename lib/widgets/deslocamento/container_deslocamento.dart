@@ -9,7 +9,6 @@ import 'package:rodarwebos/widgets/inputs/input_number.dart';
 import 'package:rodarwebos/widgets/inputs/input_text.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class ContainerDeslocamento extends StatefulWidget {
   final String titulo;
   final VoidCallback onPressed;
@@ -33,7 +32,8 @@ class _ContainerDeslocamentoState extends State<ContainerDeslocamento> {
   var longitude;
   var osid;
   void getLocation() async {
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.low);
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.low);
     print(position.latitude);
     print(position.longitude);
     setState(() {
@@ -46,6 +46,7 @@ class _ContainerDeslocamentoState extends State<ContainerDeslocamento> {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     opcs.setString("dadosdeslocamento", valores);
   }
+
   Future<void> getdata() async {
     var json;
 
@@ -66,7 +67,6 @@ class _ContainerDeslocamentoState extends State<ContainerDeslocamento> {
       valor = element['valorDeslocamentoOriginal'];
       pedagio = element['valorPedagioOriginal'];
     });
-
   }
 
   @override
@@ -78,7 +78,6 @@ class _ContainerDeslocamentoState extends State<ContainerDeslocamento> {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       child: SingleChildScrollView(
         child: Padding(
@@ -129,7 +128,6 @@ class _ContainerDeslocamentoState extends State<ContainerDeslocamento> {
                       onChanged: (value) {
                         setState(() {
                           disper = double.tryParse(value) ?? 0.0;
-
                         });
                       },
                     ),
@@ -175,14 +173,19 @@ class _ContainerDeslocamentoState extends State<ContainerDeslocamento> {
                       padding: EdgeInsets.all(16.0),
                       child: BotaoProximo(
                         onPressed: () {
-                          if (disper != null ||
-                              valor != null ||
-                              pedagio != null) {
+                          if (disper != null &&
+                              disper! >=
+                                  0 && // Verificar se a distância percorrida não é nula e maior ou igual a zero
+                              pedagio != null &&
+                              pedagio! >=
+                                  0 && // Verificar se o pedágio não é nulo e maior ou igual a zero
+                              disper! != 0) {
+                            // Verificar se a distância percorrida não é zero) {
                             Map<String, dynamic> values = {
                               "latitude": latitude,
                               "longitude": longitude,
                               "distanciaCalculada": disCalc,
-                              "distanciaPercorrida" : disper,
+                              "distanciaPercorrida": disper,
                               "valor": valor,
                               "pedagio": pedagio,
                               "motivoDiv": motivoDivergencia,
