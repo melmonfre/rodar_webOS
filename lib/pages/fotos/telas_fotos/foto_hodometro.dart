@@ -94,13 +94,6 @@ class _FotoHodometroState extends State<FotoHodometro> {
       String referenciaAtual = referencias[referenciaIndex];
       return Column(
         children: [
-          // Text(
-          //   // referenciaAtual,
-          //   // style: TextStyle(
-          //   //   fontSize: 18,
-          //   //   fontWeight: FontWeight.bold,
-          //   // ),
-          // ),
           SizedBox(height: 16.0),
           AnexoEvidencias(
             titulo: referenciaAtual,
