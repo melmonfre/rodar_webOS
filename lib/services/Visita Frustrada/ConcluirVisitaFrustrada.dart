@@ -63,12 +63,14 @@ class concluivf{
 
   enviardiversasfotosvf(osid, token, String?image) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
+    List<String> fotos = [];
+    fotos.add(image!);
     final headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
-    final data = '{"base64":[$image],"idsRemove":[]}';
+    final data = '{"base64":$fotos,"idsRemove":[]}';
     print(data);
     final url = Uri.parse('${Urlconst().url}ordem_servico/enviardiversasfotos/$osid');
 
