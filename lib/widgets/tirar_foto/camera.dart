@@ -25,7 +25,7 @@ class _CameraButtonState extends State<CameraButton> {
 
   salvanocache(base64Files) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
-    opcs.setStringList("base64camera",
+    opcs.setString("base64camera",
         base64Files); // Salva a lista de strings base64 no cache
   }
 

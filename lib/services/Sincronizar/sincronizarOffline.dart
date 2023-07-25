@@ -172,16 +172,16 @@ class syncoff{
     var indice = 0;
     referencias.forEach((foto) {
 
-      List fotos = opcs.getStringList("$foto")!;
-      fotos.forEach((ft) {
+      String? fotos = opcs.getString("$foto")!;
+
         file.referencia = foto;
-        file.base64 = ft;
+        file.base64 = fotos;
         file.etapa = "FOTOS";
         file.remover =0;
         file.indice = indice;
         indice ++;
         files.add(file);
-      });
+
     });
 
     jsonconclusao.arquivos.arquivos = files;

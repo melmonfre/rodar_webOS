@@ -26,6 +26,7 @@ class _FotoHodometroState extends State<FotoHodometro> {
       setState(() {
         referenciaIndex++;
         salvarfotos().save("${referencias[referenciaIndex]}");
+        print("Foto ${referencias[referenciaIndex]} salva");
       });
     } else {
       // Última tela, redirecione para a próxima página

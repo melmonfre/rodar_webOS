@@ -22,7 +22,7 @@ class concluivf{
     var valorDeslocamentoTec = deslocamento['valor'];
     var pedagioTec = deslocamento['pedagio'];
     var motivoDiv = element['motivoDiv'];
-    List<String>? base64images = opcs.getStringList("base64vf");
+    String? base64images = opcs.getString("base64vf");
     var localGps = "${opcs.getStringList("latitude")},${opcs.getStringList("longitude")}";
 
     await enviardiversasfotosvf(osid, token, base64images);
@@ -61,14 +61,14 @@ class concluivf{
   }
 
 
-  enviardiversasfotosvf(osid, token, List<String>?image) async {
+  enviardiversasfotosvf(osid, token, String?image) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     final headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
-    final data = '{"base64":$image,"idsRemove":[]}';
+    final data = '{"base64":[$image],"idsRemove":[]}';
     print(data);
     final url = Uri.parse('${Urlconst().url}ordem_servico/enviardiversasfotos/$osid');
 
