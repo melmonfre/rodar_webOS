@@ -1,30 +1,30 @@
 import 'dart:convert';
 
 import 'package:geolocator/geolocator.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Constantes/Urlconst.dart';
 import 'JsonConclusao.dart';
 
-class syncoff{
+class syncoff {
   //getters para instanciar o model
-  get checkin => null;
-  get equipamentos => null;
-  get acessorios => null;
-  get arquivos => null;
-  get deslocamento => null;
-  get checkout => null;
-  get motivosManutencao => null;
-  get dados => null;
-  get assinaturaTecnico => null;
-  get presencial => null;
-  get notificacaoResponsavel => null;
-  get confirmacaoPresencial => null;
-  get documentosResponsavel => null;
-  get assinaturaResponsavel => null;
+  get checkin => Checkin();
+  get equipamentos => Equipamentos();
+  get acessorios => Acessorios();
+  get arquivos => Arquivos();
+  get deslocamento => Deslocamento();
+  get checkout => Checkout();
+  get motivosManutencao => MotivosManutencao();
+  get dados => Dados();
+  get assinaturaTecnico => AssinaturaTecnico();
+  get presencial => true;
+  get notificacaoResponsavel => NotificacaoResponsavel();
+  get confirmacaoPresencial => AssinaturaResponsavel();
+  get documentosResponsavel => DocumentosResponsavel();
+  get assinaturaResponsavel => AssinaturaResponsavel();
 
-  criarjson() async {
+  criarjson(osid) async {
     // shared prefference pra obter dados do cache
     SharedPreferences opcs = await SharedPreferences.getInstance();
     List<CheckinIten> listcheckin = [];
@@ -32,33 +32,81 @@ class syncoff{
     List<Equipamento> listequipamento = [];
     List<Telefone> tel = [];
     List<Arquivo> files = [];
-    var file = Arquivo(base64: "", referencia: "", remover: 0, indice: 0, etapa: "");
-    var jsonconclusao = JsonConclusao(checkin: checkin, equipamentos: equipamentos, acessorios: acessorios, arquivos: arquivos, deslocamento: deslocamento, checkout: checkout, motivosManutencao: motivosManutencao, dados: dados, assinaturaTecnico: assinaturaTecnico, presencial: presencial, notificacaoResponsavel: notificacaoResponsavel, confirmacaoPresencial: confirmacaoPresencial, documentosResponsavel: documentosResponsavel, assinaturaResponsavel: assinaturaResponsavel);
+    var file =
+        Arquivo(base64: "", referencia: "", remover: 0, indice: 0, etapa: "");
+    var jsonconclusao = JsonConclusao(
+        checkin: checkin,
+        equipamentos: equipamentos,
+        acessorios: acessorios,
+        arquivos: arquivos,
+        deslocamento: deslocamento,
+        checkout: checkout,
+        motivosManutencao: motivosManutencao,
+        dados: dados,
+        assinaturaTecnico: assinaturaTecnico,
+        presencial: presencial,
+        notificacaoResponsavel: notificacaoResponsavel,
+        confirmacaoPresencial: confirmacaoPresencial,
+        documentosResponsavel: documentosResponsavel,
+        assinaturaResponsavel: assinaturaResponsavel);
     var checkinitem = CheckinIten(id: 0, descricao: '', situacaoAntes: 0);
     var checkoutitem = CheckoutIten(id: 0, descricao: '', situacaoDepois: 0);
-    var telefone = Telefone(id: 0, tipo: 0, ddi: "", ddd: "", numero: "", obs: "", telefoneCompleto: "");
+    var telefone = Telefone(
+        id: 0,
+        tipo: 0,
+        ddi: "",
+        ddd: "",
+        numero: "",
+        obs: "",
+        telefoneCompleto: "");
     var estado = Estado(id: 0, sigla: "", nome: "");
     var cidade = Cidade(id: 0, nome: "", estado: estado);
-    var endereco = Endereco(id: 0, rua: "", numero: "", bairro: "", complemento: "", cidade: cidade, cep: "", coordenadas: "");
-    var empr = Empresa(id: 0, nome: "", email: "", telefones: tel, endereco: endereco, stringTelefone: "", cnpj: "");
+    var endereco = Endereco(
+        id: 0,
+        rua: "",
+        numero: "",
+        bairro: "",
+        complemento: "",
+        cidade: cidade,
+        cep: "",
+        coordenadas: "");
+    var empr = Empresa(
+        id: 0,
+        nome: "",
+        email: "",
+        telefones: tel,
+        endereco: endereco,
+        stringTelefone: "",
+        cnpj: "");
     var pess = Pessoa(id: 0, empresa: empr);
-    var tecnico = Tecnico(id: 0, pessoa: pess, valorHora: 0, kmAtendimento: 0, funcionario: true);
-    var equitec = EquipamentoTec(id: 0, numero: "0", codigo: "0", documento: "0", status: "0", cancelado: false, tecnico: tecnico, localInstalacaoTec: "");
-    var equipamento = Equipamento(id: 0, tipoTec: "", situacaoTec: true, equipamentoTec: equitec);
+    var tecnico = Tecnico(
+        id: 0, pessoa: pess, valorHora: 0, kmAtendimento: 0, funcionario: true);
+    var equitec = EquipamentoTec(
+        id: 0,
+        numero: "0",
+        codigo: "0",
+        documento: "0",
+        status: "0",
+        cancelado: false,
+        tecnico: tecnico,
+        localInstalacaoTec: "");
+    var equipamento = Equipamento(
+        id: 0, tipoTec: "", situacaoTec: true, equipamentoTec: equitec);
 
     var latitude;
     var longitude;
     LocationPermission permission = await Geolocator.requestPermission();
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.low);
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.low);
     latitude = position.latitude;
     longitude = position.longitude;
     var empresaid = opcs.getInt('sessionid');
     var token = opcs.getString("${empresaid}@token");
     var json = opcs.getString("SelectedOS");
     var element = jsonDecode(json!);
-    tecnico = element['tecnico'];
+    tecnico = Tecnico.fromJson(element['tecnico']);
 
-    var  osid = element['id'];
+    var osid = element['id'];
     var jsoncheckin = opcs.getString("checkinitens");
     var datacheckin = jsonDecode(jsoncheckin!);
     var idcheckin = await datacheckin['idscheckin'];
@@ -71,7 +119,7 @@ class syncoff{
     String? obsadc = opcs.getString("obscheckin");
 
     // preenchendo check-in e check-out
-    for(int i = 0; i < idcheckin.length; i++){
+    for (int i = 0; i < idcheckin.length; i++) {
       checkinitem.descricao = nomescheckin[i];
       checkinitem.id = idcheckin[i];
       checkinitem.situacaoAntes = itenscheckin[i];
@@ -91,8 +139,6 @@ class syncoff{
     jsonconclusao.checkout.localGps = "$latitude,$longitude";
     jsonconclusao.checkout.etapa = "DESLOCAMENTO";
 
-
-
     // preenchendo equipamentos
     var jsoneqs = opcs.getStringList("EQProcess");
     jsoneqs?.forEach((element) {
@@ -102,8 +148,8 @@ class syncoff{
     "EquipamentosRemovidoID": "",
     "EquipamentoRemovidoCodigo": "",
     "localInstalacao": localInstalacao,*/
-      if(eqs["control"] == "RETIRADA"){
-        equitec.id =  eqs['EquipamentosRemovidoID'];
+      if (eqs["control"] == "RETIRADA") {
+        equitec.id = eqs['EquipamentosRemovidoID'];
         equitec.numero = "";
         equitec.codigo = "${eqs['EquipamentoRemovidoCodigo']}";
         equitec.documento = "${eqs['EquipamentoRemovidoDocumento']}";
@@ -116,10 +162,8 @@ class syncoff{
         equipamento.situacaoTec = true;
         equipamento.tipoTec = "RETIRADA";
         equipamento.equipamentoTec = equitec;
-
-
-      }else if(eqs["control"] == "INSTALACAO"){
-        equitec.id =  eqs['EquipamentoInstaladoID'];
+      } else if (eqs["control"] == "INSTALACAO") {
+        equitec.id = eqs['EquipamentoInstaladoID'];
         equitec.numero = "";
         equitec.codigo = "${eqs['EquipamentoInstaladoCodigo']}";
         equitec.documento = "${eqs['EquipamentoInstaladoDocumento']}";
@@ -132,8 +176,8 @@ class syncoff{
         equipamento.situacaoTec = true;
         equipamento.tipoTec = "INSTALACAO";
         equipamento.equipamentoTec = equitec;
-      } else if(eqs["control"] == "TROCA"){
-        equitec.id =  eqs['EquipamentoInstaladoID'];
+      } else if (eqs["control"] == "TROCA") {
+        equitec.id = eqs['EquipamentoInstaladoID'];
         equitec.numero = "";
         equitec.codigo = "${eqs['EquipamentoInstaladoCodigo']}";
         equitec.documento = "${eqs['EquipamentoInstaladoDocumento']}";
@@ -147,7 +191,7 @@ class syncoff{
         equipamento.tipoTec = "TROCA";
         equipamento.equipamentoTec = equitec;
       } else {
-        equitec.id =  eqs['EquipamentosRemovidoID'];
+        equitec.id = eqs['EquipamentosRemovidoID'];
         equitec.numero = "";
         equitec.codigo = "${eqs['EquipamentoRemovidoCodigo']}";
         equitec.documento = "${eqs['EquipamentoRemovidoDocumento']}";
@@ -161,7 +205,8 @@ class syncoff{
         equipamento.tipoTec = "MANUTENCAO";
         equipamento.equipamentoTec = equitec;
       }
-      jsonconclusao.acessorios.id = equipamento.id = eqs['EquipamentosRemovidoID'];
+      jsonconclusao.acessorios.id =
+          equipamento.id = eqs['EquipamentosRemovidoID'];
       jsonconclusao.acessorios.etapaApp = "ACESSORIOS";
       jsonconclusao.acessorios.acessorios = [];
     });
@@ -171,17 +216,15 @@ class syncoff{
     List referencias = opcs.getStringList('referencias')!;
     var indice = 0;
     referencias.forEach((foto) {
-
       String? fotos = opcs.getString("$foto")!;
 
-        file.referencia = foto;
-        file.base64 = fotos;
-        file.etapa = "FOTOS";
-        file.remover =0;
-        file.indice = indice;
-        indice ++;
-        files.add(file);
-
+      file.referencia = foto;
+      file.base64 = fotos;
+      file.etapa = "FOTOS";
+      file.remover = 0;
+      file.indice = indice;
+      indice++;
+      files.add(file);
     });
 
     jsonconclusao.arquivos.arquivos = files;
@@ -198,7 +241,6 @@ class syncoff{
     jsonconclusao.deslocamento.motivoDiv = motivoDiv;
     jsonconclusao.deslocamento.valorDeslocamentoTec = valorDeslocamentoTec;
 
-
     var mots = opcs.getString("motivositens");
     jsonconclusao.motivosManutencao.motivos = jsonDecode(mots!);
     var itensconcjson = opcs.getString("conclusaoItens");
@@ -209,17 +251,16 @@ class syncoff{
     jsonconclusao.dados.dataConclusaoOs = itenscon["dataConclusao"];
     jsonconclusao.dados.observacaoOs = "${itenscon["observacoes"]}";
 
-
     var datacon = opcs.getString("DadosContato");
     var contato = jsonDecode(datacon!);
     var assinatura = opcs.getString("assinaturaresponsavel");
     var base64 = opcs.getString("assinaturaconfirmacao");
 
     var tipoenvio;
-    if (contato['responsavelAusente']){
+    if (contato['responsavelAusente']) {
       tipoenvio = "email";
       jsonconclusao.presencial = false;
-    } else{
+    } else {
       tipoenvio = "presencial";
       jsonconclusao.presencial = true;
     }
@@ -228,7 +269,7 @@ class syncoff{
     jsonconclusao.confirmacaoPresencial.nome = contato['nome'];
     jsonconclusao.confirmacaoPresencial.email = contato['email'];
     jsonconclusao.confirmacaoPresencial.telefone = contato['telefone'];
-    jsonconclusao.confirmacaoPresencial.tipoEnvio =  tipoenvio;
+    jsonconclusao.confirmacaoPresencial.tipoEnvio = tipoenvio;
     jsonconclusao.confirmacaoPresencial.idOs = osid;
     jsonconclusao.confirmacaoPresencial.documento = "";
     jsonconclusao.confirmacaoPresencial.referencia = "";
@@ -240,14 +281,15 @@ class syncoff{
     jsonconclusao.assinaturaResponsavel.nome = contato['nome'];
     jsonconclusao.assinaturaResponsavel.email = contato['email'];
     jsonconclusao.assinaturaResponsavel.telefone = contato['telefone'];
-    jsonconclusao.assinaturaResponsavel.tipoEnvio =  tipoenvio;
+    jsonconclusao.assinaturaResponsavel.tipoEnvio = tipoenvio;
     jsonconclusao.assinaturaResponsavel.idOs = osid;
     jsonconclusao.assinaturaResponsavel.documento = "";
     jsonconclusao.assinaturaResponsavel.referencia = "";
     jsonconclusao.assinaturaResponsavel.assinatura = assinatura!;
     jsonconclusao.assinaturaResponsavel.observacaoCliente = "";
 
-    jsonconclusao.documentosResponsavel.documentoFrente = jsonconclusao.assinaturaResponsavel;
+    jsonconclusao.documentosResponsavel.documentoFrente =
+        jsonconclusao.assinaturaResponsavel;
     /*
     required Checkin checkin,
     required Equipamentos equipamentos,
@@ -264,9 +306,13 @@ class syncoff{
     required DocumentosResponsavel documentosResponsavel,
     required AssinaturaResponsavel assinaturaResponsavel,
      */
-    opcs.setString("${osid}@OSaFinalizardata", jsonEncode(jsonconclusao));
+    var jcon = jsonEncode(jsonconclusao);
+    opcs.setString("${osid}@OSaFinalizardata", jcon);
+    print(jcon);
+    syncoff().enviar(osid);
   }
-  enviar(osid)async{
+
+  enviar(osid) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
 
     var empresaid = opcs.getInt('sessionid');
@@ -277,29 +323,34 @@ class syncoff{
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
-    final data = opcs.getString("${osid}@OSaFinalizardata");
-    final url = Uri.parse('${Urlconst().url}ordem_servico/sincronizacaoordemservico');
+    final data = await opcs.getString("${osid}@OSaFinalizardata");
+    print(data);
+    final url =
+        Uri.parse('${Urlconst().url}ordem_servico/sincronizacaoordemservico');
 
     final res = await http.post(url, headers: headers, body: data);
     final status = res.statusCode;
-    if (status != 200){
+    if (status != 200) {
+      print(res.reasonPhrase);
+      print(res.request);
+      print(res.headers);
+      print(res.body);
       List<String>? ids = opcs.getStringList("osIDaFinalizar");
-      if(ids == null){
+      if (ids == null) {
         ids = [];
         ids.add("$osid");
       }
       opcs.setStringList("osIDaFinalizar", ids);
       throw Exception('http.post error: statusCode= $status');
-    } else{
+    } else {
+      print(res.reasonPhrase);
+      print(res.request);
+      print(res.headers);
+      print(res.body);
       opcs.remove("${osid}@OSaFinalizardata");
       List<String>? ids = opcs.getStringList("osIDaFinalizar");
       ids?.remove(osid);
       opcs.setStringList("osIDaFinalizar", ids!);
     }
-    print(res.reasonPhrase);
-    print(res.request);
-    print(res.headers);
-    print(res.body);
   }
 }
-
