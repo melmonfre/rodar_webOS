@@ -205,8 +205,12 @@ class syncoff {
         equipamento.tipoTec = "MANUTENCAO";
         equipamento.equipamentoTec = equitec;
       }
-      jsonconclusao.acessorios.id =
-          equipamento.id = eqs['EquipamentosRemovidoID'];
+      try {
+        jsonconclusao.acessorios.id =
+            equipamento.id = int.parse(eqs['EquipamentosRemovidoID']);
+      } catch (e) {
+        jsonconclusao.acessorios.id = 0;
+      }
       jsonconclusao.acessorios.etapaApp = "ACESSORIOS";
       jsonconclusao.acessorios.acessorios = [];
     });
@@ -214,10 +218,10 @@ class syncoff {
     jsonconclusao.equipamentos.etapaApp = "SERVICO_INICIADO";
 
     List referencias = opcs.getStringList('referencias')!;
+    print(referencias);
     var indice = 0;
     referencias.forEach((foto) {
       String? fotos = opcs.getString("$foto")!;
-
       file.referencia = foto;
       file.base64 = fotos;
       file.etapa = "FOTOS";
@@ -242,13 +246,15 @@ class syncoff {
     jsonconclusao.deslocamento.valorDeslocamentoTec = valorDeslocamentoTec;
 
     var mots = opcs.getString("motivositens");
-    jsonconclusao.motivosManutencao.motivos = jsonDecode(mots!);
+    //jsonconclusao.motivosManutencao.motivos = jsonDecode(mots!);
+    //TODO MOTIVOS
     var itensconcjson = opcs.getString("conclusaoItens");
     var itenscon = jsonDecode(itensconcjson!);
 
     jsonconclusao.dados.etapa = "CONCLUSAO";
-    jsonconclusao.dados.hodometro = itenscon["hodometro"];
-    jsonconclusao.dados.dataConclusaoOs = itenscon["dataConclusao"];
+    jsonconclusao.dados.hodometro = double.parse(itenscon["hodometro"]);
+    jsonconclusao.dados.dataConclusaoOs =
+        DateTime.tryParse(itenscon["dataConclusao"]);
     jsonconclusao.dados.observacaoOs = "${itenscon["observacoes"]}";
 
     var datacon = opcs.getString("DadosContato");

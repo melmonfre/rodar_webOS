@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
-import 'package:rodarwebos/widgets/deslocamento/variaveis_container_deslocamento.dart';
 import 'package:rodarwebos/widgets/inputs/input_motivos.dart';
 import 'package:rodarwebos/widgets/inputs/input_number.dart';
 import 'package:rodarwebos/widgets/inputs/input_text.dart';
@@ -177,9 +176,7 @@ class _ContainerDeslocamentoState extends State<ContainerDeslocamento> {
                               disper! >=
                                   0 && // Verificar se a distância percorrida não é nula e maior ou igual a zero
                               pedagio != null &&
-                              pedagio! >=
-                                  0 && // Verificar se o pedágio não é nulo e maior ou igual a zero
-                              disper! != 0) {
+                              pedagio! >= 0) {
                             // Verificar se a distância percorrida não é zero) {
                             Map<String, dynamic> values = {
                               "latitude": latitude,

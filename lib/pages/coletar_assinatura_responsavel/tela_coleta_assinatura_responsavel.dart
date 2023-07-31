@@ -1,24 +1,25 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:rodarwebos/pages/responsavel/tela_responsavel.dart';
 import 'package:rodarwebos/pages/tela_inicial/tela_inicial.dart';
 import 'package:rodarwebos/services/OS/ConcluirOS.dart';
 import 'package:rodarwebos/widgets/foto_assinatura/imagem.dart';
-import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TelaColetarAssinaturaResponsavel extends StatefulWidget {
   @override
-  _TelaColetarAssinaturaResponsavelState createState() => _TelaColetarAssinaturaResponsavelState();
+  _TelaColetarAssinaturaResponsavelState createState() =>
+      _TelaColetarAssinaturaResponsavelState();
 }
 
-class _TelaColetarAssinaturaResponsavelState extends State<TelaColetarAssinaturaResponsavel> {
+class _TelaColetarAssinaturaResponsavelState
+    extends State<TelaColetarAssinaturaResponsavel> {
   salvanocache() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     var assinatura = opcs.getString("base64assinatura");
     opcs.setString("assinaturaresponsavel", assinatura!);
   }
+
   var os;
   Future<void> getdata() async {
     var json;
@@ -28,14 +29,90 @@ class _TelaColetarAssinaturaResponsavelState extends State<TelaColetarAssinatura
     element = jsonDecode(json);
     setState(() {
       os = element['id'];
-
     });
+  }
+
+  concluir() {
+    try {
+      salvanocache();
+      concluiOS().concluir(os);
+    } catch (e) {}
+  }
+
+  Future<void> validafim() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Erro'),
+          content: const SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(
+                    'Clicar em "Sim" irá encerrar este formulário, enviar os dados aqui informados e retornar a tela inicial. \n\n '),
+                Text('Tem certeza que deseja finalizar?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Sim'),
+              onPressed: () {
+                //concluir();
+                Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => TelaInicial()),
+                );
+              },
+            ),
+            TextButton(
+              child: const Text('Não'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  finalizar() {
+    AlertDialog(
+      title: const Text('Concluir'),
+      content: const SingleChildScrollView(
+        child: ListBody(
+          children: <Widget>[
+            Text(
+                'Clicar em "OK" irá encerrar este formulário, \n enviar os dados aqui informados e \n retornar a tela inicial '),
+            Text('Tem certeza que deseja finalizar?'),
+          ],
+        ),
+      ),
+      actions: <Widget>[
+        TextButton(
+          child: const Text('sim'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        TextButton(
+          child: const Text('Não'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
+    );
   }
 
   void initState() {
     super.initState();
     getdata();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,19 +140,14 @@ class _TelaColetarAssinaturaResponsavelState extends State<TelaColetarAssinatura
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
-                
                 ),
-                
-
               ),
               Imagem(
                 onPressed: () {
                   salvanocache();
                   concluiOS().concluir(os);
-                  Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => TelaInicial()),
-            );
+                  //finalizar();
+                  validafim();
                 },
               )
             ],

@@ -2,11 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/deslocamento/tela_deslocamento.dart';
-import 'package:rodarwebos/pages/fotos/telas_fotos/foto_instalacao.dart';
 import 'package:rodarwebos/widgets/anexos/anexo_evidencias.dart';
-import 'package:rodarwebos/widgets/equipamentos/container_equipamento.dart';
-
-import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../services/salvaFotos.dart';
@@ -18,17 +14,71 @@ class FotoHodometro extends StatefulWidget {
 
 class _FotoHodometroState extends State<FotoHodometro> {
   List<String> referencias = []; // Adicione uma lista de referências
-
-  int referenciaIndex = -1; // Índice da referência atua
+  String referenciaatual = "";
+  int indiceatual = 0;
+  int referenciaIndex = 0; // Índice da referência atua
   var osid;
-  void proximaTela() {
-    if (referenciaIndex < referencias.length - 1) {
+  var refatu;
+  click() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    setState(() {
+      try {
+        salvarfotos().save("${referencias[refatu]}");
+        print("Foto ${referencias[refatu]} salva");
+      } catch (e) {}
+    });
+    setState(() {
+      indiceatual = indiceatual + 1;
+    });
+    print("INDICEATUAL $indiceatual");
+    if (indiceatual >= referencias.length) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TelaDeslocamento(),
+        ),
+      );
       setState(() {
-        referenciaIndex++;
-        salvarfotos().save("${referencias[referenciaIndex]}");
-        print("Foto ${referencias[referenciaIndex]} salva");
+        referenciaatual = referencias[indiceatual];
+        refatu = referencias[indiceatual];
       });
+      opcs.setString('referenciaatual', referenciaatual);
+      opcs.setInt('indiceatual', indiceatual);
     } else {
+      proximaTela();
+      setState(() {
+        referenciaatual = referencias[indiceatual];
+      });
+      opcs.setString('referenciaatual', referenciaatual);
+      opcs.setInt('indiceatual', indiceatual);
+    }
+  }
+
+  Future<void> proximaTela() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    print("REFERENCIAS $referencias");
+    print("REFERENCIA ATUAL $referenciaatual");
+    if (indiceatual > referencias.length - 1) {
+      indiceatual = 0;
+      refatu = referencias[indiceatual];
+    }
+    referenciaIndex = indiceatual;
+
+    print("REF ATUAL " + referenciaatual);
+
+    if (referenciaIndex < referencias.length) {
+      // se ainda não estiver no fim das referencias volta para a tela de fotos do hodometro
+      try {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => FotoHodometro(),
+          ),
+        );
+      } catch (e) {}
+    } else {
+      opcs.setString('referenciaatual', referencias[0]);
+      indiceatual = 0;
       // Última tela, redirecione para a próxima página
       Navigator.push(
         context,
@@ -38,22 +88,43 @@ class _FotoHodometroState extends State<FotoHodometro> {
       );
     }
   }
+
+  fotoinicial() {
+    setState(() {
+      referenciaIndex = indiceatual;
+    });
+  }
+
   getdata() async {
     var json;
     var element;
 
     SharedPreferences opcs = await SharedPreferences.getInstance();
-     referencias = opcs.getStringList('referencias')!;
+
+    setState(() {
+      referencias = opcs.getStringList("referencias")!;
+    });
+    print("REFS $referencias");
+    print("INDICEATUAL $indiceatual");
+    print("REFERENCIA ATUAL ${referencias[indiceatual]}");
+    setState(() {
+      indiceatual = opcs.getInt('indiceatual')!;
+      referenciaatual = opcs.getString('referenciaatual')!;
+      refatu = referencias[indiceatual];
+    });
+
     json = opcs.getString("SelectedOS");
     element = jsonDecode(json);
     osid = element['id'];
-    proximaTela();
   }
+
   @override
   void initState() {
     getdata();
+    fotoinicial();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,7 +146,8 @@ class _FotoHodometroState extends State<FotoHodometro> {
             children: [
               Container(
                 alignment: Alignment.center,
-                child: Text("$osid",
+                child: Text(
+                  "$osid",
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -90,15 +162,15 @@ class _FotoHodometroState extends State<FotoHodometro> {
       ),
     );
   }
+
   Widget _buildTelaReferencia() {
     if (referencias.isNotEmpty && referenciaIndex < referencias.length) {
-      String referenciaAtual = referencias[referenciaIndex];
       return Column(
         children: [
           SizedBox(height: 16.0),
           AnexoEvidencias(
-            titulo: referenciaAtual,
-            onPressed: proximaTela,
+            titulo: "$refatu",
+            onPressed: click,
           ),
         ],
       );
@@ -106,7 +178,7 @@ class _FotoHodometroState extends State<FotoHodometro> {
       // Sem referências, retorne a tela original
       return AnexoEvidencias(
         titulo: '  ',
-        onPressed: proximaTela,
+        onPressed: click,
       );
     }
   }

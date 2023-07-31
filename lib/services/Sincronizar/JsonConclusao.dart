@@ -45,7 +45,7 @@ class Acessorios {
 }
 
 class NotificacaoResponsavel {
-  NotificacaoResponsavel();
+  var notificacaoResponsavel;
 }
 
 class Arquivos {
@@ -413,7 +413,7 @@ class Telefone {
 }
 
 class MotivosManutencao {
-  List<NotificacaoResponsavel>? motivos;
+  List? motivos;
 
   MotivosManutencao({
     this.motivos,

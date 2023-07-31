@@ -1,13 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:rodarwebos/pages/acessorios/tela_acessorios.dart';
 import 'package:rodarwebos/services/GetEquipamento.dart';
 import 'package:rodarwebos/services/conclus%C3%A3o/salvareqptecnico.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../widgets/equipamentos/variaveis_container.dart';
 import '../fotos/telas_fotos/foto_hodometro.dart';
 
 class Equipamentos extends StatefulWidget {
@@ -26,6 +24,13 @@ class _EquipamentosState extends State<Equipamentos> {
     json = opcs.getString("SelectedOS");
     element = jsonDecode(json);
     os = element['id'];
+    int numero = 0;
+    var veiculo = element['veiculo'];
+    var empresaveiculo = veiculo['empresa'];
+    var fotosnecessarias = empresaveiculo['fotosNecessarias'];
+    List<String> referencias = fotosnecessarias.split('\n');
+    print("REFERENCIAS: $referencias");
+    opcs.setStringList("referencias", referencias);
     setState(() {
       control = opcs.getString("servico")!;
     });
@@ -109,7 +114,7 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
   var situequip;
   var eqnovodoc;
   var eqveiculodoc;
-    getdata() async {
+  getdata() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     var json = opcs.getString("equipamentos");
     var eqp = jsonDecode(json!);
@@ -217,57 +222,35 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
           ),
           SizedBox(height: 16.0),
           // Input local de instalação
-          Text(
-            'Local de instalação',
-            style: TextStyle(
-              fontSize: 14.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+
           SizedBox(height: 8.0),
-          Container(
-            width: double.infinity,
-            child: TextField(
-              textAlignVertical: TextAlignVertical.center,
-              decoration: InputDecoration(
-                hintText: localInstalacao,
-                border: OutlineInputBorder(),
-              ),
-              onChanged: (String? value) {
-                setState(() {
-                  localInstalacao = value;
-                });
-              },
-              onSubmitted: (value) {
-                localInstalacao = value;
-              },
-            ),
-          ),
+
           SizedBox(height: 8.0),
           BotaoProximo(
             onPressed: () {
-              if (situacaoEquipamento != null && localInstalacao != null) {
-                // Verifica se a situação do equipamento e o local de instalação foram selecionados
+              if (situacaoEquipamento != null) {
+                // Verifica se a situação do equipamento foi preenchida
                 var eqremovid;
                 var eqremoviddoc;
                 for (int i = 0; i < EquipamentoVeiculoCodigos.length; i++) {
                   if (EquipamentoVeiculoCodigos[i] == selecionadoveiculo) {
-                    eqremovid = EquipamentosVeiculoIDs[i]; // Armazena o ID do equipamento removido correspondente ao veículo selecionado
+                    eqremovid = EquipamentosVeiculoIDs[
+                        i]; // Armazena o ID do equipamento removido correspondente ao veículo selecionado
                     eqremoviddoc = eqveiculodoc[i];
                   }
                 }
                 Map<String, dynamic> equipamentos = {
                   "EquipamentoInstaladoID": "",
                   "EquipamentoInstaladoCodigo": "",
-                  "EquipamentoInstaladoDocumento":"",
+                  "EquipamentoInstaladoDocumento": "",
                   "EquipamentosRemovidoID":
                       eqremovid, // Armazena o ID do equipamento removido
                   "EquipamentoRemovidoCodigo":
                       selecionadoveiculo, // Armazena o código do equipamento removido (veículo selecionado)
-                  "EquipamentoRemovidoDocumento":eqremoviddoc,
+                  "EquipamentoRemovidoDocumento": eqremoviddoc,
                   "localInstalacao":
                       localInstalacao, // Armazena o local de instalação selecionado
-                  "control":Control,
+                  "control": Control,
                 };
                 getequipamentos().setEquipamento(
                     equipamentos); // Define os equipamentos selecionados no objeto getequipamentos()
@@ -485,7 +468,6 @@ class _ContainerTrocaState extends State<ContainerTroca> {
       stringEquipamento = eqp["stringEquipamento"];
       eqnovodoc = eqp["EquipamentoNovoDocumento"];
       eqveiculodoc = eqp["EquipamentoVeiculoDocumento"];
-
     });
   }
 
@@ -623,7 +605,8 @@ class _ContainerTrocaState extends State<ContainerTroca> {
                   var eqremoviddoc;
                   for (int i = 0; i < EquipamentoVeiculoCodigos.length; i++) {
                     if (EquipamentoVeiculoCodigos[i] == selecionadoveiculo) {
-                      eqremovid = EquipamentosVeiculoIDs[i]; // Armazena o ID do equipamento removido correspondente ao veículo selecionado
+                      eqremovid = EquipamentosVeiculoIDs[
+                          i]; // Armazena o ID do equipamento removido correspondente ao veículo selecionado
                       eqremoviddoc = eqveiculodoc[i];
                     }
                   }
@@ -638,14 +621,15 @@ class _ContainerTrocaState extends State<ContainerTroca> {
                   Map<String, dynamic> equipamentos = {
                     "EquipamentoInstaladoID": eqnovosid,
                     "EquipamentoInstaladoCodigo": selecionadonovo,
-                    "EquipamentoInstaladoDocumento":eqnovosdoc,
+                    "EquipamentoInstaladoDocumento": eqnovosdoc,
                     "EquipamentosRemovidoID":
-                    eqremovid, // Armazena o ID do equipamento removido
+                        eqremovid, // Armazena o ID do equipamento removido
                     "EquipamentoRemovidoCodigo":
-                    selecionadoveiculo, // Armazena o código do equipamento removido (veículo selecionado)
-                    "EquipamentoRemovidoDocumento":eqremoviddoc,
-                    "localInstalacao":localInstalacao, // Armazena o local de instalação selecionado
-                    "control":Control,
+                        selecionadoveiculo, // Armazena o código do equipamento removido (veículo selecionado)
+                    "EquipamentoRemovidoDocumento": eqremoviddoc,
+                    "localInstalacao":
+                        localInstalacao, // Armazena o local de instalação selecionado
+                    "control": Control,
                   };
                   getequipamentos().setEquipamento(equipamentos);
                   salvareqtec().enviar();
@@ -700,7 +684,7 @@ class _ContainerInstalacaoState extends State<ContainerInstalacao> {
   var stringEquipamento;
   var selecionadonovo;
   var selecionadoveiculo;
-var Control = "INSTALACAO";
+  var Control = "INSTALACAO";
   var eqnovodoc;
   var eqveiculodoc;
 
@@ -802,13 +786,12 @@ var Control = "INSTALACAO";
               Map<String, dynamic> equipamentos = {
                 "EquipamentoInstaladoID": eqnovosid,
                 "EquipamentoInstaladoCodigo": selecionadonovo,
-                "EquipamentoInstaladoDocumento":eqnovosdoc,
+                "EquipamentoInstaladoDocumento": eqnovosdoc,
                 "EquipamentosRemovidoID": "",
                 "EquipamentoRemovidoCodigo": "",
-              "EquipamentoRemovidoDocumento":"",
+                "EquipamentoRemovidoDocumento": "",
                 "localInstalacao": localInstalacao,
-                "control":Control,
-
+                "control": Control,
               };
               getequipamentos().setEquipamento(equipamentos);
 
