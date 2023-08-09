@@ -6,95 +6,6 @@ import 'package:rodarwebos/widgets/botoes/botao_visita_frustada.dart';
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Title extends StatelessWidget {
-  const Title(this.text, {super.key});
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          alignment: Alignment.center,
-          child: Text(
-            text,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        const SizedBox(height: 16.0),
-      ],
-    );
-  }
-}
-
-class Heading extends StatelessWidget {
-  const Heading(this.text, {super.key});
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 3),
-        child: Text(
-          text,
-          style: const TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class Data extends StatelessWidget {
-  const Data(this.text, {super.key, this.paddingBottom = 3});
-
-  final String text;
-  final double paddingBottom;
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Padding(
-        padding: EdgeInsets.only(bottom: paddingBottom),
-        child: Text(
-          text,
-          style: const TextStyle(
-            fontSize: 14,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class Separator extends StatelessWidget {
-  const Separator({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(height: 10.0),
-        Container(
-          height: 1.0,
-          color: Colors.grey[500],
-        ),
-        const SizedBox(height: 10.0),
-      ],
-    );
-  }
-}
-
 class OrdemServico extends StatefulWidget {
   OrdemServico({Key? key}) : super(key: key);
 
@@ -127,7 +38,7 @@ class _OrdemServicoState extends State<OrdemServico> {
   var contatoobs; //ok
   //servicos ok
   var servico; //ok
-  //equipamentos,
+  //equipamentos
   var tiposervico = "";
   var codequip = "";
   var localequip = "";
@@ -137,19 +48,13 @@ class _OrdemServicoState extends State<OrdemServico> {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     json = opcs.getString("SelectedOS");
     element = jsonDecode(json);
-
-    // final oss = VisualizarOrdemServico(element);
-
     os = element['id'];
-
+    int numero = 0;
     var veiculo = element['veiculo'];
     var empresaveiculo = veiculo['empresa'];
     var fotosnecessarias = empresaveiculo['fotosNecessarias'];
-
     List<String> referencias = fotosnecessarias.split('\n');
-
-    // print("REFERENCIAS: $referencias");
-
+    print("REFERENCIAS: $referencias");
     opcs.setStringList("referencias", referencias);
     placa = veiculo['placa'];
     corcarro = veiculo['cor'];
@@ -157,14 +62,12 @@ class _OrdemServicoState extends State<OrdemServico> {
     modelo = veiculo['modelo'];
     ano = veiculo['ano'];
     renavam = veiculo['renavan'];
-
     var pt = veiculo['plataforma'];
-    try {
+    try{
       plataforma = pt['nome'];
-    } catch (e) {
+    } catch(e){
       plataforma = "outro";
     }
-
     var clie = veiculo['cliente'];
     var epss = clie['pessoa'];
     cliente = epss['nome'];
@@ -189,18 +92,20 @@ class _OrdemServicoState extends State<OrdemServico> {
       tiposervico = "$tiposervico \n ${equip["tipo"]}";
 
       codequip = "$codequip \n ${equip["id"]}";
-      if (equip["localInstalacao"] != null) {
+      if (equip["localInstalacao"] != null){
         localequip = "$localequip \n ${equip["localInstalacao"]}";
       }
     });
 
-    List servicos = element['servicos']; // Obtém a lista de serviços do elemento atual
+    List servicos =
+        element['servicos']; // Obtém a lista de serviços do elemento atual
     var serv; // Declaração da variável serv
     servicos.forEach((ser) {
       serv = ser[
           'servico']; // Obtém o valor da chave 'servico' de cada elemento da lista servicos e armazena em serv
     });
-    servico = serv['descricao']; // Armazena o valor da chave 'descricao' do objeto serv em servico
+    servico = serv[
+        'descricao']; // Armazena o valor da chave 'descricao' do objeto serv em servico
 
     if (tiposervico == "") {
       // Verifica se a variável tiposervico está vazia
@@ -216,15 +121,19 @@ class _OrdemServicoState extends State<OrdemServico> {
     var cit = end['cidade']; // Obtém o objeto cidade do objeto end
     var cidade = cit['nome']; // Obtém o valor da chave 'nome' do objeto cit
     var rua = end['rua']; // Obtém o valor da chave 'rua' do objeto end
-    var numerocasa = end['numero']; // Obtém o valor da chave 'numero' do objeto end
+    var numerocasa =
+        end['numero']; // Obtém o valor da chave 'numero' do objeto end
     local =
-        "$rua N˚$numerocasa, $bairro, $cidade"; // Monta a string local com as informações de endereço
+        "rua:${rua} numero:${numerocasa}, ${bairro}, ${cidade}"; // Monta a string local com as informações de endereço
 
-    var localtime =
-        element['dataInstalacao']; // Obtém o valor da chave 'dataInstalacao' do elemento atual
-    var datahora = localtime.split('T'); // Divide a string em data e hora com base no 'T'
-    var data = datahora[0].split('-'); // Divide a parte de data em ano, mês e dia
-    var hora = datahora[1].split(':'); // Divide a parte de hora em hora, minuto e segundo
+    var localtime = element[
+        'dataInstalacao']; // Obtém o valor da chave 'dataInstalacao' do elemento atual
+    var datahora =
+        localtime.split('T'); // Divide a string em data e hora com base no 'T'
+    var data =
+        datahora[0].split('-'); // Divide a parte de data em ano, mês e dia
+    var hora = datahora[1]
+        .split(':'); // Divide a parte de hora em hora, minuto e segundo
     var hr; // Declaração da variável hr
     if (int.parse(hora[0]) - 3 < 0) {
       hr = int.parse(hora[0]) - 3 + 24; // Realiza um ajuste de fuso horário
@@ -232,12 +141,15 @@ class _OrdemServicoState extends State<OrdemServico> {
       hr = int.parse(hora[0]) - 3;
     }
     var agend =
-        "${data[2]}/${data[1]}/${data[0]} $hr:${hora[1]}"; // Formata a data e hora em uma string
+        "${data[2]}/${data[1]}/${data[0]} ${hr}:${hora[1]}"; // Formata a data e hora em uma string
     agendamento = agend; // Atribui a string formatada à variável agendamento
 
-    // trigger rerender
+    print("agendamento $agendamento"); // Imprime o valor atual de agendamento
+    numero++; // Incrementa o valor da variável numero
+    print(numero); // Imprime o valor atual de numero
+
     setState(() {
-      num = num + 1;
+      num = numero;
     });
   }
 
@@ -253,67 +165,318 @@ class _OrdemServicoState extends State<OrdemServico> {
       appBar: AppBar(
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: const Text('Ordem de Serviço'),
+        title: Text('Ordem de Serviço'),
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          padding: EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Title(os.toString()),
-              const Heading("Dados de Agendamento"),
-              Data("$agendamento"),
-              const Separator(),
-              const Heading('Dados do Cliente'),
-              Data('Cliente: $cliente'),
-              Data('Empresa: $empresa'),
-              Data(
-                'Telefones: $telefone',
-                paddingBottom: 0,
+              Container(
+                alignment: Alignment.center,
+                child: Text(
+                  os.toString(),
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-              const Separator(),
-              const Heading('Contatos'),
-              Data('Nome: $contatonome'),
-              Data(
-                'Obs: $contatoobs',
-                paddingBottom: 0,
+              SizedBox(height: 16.0),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Dados de Agendamento',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-              const Separator(),
-              const Heading('Dados do Veiculo'),
-              Data('Placa: $placa'),
-              Data('Cor: $corcarro'),
-              Data('Chassi: $chassi'),
-              Data('Plataforma: $plataforma'),
-              Data('Modelo: $modelo'),
-              Data('Ano: $ano'),
-              Data(
-                'Renavan: $renavam',
-                paddingBottom: 0,
+              SizedBox(height: 3.0),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "${agendamento}",
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
               ),
-              const Separator(),
-              const Heading('Serviços'),
-              Data(
-                "$servico",
-                paddingBottom: 0,
+              SizedBox(height: 12.0),
+              Container(
+                height: 1.0,
+                color: Colors.grey[500],
               ),
-              const Separator(),
-              const Heading('Equipamentos'),
-              Data('Tipo de Serviço: $tiposervico'),
-              Data('Código equipamento $codequip'),
-              Data('Local de instalação: $localequip'),
-              const Separator(),
-              const Heading('Endereco'),
-              Data(
-                "$local",
-                paddingBottom: 0,
+              SizedBox(height: 10.0),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Dados do Cliente',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-              const SizedBox(height: 20.0),
+              SizedBox(height: 3.0),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Cliente: ${cliente}',
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              SizedBox(height: 3.0),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Empresa: ${empresa}',
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              SizedBox(height: 3.0),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Telefones: ${telefone}',
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              SizedBox(height: 12.0),
+              Container(
+                height: 1.0,
+                color: Colors.grey[500],
+              ),
+              SizedBox(height: 10.0),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Contatos',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              SizedBox(height: 3.0),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Nome: ${contatonome}',
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              SizedBox(height: 3.0),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Obs: ${contatoobs}',
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              SizedBox(height: 12.0),
+              Container(
+                height: 1.0,
+                color: Colors.grey[500],
+              ),
+              SizedBox(height: 12.0),
+              // -----------------------------------------------------------
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Dados do Veiculo',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              SizedBox(height: 3.0),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Placa: ${placa}',
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              SizedBox(height: 3.0),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Cor: ${corcarro}',
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              SizedBox(height: 3.0),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Chassi: ${chassi}',
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              SizedBox(height: 3.0),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Plataforma: ${plataforma}',
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              SizedBox(height: 3.0),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Modelo: ${modelo}',
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              SizedBox(height: 3.0),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Ano: ${ano}',
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              SizedBox(height: 3.0),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Renavan: ${renavam}',
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              SizedBox(height: 12.0),
+              Container(
+                height: 1.0,
+                color: Colors.grey[500],
+              ),
+              SizedBox(height: 12.0),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Serviços',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              SizedBox(height: 3.0),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "${servico}",
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              SizedBox(height: 12.0),
+              Container(
+                height: 1.0,
+                color: Colors.grey[500],
+              ),
+              SizedBox(height: 12.0),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Equipamentos',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              SizedBox(height: 3.0),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Tipo de Serviço: ${tiposervico}',
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              SizedBox(height: 3.0),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Código equipamento ${codequip}',
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              SizedBox(height: 3.0),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Local de instalação: ${localequip}',
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              SizedBox(height: 12.0),
+              Container(
+                height: 1.0,
+                color: Colors.grey[500],
+              ),
+              SizedBox(height: 12.0),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Endereço',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              SizedBox(height: 3.0),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "${local}",
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              SizedBox(height: 20.0),
               Row(
                 children: [
                   Flexible(
@@ -323,7 +486,7 @@ class _OrdemServicoState extends State<OrdemServico> {
                       child: BotaoVisitaFrustada(),
                     ),
                   ),
-                  const SizedBox(width: 10.0), // Espaçamento entre os botões
+                  SizedBox(width: 10.0), // Espaçamento entre os botões
                   Flexible(
                     flex: 1,
                     child: Container(
@@ -333,7 +496,7 @@ class _OrdemServicoState extends State<OrdemServico> {
                   ),
                 ],
               ),
-              const SizedBox(height: 10.0)
+              SizedBox(height: 10.0)
             ],
           ),
         ),

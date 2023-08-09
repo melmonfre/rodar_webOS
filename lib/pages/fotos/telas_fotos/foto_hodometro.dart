@@ -45,12 +45,12 @@ class _FotoHodometroState extends State<FotoHodometro> {
       opcs.setString('referenciaatual', referenciaatual);
       opcs.setInt('indiceatual', indiceatual);
     } else {
-      proximaTela();
+      opcs.setString('referenciaatual', referenciaatual);
+      opcs.setInt('indiceatual', indiceatual);
       setState(() {
         referenciaatual = referencias[indiceatual];
       });
-      opcs.setString('referenciaatual', referenciaatual);
-      opcs.setInt('indiceatual', indiceatual);
+      proximaTela();
     }
   }
 
@@ -108,8 +108,10 @@ class _FotoHodometroState extends State<FotoHodometro> {
     print("INDICEATUAL $indiceatual");
     print("REFERENCIA ATUAL ${referencias[indiceatual]}");
     setState(() {
-      indiceatual = opcs.getInt('indiceatual')!;
-      referenciaatual = opcs.getString('referenciaatual')!;
+      if (opcs.containsKey('indiceatual')) {
+        indiceatual = opcs.getInt('indiceatual')!;
+        referenciaatual = opcs.getString('referenciaatual')!;
+      }
       refatu = referencias[indiceatual];
     });
 
