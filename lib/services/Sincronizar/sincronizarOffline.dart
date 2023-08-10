@@ -221,7 +221,8 @@ class syncoff {
     print(referencias);
     var indice = 0;
     referencias.forEach((foto) {
-      String? fotos = opcs.getString("$foto")!;
+      // Não está localizando o Base64 da foto
+      String? fotos = opcs.containsKey("$foto") ? opcs.getString("$foto") : "";
       file.referencia = foto;
       file.base64 = fotos;
       file.etapa = "FOTOS";
@@ -252,7 +253,8 @@ class syncoff {
     var itenscon = jsonDecode(itensconcjson!);
 
     jsonconclusao.dados.etapa = "CONCLUSAO";
-    jsonconclusao.dados.hodometro = double.parse(itenscon["hodometro"]);
+    jsonconclusao.dados.hodometro =
+        itenscon["hodometro"] != "" ? double.parse(itenscon["hodometro"]) : 0;
     jsonconclusao.dados.dataConclusaoOs =
         DateTime.tryParse(itenscon["dataConclusao"]);
     jsonconclusao.dados.observacaoOs = "${itenscon["observacoes"]}";
@@ -271,7 +273,8 @@ class syncoff {
       jsonconclusao.presencial = true;
     }
     jsonconclusao.confirmacaoPresencial.etapa = "CONCLUSAO";
-    jsonconclusao.confirmacaoPresencial.id = contato['id'];
+    jsonconclusao.confirmacaoPresencial.id =
+        contato['id'] != "" ? int.parse(contato['id']) : 0;
     jsonconclusao.confirmacaoPresencial.nome = contato['nome'];
     jsonconclusao.confirmacaoPresencial.email = contato['email'];
     jsonconclusao.confirmacaoPresencial.telefone = contato['telefone'];
@@ -283,7 +286,8 @@ class syncoff {
     jsonconclusao.confirmacaoPresencial.observacaoCliente = "";
 
     jsonconclusao.assinaturaResponsavel.etapa = "ASSINATURA_RESPONSAVEL";
-    jsonconclusao.assinaturaResponsavel.id = contato['id'];
+    jsonconclusao.assinaturaResponsavel.id =
+        contato['id'] != "" ? int.parse(contato['id']) : 0;
     jsonconclusao.assinaturaResponsavel.nome = contato['nome'];
     jsonconclusao.assinaturaResponsavel.email = contato['email'];
     jsonconclusao.assinaturaResponsavel.telefone = contato['telefone'];
@@ -312,6 +316,22 @@ class syncoff {
     required DocumentosResponsavel documentosResponsavel,
     required AssinaturaResponsavel assinaturaResponsavel,
      */
+    print(jsonEncode(jsonconclusao.checkin));
+    jsonconclusao.equipamentos.equipamentos = List.empty();
+    // jsonconclusao.equipamentos.equipamentos.add(Equipamento());
+    print(jsonEncode(jsonconclusao.equipamentos));
+    print(jsonEncode(jsonconclusao.acessorios));
+    print(jsonEncode(jsonconclusao.arquivos));
+    print(jsonEncode(jsonconclusao.deslocamento));
+    print(jsonEncode(jsonconclusao.checkout));
+    print(jsonEncode(jsonconclusao.motivosManutencao));
+    print(jsonEncode(jsonconclusao.dados));
+    print(jsonEncode(jsonconclusao.assinaturaTecnico));
+    print(jsonEncode(jsonconclusao.presencial));
+    print(jsonEncode(jsonconclusao.notificacaoResponsavel));
+    print(jsonEncode(jsonconclusao.confirmacaoPresencial));
+    print(jsonEncode(jsonconclusao.documentosResponsavel));
+    print(jsonEncode(jsonconclusao.assinaturaResponsavel));
     var jcon = jsonEncode(jsonconclusao);
     opcs.setString("${osid}@OSaFinalizardata", jcon);
     print(jcon);
