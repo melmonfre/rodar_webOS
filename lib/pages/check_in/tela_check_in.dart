@@ -3,9 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:rodarwebos/pages/equipamentos/tela_equipamento.dart';
-import 'package:rodarwebos/services/conclus%C3%A3o/checkin.dart';
-import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
-import 'package:rodarwebos/widgets/check_in/container_check_in.dart';
+import 'package:rodarwebos/services/conclusao/checkin.dart';
 import 'package:rodarwebos/widgets/check_in/container_observacao_adicional.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -28,7 +26,8 @@ class _CheckInTelaState extends State<CheckInTela> {
 
   void getLocation() async {
     LocationPermission permission = await Geolocator.requestPermission();
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.low);
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.low);
     print(position.latitude);
     print(position.longitude);
     setState(() {
@@ -36,6 +35,7 @@ class _CheckInTelaState extends State<CheckInTela> {
       longitude = position.longitude;
     });
   }
+
   Future<void> getdata() async {
     var json;
     var osid;
@@ -53,7 +53,7 @@ class _CheckInTelaState extends State<CheckInTela> {
     token = opcs.getString("${empresaid}@token")!;
     osid = element['id'];
     check = opcs.getString("${osid}@checklist");
-    if(check == null){
+    if (check == null) {
       check = await GetChecklistOS().obter(empresaid, osid);
       opcs.setString("${osid}@checklist", check);
     }
@@ -231,7 +231,6 @@ class _CheckInTelaState extends State<CheckInTela> {
                             };
                             checkNavigation(json.encode(
                                 values)); // Navega para a próxima tela, passando os valores do checklist em formato JSON
-
                           },
                         );
                       }
@@ -245,13 +244,13 @@ class _CheckInTelaState extends State<CheckInTela> {
   Future<void> checkNavigation(jsoncheckin) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     await opcs.setString("checkinitens", jsoncheckin);
-     enviacheckin().enviar();
-     bool error = false;
-     for (int i = 0; i <checklistItens.length; i++){
-       if(checklistItens[i] == 3){
-         error = true;
-       }
-     }
+    enviacheckin().enviar();
+    bool error = false;
+    for (int i = 0; i < checklistItens.length; i++) {
+      if (checklistItens[i] == 3) {
+        error = true;
+      }
+    }
     if (error) {
       showDialog(
         context: context,

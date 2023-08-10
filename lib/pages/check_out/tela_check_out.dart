@@ -1,17 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:rodarwebos/pages/equipamentos/tela_equipamento.dart';
 import 'package:rodarwebos/pages/motivos/tela_relate_motivos.dart';
-import 'package:rodarwebos/services/conclus%C3%A3o/checkout.dart';
-import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
-import 'package:rodarwebos/widgets/check_in/container_check_in.dart';
+import 'package:rodarwebos/services/conclusao/checkout.dart';
 import 'package:rodarwebos/widgets/check_in/container_observacao_adicional.dart';
-import 'package:rodarwebos/widgets/confirmacao_dados/lista_resumo_estado.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../services/GetEquipamento.dart';
-import '../../widgets/check_out/container_check_out.dart';
 
 class CheckOutTela extends StatefulWidget {
   @override
@@ -19,7 +14,7 @@ class CheckOutTela extends StatefulWidget {
 }
 
 class _CheckOutTelaState extends State<CheckOutTela> {
-  List checklistID =[];
+  List checklistID = [];
   List checklistNome = [];
   List checklistItens = [];
   List ChecklistOBS = [];
@@ -42,11 +37,11 @@ class _CheckOutTelaState extends State<CheckOutTela> {
     var checkinitens = jsonDecode(checkin!);
     List itenscheckin = checkinitens['itenscheckin'];
     itenscheckin.forEach((element) {
-      if(element == 0){
+      if (element == 0) {
         checkinsitu.add("OK");
-      } else if(element == 1){
+      } else if (element == 1) {
         checkinsitu.add("Com Defeito");
-      } else if(element == 2){
+      } else if (element == 2) {
         checkinsitu.add("Não Possui");
       }
     });
@@ -65,10 +60,12 @@ class _CheckOutTelaState extends State<CheckOutTela> {
       });
     });
   }
+
   void initState() {
     getdata();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -83,20 +80,21 @@ class _CheckOutTelaState extends State<CheckOutTela> {
               ),
               title: Text('Check-out'),
             ),
-            body:  Column(
+            body: Column(
               children: [
                 Expanded(
                     child: ListView.builder(
                         padding: const EdgeInsets.all(8),
                         itemCount: tamanho + 1,
                         itemBuilder: (BuildContext context, int index) {
-                          if(index < tamanho){
+                          if (index < tamanho) {
                             return Row(
                               children: [
                                 Container(
                                   padding: EdgeInsets.all(16.0),
                                   child: Container(
-                                    width: MediaQuery.of(context).size.width - 48,
+                                    width:
+                                        MediaQuery.of(context).size.width - 48,
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       border: Border.all(
@@ -106,7 +104,6 @@ class _CheckOutTelaState extends State<CheckOutTela> {
                                       borderRadius: BorderRadius.circular(8.0),
                                     ),
                                     padding: EdgeInsets.all(16.0),
-
                                     child: Column(
                                       children: <Widget>[
                                         Text(
@@ -127,119 +124,128 @@ class _CheckOutTelaState extends State<CheckOutTela> {
                                         ),
                                         SizedBox(height: 5.0),
                                         Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
-                                            Row(children: [
-
-                                              Radio(
-                                                value: 0,
-                                                groupValue: checklistItens[index],
-                                                onChanged:  (value) {
-                                                  setState(() {
-                                                    if(checklistItens.asMap().containsKey(index)){
-                                                      checklistItens[index] = value;
-                                                    } else {
-                                                      checklistItens.add(value); // Atualize o valor selecionado
-                                                    }
-                                                  });
-                                                },
-                                              ),
-                                              Text(
-                                                'OK',
-                                                style: TextStyle(fontSize: 14.0),
-                                              ),
-                                              SizedBox(width: 13),
-
-                                              Radio(
-                                                value: 1,
-                                                groupValue: checklistItens[index],
-                                                onChanged:  (value) {
-                                                  setState(() {
-                                                    if(checklistItens.asMap().containsKey(index)){
-                                                      checklistItens[index] = value;
-                                                    } else {
-                                                      checklistItens.add(value); // Atualize o valor selecionado
-                                                    }
-                                                  });
-                                                },
-                                              ),
-                                              Text(
-                                                'Com \nDefeito',
-                                                style: TextStyle(fontSize: 14.0),
-                                              ),
-                                              SizedBox(width: 13),
-
-                                              Radio(
-                                                value: 2,
-                                                groupValue: checklistItens[index],
-                                                onChanged:  (value) {
-                                                  setState(() {
-                                                    if(checklistItens.asMap().containsKey(index)){
-                                                      checklistItens[index] = value;
-                                                    } else {
-                                                      checklistItens.add(value); // Atualize o valor selecionado
-                                                    }
-                                                  });
-                                                },
-                                              ),
-                                              Text(
-                                                'Não \nPossui',
-                                                style: TextStyle(fontSize: 14.0),
-                                              ),
-
-                                            ],),
-
+                                            Row(
+                                              children: [
+                                                Radio(
+                                                  value: 0,
+                                                  groupValue:
+                                                      checklistItens[index],
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      if (checklistItens
+                                                          .asMap()
+                                                          .containsKey(index)) {
+                                                        checklistItens[index] =
+                                                            value;
+                                                      } else {
+                                                        checklistItens.add(
+                                                            value); // Atualize o valor selecionado
+                                                      }
+                                                    });
+                                                  },
+                                                ),
+                                                Text(
+                                                  'OK',
+                                                  style:
+                                                      TextStyle(fontSize: 14.0),
+                                                ),
+                                                SizedBox(width: 13),
+                                                Radio(
+                                                  value: 1,
+                                                  groupValue:
+                                                      checklistItens[index],
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      if (checklistItens
+                                                          .asMap()
+                                                          .containsKey(index)) {
+                                                        checklistItens[index] =
+                                                            value;
+                                                      } else {
+                                                        checklistItens.add(
+                                                            value); // Atualize o valor selecionado
+                                                      }
+                                                    });
+                                                  },
+                                                ),
+                                                Text(
+                                                  'Com \nDefeito',
+                                                  style:
+                                                      TextStyle(fontSize: 14.0),
+                                                ),
+                                                SizedBox(width: 13),
+                                                Radio(
+                                                  value: 2,
+                                                  groupValue:
+                                                      checklistItens[index],
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      if (checklistItens
+                                                          .asMap()
+                                                          .containsKey(index)) {
+                                                        checklistItens[index] =
+                                                            value;
+                                                      } else {
+                                                        checklistItens.add(
+                                                            value); // Atualize o valor selecionado
+                                                      }
+                                                    });
+                                                  },
+                                                ),
+                                                Text(
+                                                  'Não \nPossui',
+                                                  style:
+                                                      TextStyle(fontSize: 14.0),
+                                                ),
+                                              ],
+                                            ),
                                             TextField(
                                               decoration: InputDecoration(
                                                 labelText: 'Observação...',
                                                 border: OutlineInputBorder(),
                                               ),
-                                              onChanged: (value){
-                                                ChecklistOBS[index]= value;
+                                              onChanged: (value) {
+                                                ChecklistOBS[index] = value;
                                               },
                                             ),
                                           ],
                                         ),
                                         SizedBox(height: 16.0),
-
-
                                       ],
                                     ),
-
                                   ),
                                 )
                               ],
                             );
                           } else {
-                            return  ContainerObservacaoAdicional(
+                            return ContainerObservacaoAdicional(
                               onPressed: () {
                                 Map<String, dynamic> values = {
-                                  "idscheckin" : checklistID,
-                                  "nomescheckin" : checklistNome,
-                                  "itenscheckin" : checklistItens,
-                                  "obscheckin" : ChecklistOBS
+                                  "idscheckin": checklistID,
+                                  "nomescheckin": checklistNome,
+                                  "itenscheckin": checklistItens,
+                                  "obscheckin": ChecklistOBS
                                 };
 
                                 checkNavigation(json.encode(values));
-
                               },
                             );
                           }
-                        }
-                    )
-                )
+                        }))
               ],
-            )
-        )
-    );
+            )));
   }
+
   Future<void> checkNavigation(jsoncheckin) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     enviacheckout().enviar();
 
     bool error = false;
-    for (int i = 0; i <checklistItens.length; i++){
-      if(checklistItens[i] == 3){
+    for (int i = 0; i < checklistItens.length; i++) {
+      if (checklistItens[i] == 3) {
         error = true;
       }
     }

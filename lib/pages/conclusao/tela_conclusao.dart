@@ -2,13 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/confirmacao_dados/tela_confirmacao_dados.dart';
-import 'package:rodarwebos/services/conclus%C3%A3o/conclusao.dart';
-import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
+import 'package:rodarwebos/services/conclusao/conclusao.dart';
 import 'package:rodarwebos/widgets/conclusao/container_conclusao.dart';
-import 'package:rodarwebos/widgets/inputs/input_motivos.dart';
-import 'package:rodarwebos/widgets/inputs/input_text.dart';
-import 'package:rodarwebos/widgets/motivos/container_relate_motivos.dart';
-import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TelaConclusao extends StatefulWidget {
@@ -34,6 +29,7 @@ class _TelaConclusaoState extends State<TelaConclusao> {
     super.initState();
     getdata();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,7 +70,8 @@ class _TelaConclusaoState extends State<TelaConclusao> {
                       builder: (context) => TelaConfirmacaoDados(),
                     ),
                   );
-                },)
+                },
+              )
             ],
           ),
         ),

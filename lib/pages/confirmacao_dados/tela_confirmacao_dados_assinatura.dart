@@ -2,22 +2,24 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/responsavel/tela_responsavel.dart';
-import 'package:rodarwebos/services/conclus%C3%A3o/confirmaostecnicoassinatura.dart';
+import 'package:rodarwebos/services/conclusao/confirmaostecnicoassinatura.dart';
 import 'package:rodarwebos/widgets/foto_assinatura/imagem.dart';
-import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TelaConclusaoDadosAssinatura extends StatefulWidget {
   @override
-  _TelaConclusaoDadosAssinaturaState createState() => _TelaConclusaoDadosAssinaturaState();
+  _TelaConclusaoDadosAssinaturaState createState() =>
+      _TelaConclusaoDadosAssinaturaState();
 }
 
-class _TelaConclusaoDadosAssinaturaState extends State<TelaConclusaoDadosAssinatura> {
+class _TelaConclusaoDadosAssinaturaState
+    extends State<TelaConclusaoDadosAssinatura> {
   salvanocache() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     var assinatura = opcs.getString("base64assinatura");
     opcs.setString("assinaturaconfirmacao", assinatura!);
   }
+
   var os;
   Future<void> getdata() async {
     var json;
@@ -27,7 +29,6 @@ class _TelaConclusaoDadosAssinaturaState extends State<TelaConclusaoDadosAssinat
     element = jsonDecode(json);
     setState(() {
       os = element['id'];
-
     });
   }
 
@@ -63,19 +64,16 @@ class _TelaConclusaoDadosAssinaturaState extends State<TelaConclusaoDadosAssinat
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
-                
                 ),
-                
-
               ),
               Imagem(
                 onPressed: () async {
                   await salvanocache();
                   confirmassinatura().enviar();
                   Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => TelaResponsavel()),
-            );
+                    context,
+                    MaterialPageRoute(builder: (context) => TelaResponsavel()),
+                  );
                 },
               )
             ],

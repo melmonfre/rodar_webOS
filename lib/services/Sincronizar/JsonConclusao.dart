@@ -31,41 +31,22 @@ class JsonConclusao {
     required this.assinaturaResponsavel,
   });
 
-  // Map<String, dynamic> toJson() => {
-  //   "acessorios": acessorios ,
-  //   "arquivos ": arquivos,
-  //   "confirmacaoAgendamento": confirmacaoAgendamento,
-  //   "contatos": contatos,
-  //   "dataEmissao": ,
-  //   "dataInstalacao": ,
-  //   "descricaoItens ": ,
-  //   "descricaoMotivos ": ,
-  //   "descricaoMotivosTecnico ": ,
-  //   "descricaoServicos": ,
-  //   "descricaoServicosString": ,
-  //   "distanciaDeslocamento": deslocamento.,
-  //   "distanciaDeslocamentoOriginal": ,
-  //   "distanciaDeslocamentoTecnico": deslocamento.distanciaTec,
-  //   "endereco": endereco,
-  //   "enderecoOrigem": ,
-  //   "equipamentos": equipamentos,
-  //   "etapaAPP": ,
-  //   "hodometro": hodo,
-  //   "id": ,
-  //   "motivos": ,
-  //   "motivosTecnico": motivosManutencao,
-  //   "observacao": ,
-  //   "servicos": ,
-  //   "tecnico": ,
-  //   "valorDeslocamento": ,
-  //   "valorDeslocamentoOriginal": ,
-  //   "valorDeslocamentoTecnico": ,
-  //   "valorPedagio": ,
-  //   "valorPedagioOriginal": ,
-  //   "valorPedagioTecnico": ,
-  //   "veiculo": veiculo,
-  //   "visitaFrustrada": visitaFrustrada,
-  // };
+  Map<String, dynamic> toJson() => {
+        'checkin': checkin,
+        'equipamentos': equipamentos,
+        'acessorios': acessorios,
+        'arquivos': arquivos,
+        'deslocamento': deslocamento,
+        'checkout': checkout,
+        'motivosManutencao': motivosManutencao,
+        'dados': dados,
+        'assinaturaTecnico': assinaturaTecnico,
+        'presencial': presencial,
+        'notificacaoResponsavel': notificacaoResponsavel,
+        'confirmacaoPresencial': confirmacaoPresencial,
+        'documentosResponsavel': documentosResponsavel,
+        'assinaturaResponsavel': assinaturaResponsavel
+      };
 }
 
 class Acessorios {
@@ -78,10 +59,14 @@ class Acessorios {
     this.acessorios,
     this.etapaApp,
   });
+  Map<String, dynamic> toJson() =>
+      {'id': id, 'acessorios': acessorios, 'etapaApp': etapaApp};
 }
 
 class NotificacaoResponsavel {
   var notificacaoResponsavel;
+  Map<String, dynamic> toJson() =>
+      {'notificacaoResponsavel': notificacaoResponsavel};
 }
 
 class Arquivos {
@@ -90,6 +75,7 @@ class Arquivos {
   Arquivos({
     this.arquivos,
   });
+  Map<String, dynamic> toJson() => {'arquivos': arquivos};
 }
 
 class Arquivo {
@@ -106,6 +92,13 @@ class Arquivo {
     this.indice,
     this.etapa,
   });
+  Map<String, dynamic> toJson() => {
+        'base64': base64,
+        'referencia': referencia,
+        'remover': remover,
+        'indice': indice,
+        'etapa': etapa,
+      };
 }
 
 class AssinaturaResponsavel {
@@ -134,6 +127,19 @@ class AssinaturaResponsavel {
     this.observacaoCliente,
     this.etapa,
   });
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'nome': nome,
+        'email': email,
+        'telefone': telefone,
+        'tipoEnvio': tipoEnvio,
+        'idOs': idOs,
+        'documento': documento,
+        'referencia': referencia,
+        'assinatura': assinatura,
+        'observacaoCliente': observacaoCliente,
+        'etapa': etapa,
+      };
 }
 
 class AssinaturaTecnico {
@@ -150,6 +156,13 @@ class AssinaturaTecnico {
     this.observacaoCliente,
     this.etapa,
   });
+  Map<String, dynamic> toJson() => {
+        'base64': base64,
+        'referencia': referencia,
+        'nomeResponsavel': nomeResponsavel,
+        'observacaoCliente': observacaoCliente,
+        'etapa': etapa
+      };
 }
 
 class Checkin {
@@ -165,7 +178,12 @@ class Checkin {
     this.etapa,
   });
 
-  Map<String, dynamic> toJson() => {'localGps': localGps, 'itens': itens};
+  Map<String, dynamic> toJson() => {
+        'itens': itens,
+        'localGps': localGps,
+        'observacao': observacao,
+        'etapa': etapa,
+      };
 }
 
 class CheckinIten {
@@ -179,7 +197,8 @@ class CheckinIten {
     this.situacaoAntes,
   });
 
-  Map<String, dynamic> toJson() => {'id': id, 'descricao': descricao};
+  Map<String, dynamic> toJson() =>
+      {'id': id, 'descricao': descricao, 'situacaoAntes': situacaoAntes};
 }
 
 class Checkout {
@@ -192,6 +211,8 @@ class Checkout {
     this.localGps,
     this.etapa,
   });
+  Map<String, dynamic> toJson() =>
+      {'itens': itens, 'localGps': localGps, 'etapa': etapa};
 }
 
 class CheckoutIten {
@@ -204,10 +225,12 @@ class CheckoutIten {
     this.descricao,
     this.situacaoDepois,
   });
+  Map<String, dynamic> toJson() =>
+      {'id': id, 'descricao': descricao, 'situacaoDepois': situacaoDepois};
 }
 
 class Dados {
-  DateTime? dataConclusaoOs;
+  dynamic dataConclusaoOs;
   String? observacaoOs;
   double? hodometro;
   String? etapa;
@@ -218,6 +241,12 @@ class Dados {
     this.hodometro,
     this.etapa,
   });
+  Map<String, dynamic> toJson() => {
+        'dataConclusaoOs': dataConclusaoOs,
+        'observacaoOs': observacaoOs,
+        'hodometro': hodometro,
+        'etapa': etapa,
+      };
 }
 
 class Deslocamento {
@@ -234,6 +263,13 @@ class Deslocamento {
     this.motivoDiv,
     this.etapa,
   });
+  Map<String, dynamic> toJson() => {
+        'distanciaTec': distanciaTec,
+        'valorDeslocamentoTec': valorDeslocamentoTec,
+        'pedagioTec': pedagioTec,
+        'motivoDiv': motivoDiv,
+        'etapa': etapa,
+      };
 }
 
 class DocumentosResponsavel {
@@ -242,6 +278,7 @@ class DocumentosResponsavel {
   DocumentosResponsavel({
     this.documentoFrente,
   });
+  Map<String, dynamic> toJson() => {'documentoFrente': documentoFrente};
 }
 
 class Equipamentos {
@@ -277,6 +314,9 @@ class Equipamento {
 
   Map<String, dynamic> toJson() => {
         'id': id,
+        'tipoTec': tipoTec,
+        'situacaoTec': situacaoTec,
+        'equipamentoTec': equipamentoTec
       };
 }
 
@@ -300,6 +340,16 @@ class EquipamentoTec {
     this.tecnico,
     this.localInstalacaoTec,
   });
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'numero': numero,
+        'codigo': codigo,
+        'documento': documento,
+        'status': status,
+        'cancelado': cancelado,
+        'tecnico': tecnico,
+        'localInstalacaoTec': localInstalacaoTec
+      };
 }
 
 class Tecnico {
@@ -316,7 +366,13 @@ class Tecnico {
     this.kmAtendimento,
     this.funcionario,
   });
-
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'pessoa': pessoa,
+        'valorHora': valorHora,
+        'kmAtendimento': kmAtendimento,
+        'funcionario': funcionario,
+      };
   Tecnico.fromJson(json) {
     id = json['id'];
     pessoa?.fromJson(json['pessoa']);
@@ -334,6 +390,7 @@ class Pessoa {
     this.id,
     this.empresa,
   });
+  Map<String, dynamic> toJson() => {'id': id, 'empresa': empresa};
 
   fromJson(json) {
     id = json['id'];
@@ -359,6 +416,15 @@ class Empresa {
     this.stringTelefone,
     this.cnpj,
   });
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'nome': nome,
+        'email': email,
+        'telefones': telefones,
+        'endereco': endereco,
+        'stringTelefone': stringTelefone,
+        'cnpj': cnpj,
+      };
 
   fromJson(json) {
     id = json['id'];
@@ -393,6 +459,16 @@ class Endereco {
     this.cep,
     this.coordenadas,
   });
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'rua': rua,
+        'numero': numero,
+        'bairro': bairro,
+        'complemento': complemento,
+        'cidade': cidade,
+        'cep': cep,
+        'coordenadas': coordenadas
+      };
 
   fromJson(json) {
     id = json['id'];
@@ -416,6 +492,7 @@ class Cidade {
     this.nome,
     this.estado,
   });
+  Map<String, dynamic> toJson() => {'id': id, 'nome': nome, 'estado': estado};
 
   fromJson(json) {
     id = json['id'];
@@ -434,7 +511,7 @@ class Estado {
     this.sigla,
     this.nome,
   });
-
+  Map<String, dynamic> toJson() => {'id': id, 'sigla': sigla, 'nome': nome};
   fromJson(json) {
     id = json['id'];
     sigla = json['sigla'];
@@ -460,6 +537,15 @@ class Telefone {
     this.obs,
     this.telefoneCompleto,
   });
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'tipo': tipo,
+        'ddi': ddi,
+        'ddd': ddd,
+        'numero': numero,
+        'obs': obs,
+        'telefoneCompleto': telefoneCompleto
+      };
 }
 
 class MotivosManutencao {
@@ -468,4 +554,5 @@ class MotivosManutencao {
   MotivosManutencao({
     this.motivos,
   });
+  Map<String, dynamic> toJson() => {'motivos': motivos};
 }

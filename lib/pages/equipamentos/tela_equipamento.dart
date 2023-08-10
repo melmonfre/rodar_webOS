@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/services/GetEquipamento.dart';
-import 'package:rodarwebos/services/conclus%C3%A3o/salvareqptecnico.dart';
+import 'package:rodarwebos/services/conclusao/salvareqptecnico.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

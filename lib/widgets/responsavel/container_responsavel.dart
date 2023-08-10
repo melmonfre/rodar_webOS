@@ -4,19 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/coletar_assinatura_responsavel/tela_coleta_assinatura_responsavel.dart';
 import 'package:rodarwebos/pages/tela_inicial/tela_inicial.dart';
 import 'package:rodarwebos/services/OS/ConcluirOS.dart';
-import 'package:rodarwebos/services/conclus%C3%A3o/envianotificacaocontato.dart';
-import 'package:rodarwebos/services/conclus%C3%A3o/reenviarconfirmacao.dart';
+import 'package:rodarwebos/services/conclusao/envianotificacaocontato.dart';
+import 'package:rodarwebos/services/conclusao/reenviarconfirmacao.dart';
 import 'package:rodarwebos/widgets/botoes/botao_coletar_assinatura_responsavel.dart';
 import 'package:rodarwebos/widgets/botoes/botao_enviar.dart';
-import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
-import 'package:rodarwebos/widgets/inputs/input_motivos.dart';
 import 'package:rodarwebos/widgets/inputs/input_number.dart';
 import 'package:rodarwebos/widgets/inputs/input_text.dart';
-import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../services/conclusão/confirmacaopresencial.dart';
-import '../../services/conclusão/enviardocumentopresencial.dart';
+import '../../services/conclusao/confirmacaopresencial.dart';
+import '../../services/conclusao/enviardocumentopresencial.dart';
 
 class ContainerResponsavel extends StatefulWidget {
   final VoidCallback onPressed;
@@ -31,7 +28,7 @@ class ContainerResponsavel extends StatefulWidget {
 
 class _ContainerResponsavelState extends State<ContainerResponsavel> {
   String motivoDivergencia = '';
-  String? nome ;
+  String? nome;
   String? email;
   String? telefone;
 
@@ -39,21 +36,21 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
   bool responsavelAusente = false;
   String motivoAusencia = '';
   String id = '';
-var osid;
+  var osid;
 
-saveoncache() async {
-  SharedPreferences opcs = await SharedPreferences.getInstance();
+  saveoncache() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
 
-  Map<String, dynamic> values = {
-      "id" : id,
-      "nome" : nome,
-      "email" : email,
-      "telefone" : telefone,
+    Map<String, dynamic> values = {
+      "id": id,
+      "nome": nome,
+      "email": email,
+      "telefone": telefone,
       "responsavelAusente": responsavelAusente
     };
-    opcs.setString("DadosContato",jsonEncode(values));
-}
-  
+    opcs.setString("DadosContato", jsonEncode(values));
+  }
+
   Future<void> getdata() async {
     var json;
     var element;
@@ -64,15 +61,15 @@ saveoncache() async {
 
     setState(() {
       osid = element['id'];
-      try{
+      try {
         var contacto = contatos[0];
         id = contacto["id"];
         var contact = contacto["contato"];
         nome = contact['nome'];
         email = contact['email'];
         telefone = contact['telefone'];
-      } catch(e){
-        nome ="Não informado";
+      } catch (e) {
+        nome = "Não informado";
         email = "";
         telefone = "";
       }
@@ -84,6 +81,7 @@ saveoncache() async {
     super.initState();
     getdata();
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -177,8 +175,8 @@ saveoncache() async {
                       },
                       onChanged: (String? value) {
                         setState(() {
-                            email = value;
-                          });
+                          email = value;
+                        });
                       },
                       enabled:
                           false, // Desabilitar o campo preenchido automaticamente
@@ -305,7 +303,6 @@ saveoncache() async {
                       )
                     : ColetarAssinaturaResponsavel(
                         onPressed: () {
-
                           if (nome != null ||
                               email != null ||
                               telefone != null) {
@@ -314,7 +311,7 @@ saveoncache() async {
                             confirmacaopresencial().enviar();
                             enviardocconfirmacaopresencial().enviar();
                             saveoncache();
-                            concluiOS().concluir(osid);
+                            //concluiOS().concluir(osid);
                             Navigator.push(
                               context,
                               MaterialPageRoute(

@@ -110,7 +110,11 @@ class _FotoHodometroState extends State<FotoHodometro> {
     setState(() {
       if (opcs.containsKey('indiceatual')) {
         indiceatual = opcs.getInt('indiceatual')!;
-        referenciaatual = opcs.getString('referenciaatual')!;
+        try {
+          referenciaatual = opcs.getString('referenciaatual')!;
+        } catch (e) {
+          referenciaatual = referencias[indiceatual];
+        }
       }
       refatu = referencias[indiceatual];
     });

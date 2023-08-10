@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Constantes/Urlconst.dart';
@@ -141,6 +142,7 @@ class syncoff {
 
     // preenchendo equipamentos
     var jsoneqs = opcs.getStringList("EQProcess");
+    jsonconclusao.equipamentos.equipamentos = List.empty();
     jsoneqs?.forEach((element) {
       var eqs = jsonDecode(element);
       /*"EquipamentoInstaladoID": ,
@@ -162,6 +164,7 @@ class syncoff {
         equipamento.situacaoTec = true;
         equipamento.tipoTec = "RETIRADA";
         equipamento.equipamentoTec = equitec;
+        jsonconclusao.equipamentos.equipamentos?.add(Equipamento());
       } else if (eqs["control"] == "INSTALACAO") {
         equitec.id = eqs['EquipamentoInstaladoID'];
         equitec.numero = "";
@@ -176,6 +179,7 @@ class syncoff {
         equipamento.situacaoTec = true;
         equipamento.tipoTec = "INSTALACAO";
         equipamento.equipamentoTec = equitec;
+        jsonconclusao.equipamentos.equipamentos?.add(Equipamento());
       } else if (eqs["control"] == "TROCA") {
         equitec.id = eqs['EquipamentoInstaladoID'];
         equitec.numero = "";
@@ -190,6 +194,7 @@ class syncoff {
         equipamento.situacaoTec = true;
         equipamento.tipoTec = "TROCA";
         equipamento.equipamentoTec = equitec;
+        jsonconclusao.equipamentos.equipamentos?.add(Equipamento());
       } else {
         equitec.id = eqs['EquipamentosRemovidoID'];
         equitec.numero = "";
@@ -204,6 +209,7 @@ class syncoff {
         equipamento.situacaoTec = true;
         equipamento.tipoTec = "MANUTENCAO";
         equipamento.equipamentoTec = equitec;
+        jsonconclusao.equipamentos.equipamentos?.add(Equipamento());
       }
       try {
         jsonconclusao.acessorios.id =
@@ -247,7 +253,7 @@ class syncoff {
     jsonconclusao.deslocamento.valorDeslocamentoTec = valorDeslocamentoTec;
 
     var mots = opcs.getString("motivositens");
-    //jsonconclusao.motivosManutencao.motivos = jsonDecode(mots!);
+    jsonconclusao.motivosManutencao.motivos = jsonDecode(mots!);
     //TODO MOTIVOS
     var itensconcjson = opcs.getString("conclusaoItens");
     var itenscon = jsonDecode(itensconcjson!);
@@ -255,8 +261,10 @@ class syncoff {
     jsonconclusao.dados.etapa = "CONCLUSAO";
     jsonconclusao.dados.hodometro =
         itenscon["hodometro"] != "" ? double.parse(itenscon["hodometro"]) : 0;
+    var conclu =
+        DateFormat('dd/MM/yyyy HH:mm:ss').parse(itenscon["dataConclusao"]);
     jsonconclusao.dados.dataConclusaoOs =
-        DateTime.tryParse(itenscon["dataConclusao"]);
+        DateFormat('yyyy-MM-ddTHH:mm:ss.SSS-03:00').format(conclu);
     jsonconclusao.dados.observacaoOs = "${itenscon["observacoes"]}";
 
     var datacon = opcs.getString("DadosContato");
@@ -317,8 +325,7 @@ class syncoff {
     required AssinaturaResponsavel assinaturaResponsavel,
      */
     print(jsonEncode(jsonconclusao.checkin));
-    jsonconclusao.equipamentos.equipamentos = List.empty();
-    // jsonconclusao.equipamentos.equipamentos.add(Equipamento());
+
     print(jsonEncode(jsonconclusao.equipamentos));
     print(jsonEncode(jsonconclusao.acessorios));
     print(jsonEncode(jsonconclusao.arquivos));

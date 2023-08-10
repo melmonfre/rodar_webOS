@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/deslocamento/tela_deslocamento.dart';
-import 'package:rodarwebos/pages/deslocamento/visita_frustada_deslocamento.dart';
-import 'package:rodarwebos/pages/fotos/telas_fotos/foto_instalacao.dart';
-import 'package:rodarwebos/services/conclus%C3%A3o/enviarfoto.dart';
+import 'package:rodarwebos/services/conclusao/enviarfoto.dart';
 import 'package:rodarwebos/widgets/anexos/anexo_evidencias.dart';
-import 'package:rodarwebos/widgets/equipamentos/container_equipamento.dart';
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
 
 import '../../../services/salvaFotos.dart';

@@ -95,6 +95,7 @@ class _TelaColetarAssinaturaResponsavelState
         TextButton(
           child: const Text('sim'),
           onPressed: () {
+            concluiOS().concluir(os);
             Navigator.of(context).pop();
           },
         ),
