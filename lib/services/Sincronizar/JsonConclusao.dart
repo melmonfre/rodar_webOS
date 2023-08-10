@@ -164,6 +164,8 @@ class Checkin {
     this.observacao,
     this.etapa,
   });
+
+  Map<String, dynamic> toJson() => {'localGps': localGps, 'itens': itens};
 }
 
 class CheckinIten {
@@ -176,6 +178,8 @@ class CheckinIten {
     this.descricao,
     this.situacaoAntes,
   });
+
+  Map<String, dynamic> toJson() => {'id': id, 'descricao': descricao};
 }
 
 class Checkout {
@@ -250,6 +254,12 @@ class Equipamentos {
     this.equipamentos,
     this.etapaApp,
   });
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'equipamentos': equipamentos,
+        'etapaApp': etapaApp,
+      };
 }
 
 class Equipamento {
@@ -264,6 +274,10 @@ class Equipamento {
     this.situacaoTec,
     this.equipamentoTec,
   });
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+      };
 }
 
 class EquipamentoTec {
