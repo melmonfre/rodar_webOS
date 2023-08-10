@@ -30,6 +30,42 @@ class JsonConclusao {
     required this.documentosResponsavel,
     required this.assinaturaResponsavel,
   });
+
+  // Map<String, dynamic> toJson() => {
+  //   "acessorios": acessorios ,
+  //   "arquivos ": arquivos,
+  //   "confirmacaoAgendamento": confirmacaoAgendamento,
+  //   "contatos": contatos,
+  //   "dataEmissao": ,
+  //   "dataInstalacao": ,
+  //   "descricaoItens ": ,
+  //   "descricaoMotivos ": ,
+  //   "descricaoMotivosTecnico ": ,
+  //   "descricaoServicos": ,
+  //   "descricaoServicosString": ,
+  //   "distanciaDeslocamento": deslocamento.,
+  //   "distanciaDeslocamentoOriginal": ,
+  //   "distanciaDeslocamentoTecnico": deslocamento.distanciaTec,
+  //   "endereco": endereco,
+  //   "enderecoOrigem": ,
+  //   "equipamentos": equipamentos,
+  //   "etapaAPP": ,
+  //   "hodometro": hodo,
+  //   "id": ,
+  //   "motivos": ,
+  //   "motivosTecnico": motivosManutencao,
+  //   "observacao": ,
+  //   "servicos": ,
+  //   "tecnico": ,
+  //   "valorDeslocamento": ,
+  //   "valorDeslocamentoOriginal": ,
+  //   "valorDeslocamentoTecnico": ,
+  //   "valorPedagio": ,
+  //   "valorPedagioOriginal": ,
+  //   "valorPedagioTecnico": ,
+  //   "veiculo": veiculo,
+  //   "visitaFrustrada": visitaFrustrada,
+  // };
 }
 
 class Acessorios {
