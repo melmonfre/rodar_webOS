@@ -255,8 +255,15 @@ class syncoff {
     var mots = opcs.getString("motivositens");
     print("MOTIVOS:");
     print(mots);
+    var moti = jsonDecode(mots!);
     jsonconclusao.motivosManutencao.motivos = [];
-    //TODO MOTIVOS
+    var idmotivos = moti['idsmotivos'];
+    var itensmotivos = moti['itensmotivos'];
+    for (int i = 0; i < idmotivos.length; i++) {
+      if (itensmotivos[i]) {
+        jsonconclusao.motivosManutencao.motivos?.add(idmotivos[i]);
+      }
+    }
     var itensconcjson = opcs.getString("conclusaoItens");
     var itenscon = jsonDecode(itensconcjson!);
 
@@ -326,22 +333,23 @@ class syncoff {
     required DocumentosResponsavel documentosResponsavel,
     required AssinaturaResponsavel assinaturaResponsavel,
      */
-    print(jsonEncode(jsonconclusao.checkin));
-
-    print(jsonEncode(jsonconclusao.equipamentos));
-    print(jsonEncode(jsonconclusao.acessorios));
-    print(jsonEncode(jsonconclusao.arquivos));
-    print(jsonEncode(jsonconclusao.deslocamento));
-    print(jsonEncode(jsonconclusao.checkout));
-    print(jsonEncode(jsonconclusao.motivosManutencao));
-    print(jsonEncode(jsonconclusao.dados));
-    print(jsonEncode(jsonconclusao.assinaturaTecnico));
-    print(jsonEncode(jsonconclusao.presencial));
-    print(jsonEncode(jsonconclusao.notificacaoResponsavel));
-    print(jsonEncode(jsonconclusao.confirmacaoPresencial));
-    print(jsonEncode(jsonconclusao.documentosResponsavel));
-    print(jsonEncode(jsonconclusao.assinaturaResponsavel));
+    //print(jsonEncode(jsonconclusao.checkin));
+    // print(jsonEncode(jsonconclusao.equipamentos));
+    // print(jsonEncode(jsonconclusao.acessorios));
+    // print(jsonEncode(jsonconclusao.arquivos));
+    // print(jsonEncode(jsonconclusao.deslocamento));
+    // print(jsonEncode(jsonconclusao.checkout));
+    // print(jsonEncode(jsonconclusao.motivosManutencao));
+    // print(jsonEncode(jsonconclusao.dados));
+    // print(jsonEncode(jsonconclusao.assinaturaTecnico));
+    // print(jsonEncode(jsonconclusao.presencial));
+    // print(jsonEncode(jsonconclusao.notificacaoResponsavel));
+    // print(jsonEncode(jsonconclusao.confirmacaoPresencial));
+    // print(jsonEncode(jsonconclusao.documentosResponsavel));
+    // print(jsonEncode(jsonconclusao.assinaturaResponsavel));
     var jcon = jsonEncode(jsonconclusao);
+    print(jcon);
+
     opcs.setString("${osid}@OSaFinalizardata", jcon);
     print(jcon);
     syncoff().enviar(osid);
@@ -360,8 +368,8 @@ class syncoff {
     };
     final data = await opcs.getString("${osid}@OSaFinalizardata");
     print(data);
-    final url =
-        Uri.parse('${Urlconst().url}ordem_servico/sincronizacaoordemservico');
+    final url = Uri.parse(
+        '${Urlconst().url}ordem_servico/sincronizacaoordemservico/$osid');
 
     final res = await http.post(url, headers: headers, body: data);
     final status = res.statusCode;
