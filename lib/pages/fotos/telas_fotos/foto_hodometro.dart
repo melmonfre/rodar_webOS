@@ -23,7 +23,7 @@ class _FotoHodometroState extends State<FotoHodometro> {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     setState(() {
       try {
-        salvarfotos().save("${referencias[refatu]}");
+        salvarfotos().save("${referencias[indiceatual]}");
         print("Foto ${referencias[refatu]} salva");
       } catch (e) {}
     });
