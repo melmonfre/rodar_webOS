@@ -306,7 +306,6 @@ class syncoff {
     jsonconclusao.confirmacaoPresencial.referencia = "";
     jsonconclusao.confirmacaoPresencial.assinatura = base64!;
     jsonconclusao.confirmacaoPresencial.observacaoCliente = "";
-
     jsonconclusao.assinaturaResponsavel.etapa = "ASSINATURA_RESPONSAVEL";
     jsonconclusao.assinaturaResponsavel.id =
         contato['id'] != "" ? int.parse(contato['id']) : 0;
@@ -320,8 +319,6 @@ class syncoff {
     jsonconclusao.assinaturaResponsavel.assinatura = assinatura!;
     jsonconclusao.assinaturaResponsavel.observacaoCliente = "";
 
-    jsonconclusao.documentosResponsavel.documentoFrente =
-        jsonconclusao.assinaturaResponsavel;
     /*
     required Checkin checkin,
     required Equipamentos equipamentos,

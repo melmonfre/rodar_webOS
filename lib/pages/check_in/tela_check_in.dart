@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:rodarwebos/pages/equipamentos/tela_equipamento.dart';
 import 'package:rodarwebos/services/conclusao/checkin.dart';
-import 'package:rodarwebos/widgets/check_in/container_observacao_adicional.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../services/GetEquipamento.dart';
 import '../../services/OS/GetChecklistOS.dart';
+import '../../widgets/botoes/botao_proximo.dart';
 
 class CheckInTela extends StatefulWidget {
   @override
@@ -23,6 +23,15 @@ class _CheckInTelaState extends State<CheckInTela> {
   int tamanho = 0;
   var latitude;
   var longitude;
+  var obsadc;
+  String selectedButton = '';
+
+  TextEditingController observacaoController = TextEditingController();
+
+  Future<void> obscheckin(String value) async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    opcs.setString("obscheckin", value);
+  }
 
   void getLocation() async {
     LocationPermission permission = await Geolocator.requestPermission();
@@ -221,18 +230,161 @@ class _CheckInTelaState extends State<CheckInTela> {
                           ],
                         );
                       } else {
-                        return ContainerObservacaoAdicional(
-                          onPressed: () {
-                            Map<String, dynamic> values = {
-                              "idscheckin": checklistID,
-                              "nomescheckin": checklistNome,
-                              "itenscheckin": checklistItens,
-                              "obscheckin": ChecklistOBS
-                            };
-                            checkNavigation(json.encode(
-                                values)); // Navega para a próxima tela, passando os valores do checklist em formato JSON
-                          },
+                        return Container(
+                          width: MediaQuery.of(context).size.width - 48,
+                          padding: EdgeInsets.all(16.0),
+                          child: SingleChildScrollView(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(
+                                  color: Colors.grey[300]!,
+                                  width: 1.0,
+                                ),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              padding: EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: <Widget>[
+                                  Text(
+                                    'Possui alguma observação adicional?',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16.0,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  SizedBox(height: 5.0),
+                                  Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: RadioListTile(
+                                          title: Text(
+                                            'Sim',
+                                            style: TextStyle(fontSize: 14.0),
+                                          ),
+                                          value: 'Sim',
+                                          groupValue: selectedButton,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              selectedButton = value.toString();
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: RadioListTile(
+                                          title: Text(
+                                            'Não Possui',
+                                            style: TextStyle(fontSize: 14.0),
+                                          ),
+                                          value: 'Não Possui',
+                                          groupValue: selectedButton,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              selectedButton = value.toString();
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 16.0),
+                                  TextField(
+                                    controller: observacaoController,
+                                    decoration: InputDecoration(
+                                      labelText: 'Observação...',
+                                      border: OutlineInputBorder(),
+                                    ),
+                                    onSubmitted: (value) {
+                                      obscheckin(value);
+                                      obsadc = value;
+                                    },
+                                  ),
+                                  SizedBox(height: 16.0),
+                                  BotaoProximo(
+                                    onPressed: () {
+                                      if (selectedButton.isNotEmpty) {
+                                        // Os campos estão preenchidos, chama a função onPressed
+                                        Map<String, dynamic> values = {
+                                          "idscheckin": checklistID,
+                                          "nomescheckin": checklistNome,
+                                          "itenscheckin": checklistItens,
+                                          "obscheckin": ChecklistOBS
+                                        };
+                                        if (selectedButton.contains("Sim")) {
+                                          if (obsadc == null || obsadc == "") {
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Text(
+                                                      'Campos não preenchidos'),
+                                                  content: Text(
+                                                      'Por favor, preencha todos os campos de observação adicional.'),
+                                                  actions: <Widget>[
+                                                    TextButton(
+                                                      child: Text('Fechar'),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          } else {
+                                            checkNavigation(
+                                                json.encode(values));
+                                          }
+                                        } else {
+                                          checkNavigation(json.encode(values));
+                                        }
+
+                                        // Navega para a próxima tela, passando os valores do checklist em formato JSON
+                                      } else {
+                                        // Exibe um diálogo de alerta ao usuário
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text(
+                                                  'Campos não preenchidos'),
+                                              content: Text(
+                                                  'Por favor, preencha todos os campos de observação adicional.'),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  child: Text('Fechar'),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      }
+                                    },
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
                         );
+                        // return ContainerObservacaoAdicional(
+                        //   onPressed: () {
+                        //     Map<String, dynamic> values = {
+                        //       "idscheckin": checklistID,
+                        //       "nomescheckin": checklistNome,
+                        //       "itenscheckin": checklistItens,
+                        //       "obscheckin": ChecklistOBS
+                        //     };
+                        //     checkNavigation(json.encode(
+                        //         values)); // Navega para a próxima tela, passando os valores do checklist em formato JSON
+                        //   },
+                        // );
                       }
                     }))
           ],
