@@ -35,7 +35,6 @@ class _TelaColetarAssinaturaResponsavelState
   concluir() {
     try {
       salvanocache();
-      concluiOS().concluir(os);
     } catch (e) {}
   }
 
@@ -45,7 +44,7 @@ class _TelaColetarAssinaturaResponsavelState
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Erro'),
+          title: const Text('Aviso'),
           content: const SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
@@ -58,8 +57,8 @@ class _TelaColetarAssinaturaResponsavelState
           actions: <Widget>[
             TextButton(
               child: const Text('Sim'),
-              onPressed: () {
-                //concluir();
+              onPressed: () async {
+                await concluiOS().concluir(os);
                 Navigator.of(context).pop();
                 Navigator.push(
                   context,
@@ -95,7 +94,6 @@ class _TelaColetarAssinaturaResponsavelState
         TextButton(
           child: const Text('sim'),
           onPressed: () {
-            concluiOS().concluir(os);
             Navigator.of(context).pop();
           },
         ),
@@ -144,10 +142,8 @@ class _TelaColetarAssinaturaResponsavelState
                 ),
               ),
               Imagem(
-                onPressed: () {
+                onPressed: () async {
                   salvanocache();
-                  concluiOS().concluir(os);
-                  //finalizar();
                   validafim();
                 },
               )
