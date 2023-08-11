@@ -30,7 +30,7 @@ class syncoff {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     List<CheckinIten> listcheckin = [];
     List<CheckoutIten> listcheckout = [];
-    //List<Equipamento> listequipamento = [];
+    List<Equipamento> listequipamento = [];
     List<Telefone> tel = [];
     List<Arquivo> files = [];
     var file =
@@ -102,6 +102,7 @@ class syncoff {
     latitude = position.latitude;
     longitude = position.longitude;
     var empresaid = opcs.getInt('sessionid');
+    var token = opcs.getString("${empresaid}@token");
     var json = opcs.getString("SelectedOS");
     var element = jsonDecode(json!);
     tecnico = Tecnico.fromJson(element['tecnico']);
