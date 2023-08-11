@@ -36,6 +36,9 @@ class enviaconclusao {
     if (status != 200)
       throw Exception('http.post error: statusCode= $status body= $body');
 
+    print(res.reasonPhrase);
+    print(res.request);
+    print(res.headers);
     print(res.body);
   }
 }

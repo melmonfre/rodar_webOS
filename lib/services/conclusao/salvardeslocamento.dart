@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Constantes/Urlconst.dart';
 
-class salvardeslocamento{
+class salvardeslocamento {
   enviar() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     var dadosdeslocamento = opcs.getString("dadosdeslocamento");
@@ -27,14 +27,17 @@ class salvardeslocamento{
       'Authorization': 'Bearer $token',
     };
 
+    final data =
+        '{"distanciaTec":$distanciacalc,"distanciaTec":$DistanciaTec,"pedagioTec":$pedagioTec}';
+    final url = Uri.parse('${Urlconst().url}ordem_servico/deslocamento/108527');
 
-      final data = '{"distanciaTec":$distanciacalc,"distanciaTec":$DistanciaTec,"pedagioTec":$pedagioTec}';
-      final url = Uri.parse('${Urlconst().url}ordem_servico/deslocamento/108527');
+    final res = await http.post(url, headers: headers, body: data);
+    final status = res.statusCode;
+    if (status != 200) throw Exception('http.post error: statusCode= $status');
 
-      final res = await http.post(url, headers: headers, body: data);
-      final status = res.statusCode;
-      if (status != 200) throw Exception('http.post error: statusCode= $status');
-
-      print(res.body);
+    print(res.reasonPhrase);
+    print(res.request);
+    print(res.headers);
+    print(res.body);
   }
 }

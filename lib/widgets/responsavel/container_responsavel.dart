@@ -280,11 +280,11 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                                 actions: [
                                   TextButton(
                                     onPressed: () {
+                                      saveoncache();
                                       envianot().enviar();
                                       reenvianot().enviar();
                                       confirmacaopresencial().enviar();
                                       enviardocconfirmacaopresencial().enviar();
-                                      saveoncache();
                                       concluiOS().concluir(osid);
                                       Navigator.push(
                                         context,
@@ -306,11 +306,12 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                           if (nome != null ||
                               email != null ||
                               telefone != null) {
+                            saveoncache();
                             envianot().enviar();
                             reenvianot().enviar();
                             confirmacaopresencial().enviar();
                             enviardocconfirmacaopresencial().enviar();
-                            saveoncache();
+
                             //concluiOS().concluir(osid);
                             Navigator.push(
                               context,

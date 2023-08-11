@@ -4,7 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Constantes/Urlconst.dart';
-class enviarfoto{
+
+class enviarfoto {
   enviar() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     var os = opcs.getString("SelectedOS");
@@ -23,7 +24,6 @@ class enviarfoto{
     List<String>? FotoEquipamento = opcs.getStringList('FotoEquipamento');
     ref = "Tirar do equipamento";
     enviarimagem(osid, FotoEquipamento?[0], ref, 3);
-
   }
 
   enviarimagem(osid, imagem, referencia, int indice) async {
@@ -37,7 +37,8 @@ class enviarfoto{
       'Authorization': 'Bearer $token',
     };
 
-    var data = '{"base64": "$imagem",\n"etapa": "ACESSORIOS"\n, "indice": $indice,\n"referencia": "$referencia"}';
+    var data =
+        '{"base64": "$imagem",\n"etapa": "ACESSORIOS"\n, "indice": $indice,\n"referencia": "$referencia"}';
 
     final url = Uri.parse('${Urlconst().url}ordem_servico/enviarfotos/108527');
 
@@ -45,6 +46,9 @@ class enviarfoto{
     final status = res.statusCode;
     if (status != 200) throw Exception('http.post error: statusCode= $status');
 
+    print(res.reasonPhrase);
+    print(res.request);
+    print(res.headers);
     print(res.body);
   }
 }

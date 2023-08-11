@@ -253,7 +253,9 @@ class syncoff {
     jsonconclusao.deslocamento.valorDeslocamentoTec = valorDeslocamentoTec;
 
     var mots = opcs.getString("motivositens");
-    jsonconclusao.motivosManutencao.motivos = jsonDecode(mots!);
+    print("MOTIVOS:");
+    print(mots);
+    jsonconclusao.motivosManutencao.motivos = [];
     //TODO MOTIVOS
     var itensconcjson = opcs.getString("conclusaoItens");
     var itenscon = jsonDecode(itensconcjson!);
@@ -374,6 +376,10 @@ class syncoff {
         ids.add("$osid");
       }
       opcs.setStringList("osIDaFinalizar", ids);
+      print(res.reasonPhrase);
+      print(res.request);
+      print(res.headers);
+      print(res.body);
       throw Exception('http.post error: statusCode= $status');
     } else {
       print(res.reasonPhrase);
