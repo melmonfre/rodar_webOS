@@ -43,6 +43,7 @@ class _ContainerOSState extends State<ContainerOS> {
       print("SESSÃO ${sess}");
       opcs.setString("SessionOS", sess);
     });
+    lista.remove(osselecao);
     selecionado = jsonEncode(osselecao);
     opcs.setString("SelectedOS", selecionado);
   }
