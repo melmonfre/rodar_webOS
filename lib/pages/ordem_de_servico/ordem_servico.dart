@@ -3,8 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/widgets/botoes/botao_iniciar_execucao.dart';
 import 'package:rodarwebos/widgets/botoes/botao_visita_frustada.dart';
-import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../tela_inicial/tela_inicial.dart';
 
 class OrdemServico extends StatefulWidget {
   OrdemServico({Key? key}) : super(key: key);
@@ -63,9 +64,9 @@ class _OrdemServicoState extends State<OrdemServico> {
     ano = veiculo['ano'];
     renavam = veiculo['renavan'];
     var pt = veiculo['plataforma'];
-    try{
+    try {
       plataforma = pt['nome'];
-    } catch(e){
+    } catch (e) {
       plataforma = "outro";
     }
     var clie = veiculo['cliente'];
@@ -92,7 +93,7 @@ class _OrdemServicoState extends State<OrdemServico> {
       tiposervico = "$tiposervico \n ${equip["tipo"]}";
 
       codequip = "$codequip \n ${equip["id"]}";
-      if (equip["localInstalacao"] != null){
+      if (equip["localInstalacao"] != null) {
         localequip = "$localequip \n ${equip["localInstalacao"]}";
       }
     });
@@ -167,7 +168,10 @@ class _OrdemServicoState extends State<OrdemServico> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => TelaInicial()),
+            );
           },
         ),
         title: Text('Ordem de Serviço'),

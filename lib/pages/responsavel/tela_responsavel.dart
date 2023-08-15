@@ -67,7 +67,7 @@ class _TelaResponsavelState extends State<TelaResponsavel> {
                   reenvianot().enviar();
                   confirmacaopresencial().enviar();
                   enviardocconfirmacaopresencial().enviar();
-                  Navigator.of(context).pop();
+                  //Navigator.of(context).pop();
                   Navigator.push(
                     context,
                     MaterialPageRoute(
