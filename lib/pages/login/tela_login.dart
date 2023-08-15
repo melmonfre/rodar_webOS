@@ -1,16 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:typed_data';
+
+import "package:flutter/material.dart";
 import 'package:flutter/services.dart';
 import 'package:loading_indicator/loading_indicator.dart';
-import 'package:flutter_dialogs/flutter_dialogs.dart';
+import 'package:qrscan/qrscan.dart' as scanner;
 import 'package:rodarwebos/pages/tela_inicial/tela_inicial.dart';
 import 'package:rodarwebos/services/getToken.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import "package:flutter/material.dart";
-import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:qrscan/qrscan.dart' as scanner;
-import '../../widgets/login/container_login.dart';
 
 class login extends StatefulWidget {
   var token;
@@ -33,7 +30,6 @@ class _loginState extends State<login> {
 
   var link = null;
   var texto = "ou faça a leitura do código QR";
-
 
   Future<void> validalink() async {
     return showDialog<void>(
@@ -61,6 +57,7 @@ class _loginState extends State<login> {
       },
     );
   }
+
   Future<void> linkmanual() async {
     return showDialog<void>(
       context: context,
@@ -75,7 +72,7 @@ class _loginState extends State<login> {
                   decoration: InputDecoration(
                       border: InputBorder.none,
                       icon: Icon(Icons.link),
-                      hintText:  link != null ? link :  'Informe o link'),
+                      hintText: link != null ? link : 'Informe o link'),
                   style: TextStyle(color: Colors.black),
                   onChanged: (text) {
                     setState(() {
@@ -83,25 +80,22 @@ class _loginState extends State<login> {
                     });
                   },
                 ),
-                Text("$texto",
+                Text(
+                  "$texto",
                   style: TextStyle(color: Colors.black54),
-                    ),
-
-
-                    IconButton(
-                      iconSize: 72,
-                      icon: const Icon(Icons.qr_code_rounded),
-                      color: Color.fromARGB(255, 4, 30, 70),
-                      onPressed: () async {
-                        link = await scanner.scan();
-                        setState(() {
-                          link;
-                          texto = "Link: " + link;
-                        });
-                      },
-                    ),
-
-
+                ),
+                IconButton(
+                  iconSize: 72,
+                  icon: const Icon(Icons.qr_code_rounded),
+                  color: Color.fromARGB(255, 4, 30, 70),
+                  onPressed: () async {
+                    link = await scanner.scan();
+                    setState(() {
+                      link;
+                      texto = "Link: " + link;
+                    });
+                  },
+                ),
               ],
             ),
           ),
@@ -109,28 +103,29 @@ class _loginState extends State<login> {
             TextButton(
               child: const Text('concluir'),
               onPressed: () async {
+                if (link == null ||
+                    !link.toString().contains("siger.winksys.com.br")) {
+                  validalink();
+                } else {
+                  Navigator.of(context).pop();
+                  _showSingleAnimationDialog(
+                      context, Indicator.ballSpinFadeLoader);
+                  var linkExterno;
+                  String? initialLink = link;
+                  if (initialLink != null || initialLink != "") {
+                    linkExterno = initialLink;
+                    if (linkExterno != null || linkExterno != "") {
+                      var divid = linkExterno?.split("/auth/");
+                      print(divid);
+                      var token = divid?[1];
+                      print('Link externo: $linkExterno');
+                      print('token $token');
+                      await getToken().obter(token);
+                    }
+                  }
 
-               if(link == null || !link.toString().contains("siger.winksys.com.br")) {
-                 validalink();
-               } else {
-                 Navigator.of(context).pop();
-                 _showSingleAnimationDialog(
-                     context, Indicator.ballSpinFadeLoader);
-                 var linkExterno;
-                 String? initialLink = link;
-                 if (initialLink != null || initialLink != "") {
-                   linkExterno = initialLink;
-                   if (linkExterno != null || linkExterno != "") {
-                     var divid = linkExterno?.split("/auth/");
-                     print(divid);
-                     var token = divid?[1];
-                     print('Link externo: $linkExterno');
-                     print('token $token');
-                     await getToken().obter(token);
-                   }
-                 }
-                 vaiprapaginainicial();
-               }
+                  vaiprapaginainicial();
+                }
               },
             ),
           ],
@@ -224,6 +219,7 @@ class _loginState extends State<login> {
 
   vaiprapaginainicial() async {
     await Future.delayed(Duration(seconds: 5));
+    Navigator.of(context).pop();
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => TelaInicial()),
@@ -276,7 +272,6 @@ class _loginState extends State<login> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Color(0xFF147C7B),
-        
         body: SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.all(10),
@@ -337,8 +332,8 @@ class _loginState extends State<login> {
                         return Container(
                           padding: const EdgeInsets.only(top: 5),
                           decoration: const BoxDecoration(
-                            border: Border(
-                                top: BorderSide(color: Colors.black12)),
+                            border:
+                                Border(top: BorderSide(color: Colors.black12)),
                           ),
                           child: Container(
                             height: 130,
@@ -357,6 +352,7 @@ class _loginState extends State<login> {
                                       context, Indicator.ballSpinFadeLoader);
                                   setsession(ids[index]);
                                   getToken().sincronizar(ids[index]);
+
                                   vaiprapaginainicial();
                                 }
                               },
@@ -372,11 +368,9 @@ class _loginState extends State<login> {
                                   ),
                                   // const SizedBox(width: 10.0),
                                   Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Padding(
-                                          padding: EdgeInsets.only(top: 7)),
+                                      Padding(padding: EdgeInsets.only(top: 7)),
                                       Text(
                                         '${Nomeempresa[index]}',
                                         style: TextStyle(
@@ -384,15 +378,13 @@ class _loginState extends State<login> {
                                         textAlign: TextAlign.left,
                                         overflow: TextOverflow.ellipsis,
                                       ),
-                                      Padding(
-                                          padding: EdgeInsets.only(top: 2)),
+                                      Padding(padding: EdgeInsets.only(top: 2)),
                                       Text(
                                         '${nomes[index]}',
                                         textAlign: TextAlign.left,
                                         overflow: TextOverflow.ellipsis,
                                       ),
-                                      Padding(
-                                          padding: EdgeInsets.only(top: 5)),
+                                      Padding(padding: EdgeInsets.only(top: 5)),
                                       // TextButton(
                                       //   style: ButtonStyle(
                                       //     foregroundColor:
@@ -416,8 +408,6 @@ class _loginState extends State<login> {
                     ),
                   ),
                 ),
-
-
               ],
             ),
           ),
