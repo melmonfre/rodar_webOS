@@ -6,6 +6,8 @@ import 'package:rodarwebos/services/OS/ConcluirOS.dart';
 import 'package:rodarwebos/widgets/foto_assinatura/imagem.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../services/Sincronizar/sincronizarOffline.dart';
+
 class TelaColetarAssinaturaResponsavel extends StatefulWidget {
   @override
   _TelaColetarAssinaturaResponsavelState createState() =>
@@ -18,6 +20,11 @@ class _TelaColetarAssinaturaResponsavelState
     SharedPreferences opcs = await SharedPreferences.getInstance();
     var assinatura = opcs.getString("base64assinatura");
     opcs.setString("assinaturaresponsavel", assinatura!);
+    try {
+      concluiOS().concluir(os);
+    } catch (e) {
+      syncoff().criarjson(os);
+    }
   }
 
   var os;
@@ -30,12 +37,6 @@ class _TelaColetarAssinaturaResponsavelState
     setState(() {
       os = element['id'];
     });
-  }
-
-  concluir() {
-    try {
-      salvanocache();
-    } catch (e) {}
   }
 
   Future<void> validafim() async {
@@ -58,7 +59,12 @@ class _TelaColetarAssinaturaResponsavelState
             TextButton(
               child: const Text('Sim'),
               onPressed: () async {
-                concluiOS().concluir(os);
+                try {
+                  concluiOS().concluir(os);
+                } catch (e) {
+                  syncoff().criarjson(os);
+                }
+
                 Navigator.of(context).pop();
                 Navigator.push(
                   context,
@@ -75,35 +81,6 @@ class _TelaColetarAssinaturaResponsavelState
           ],
         );
       },
-    );
-  }
-
-  finalizar() {
-    AlertDialog(
-      title: const Text('Concluir'),
-      content: const SingleChildScrollView(
-        child: ListBody(
-          children: <Widget>[
-            Text(
-                'Clicar em "OK" irá encerrar este formulário, \n enviar os dados aqui informados e \n retornar a tela inicial '),
-            Text('Tem certeza que deseja finalizar?'),
-          ],
-        ),
-      ),
-      actions: <Widget>[
-        TextButton(
-          child: const Text('sim'),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        TextButton(
-          child: const Text('Não'),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ],
     );
   }
 
@@ -142,8 +119,9 @@ class _TelaColetarAssinaturaResponsavelState
                 ),
               ),
               Imagem(
-                onPressed: () async {
+                onPressed: () {
                   salvanocache();
+
                   validafim();
                 },
               )
