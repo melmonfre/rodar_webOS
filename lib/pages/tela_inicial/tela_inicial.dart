@@ -23,7 +23,7 @@ class _TelaInicialState extends State<TelaInicial> {
   }
 
   @override
-  var timer = 5;
+  var timer = 1;
   void _decrementCounter() {
     Timer.periodic(const Duration(seconds: 1), (_) {
       try {
@@ -32,7 +32,7 @@ class _TelaInicialState extends State<TelaInicial> {
           setState(() {
             getdata();
           });
-          timer = 5;
+          timer = 10;
         }
       } catch (e) {}
     });

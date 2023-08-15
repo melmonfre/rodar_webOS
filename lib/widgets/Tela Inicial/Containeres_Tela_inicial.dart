@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_amanha.dart';
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_atrasadas.dart';
@@ -13,10 +14,11 @@ class Futuras extends StatefulWidget {
   @override
   State<Futuras> createState() => _FuturasState();
 }
- int  numdodia = 0;
- int  numfuturas = 0;
- int  numamanha = 0;
- int  numatrasadas = 0;
+
+int numdodia = 0;
+int numfuturas = 0;
+int numamanha = 0;
+int numatrasadas = 0;
 
 class _FuturasState extends State<Futuras> {
   @override
@@ -26,39 +28,44 @@ class _FuturasState extends State<Futuras> {
   Future<void> getdata() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     empresaid = opcs.getInt("sessionid");
-    jsonfuturas =  opcs.getString("${empresaid}@GetOSFuturas");
+    jsonfuturas = opcs.getString("${empresaid}@GetOSFuturas");
     varfuturas = jsonDecode(jsonfuturas);
-    int numero =0;
+    int numero = 0;
     varfuturas.forEach((element) {
       numero++;
     });
-
 
     setState(() {
       numfuturas = numero;
     });
     //numfuturas = varfuturas.length;
   }
-  var timer  = 1;
+
+  var timer = 1;
   void _decrementCounter() {
     Timer.periodic(const Duration(seconds: 1), (_) {
-      try{setState(() {
-        timer--;
-        if (timer == 0) {
-          getdata();
-          timer = 5;
-        }
-      });} catch (e){}
+      try {
+        setState(() {
+          timer--;
+          if (timer == 0) {
+            getdata();
+            timer = 5;
+          }
+        });
+      } catch (e) {}
     });
   }
+
   void initState() {
     getdata();
     _decrementCounter();
     super.initState();
   }
+
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        Navigator.of(context).pop();
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => ListaOSFuturas()),
@@ -82,7 +89,6 @@ class _FuturasState extends State<Futuras> {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 Text(
-
                   numfuturas.toString() ?? "",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
                 ),
@@ -110,7 +116,7 @@ class _AmanhaState extends State<Amanha> {
     jsonamanha = opcs.getString("${empresaid}@GetOSAmanha");
     varamanha = jsonDecode(jsonamanha);
 
-    int numero =0;
+    int numero = 0;
     varamanha.forEach((element) {
       numero++;
     });
@@ -119,28 +125,33 @@ class _AmanhaState extends State<Amanha> {
     });
     //numamanha = varamanha.length;
   }
-  var timer  = 2;
+
+  var timer = 2;
   void _decrementCounter() {
     Timer.periodic(const Duration(seconds: 1), (_) {
       try {
         setState(() {
-        timer--;
-        if (timer == 0) {
-          getdata();
-          timer = 5;
-        }
-      });} catch(e){}
+          timer--;
+          if (timer == 0) {
+            getdata();
+            timer = 5;
+          }
+        });
+      } catch (e) {}
     });
   }
+
   void initState() {
     getdata();
     _decrementCounter();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        Navigator.of(context).pop();
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => ListaOSAmanha()),
@@ -164,7 +175,7 @@ class _AmanhaState extends State<Amanha> {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                 numamanha.toString() ?? "",
+                  numamanha.toString() ?? "",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
                 ),
               ],
@@ -193,7 +204,7 @@ class _HojeState extends State<Hoje> {
     jsondodia = opcs.getString("${empresaid}@GetOSDia");
     vardodia = jsonDecode(jsondodia);
 
-    int numero =0;
+    int numero = 0;
     vardodia.forEach((element) {
       numero++;
     });
@@ -201,9 +212,10 @@ class _HojeState extends State<Hoje> {
       numdodia = numero;
     });
 
-   // numdodia = vardodia.length;
+    // numdodia = vardodia.length;
   }
-  var timer  = 3;
+
+  var timer = 3;
   void _decrementCounter() {
     Timer.periodic(const Duration(seconds: 1), (_) {
       try {
@@ -217,15 +229,18 @@ class _HojeState extends State<Hoje> {
       } catch (e) {}
     });
   }
+
   void initState() {
     getdata();
     _decrementCounter();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        Navigator.of(context).pop();
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => ListaOSHoje()),
@@ -262,7 +277,6 @@ class _HojeState extends State<Hoje> {
 }
 
 class Atrasadas extends StatefulWidget {
-
   @override
   State<Atrasadas> createState() => _AtrasadasState();
 }
@@ -278,7 +292,7 @@ class _AtrasadasState extends State<Atrasadas> {
     varatrasadas = jsonDecode(jsonatrasadas);
     //numatrasadas = varatrasadas.length;
 
-    int numero =0;
+    int numero = 0;
     varatrasadas.forEach((element) {
       numero++;
     });
@@ -286,7 +300,8 @@ class _AtrasadasState extends State<Atrasadas> {
       numatrasadas = numero;
     });
   }
-  var timer  = 4;
+
+  var timer = 4;
   void _decrementCounter() {
     Timer.periodic(const Duration(seconds: 1), (_) {
       try {
@@ -297,18 +312,21 @@ class _AtrasadasState extends State<Atrasadas> {
             timer = 5;
           }
         });
-      } catch (e){}
+      } catch (e) {}
     });
   }
+
   void initState() {
     getdata();
     _decrementCounter();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        Navigator.of(context).pop();
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => ListaOSAtrasadas()),
@@ -343,6 +361,7 @@ class _AtrasadasState extends State<Atrasadas> {
     );
   }
 }
+
 class ContainerContent extends StatefulWidget {
   const ContainerContent({Key? key}) : super(key: key);
 
@@ -351,20 +370,18 @@ class ContainerContent extends StatefulWidget {
 }
 
 class _ContainerContentState extends State<ContainerContent> {
-
   @override
   Widget build(BuildContext context) {
     final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-    GlobalKey<RefreshIndicatorState>();
+        GlobalKey<RefreshIndicatorState>();
     Future<void> getdata() async {
-
       SharedPreferences opcs = await SharedPreferences.getInstance();
       var empresaid = opcs.getInt("sessionid");
       getToken().sincronizar(empresaid);
-
     }
+
     @override
-    var timer  = 5;
+    var timer = 5;
     void _decrementCounter() {
       Timer.periodic(const Duration(seconds: 1), (_) {
         setState(() {
@@ -376,11 +393,13 @@ class _ContainerContentState extends State<ContainerContent> {
         });
       });
     }
+
     void initState() {
       getdata();
       _decrementCounter();
       super.initState();
     }
+
     return Scaffold(
       body: RefreshIndicator(
         key: _refreshIndicatorKey,
@@ -390,42 +409,39 @@ class _ContainerContentState extends State<ContainerContent> {
         onRefresh: () async {
           return Future<void>.delayed(const Duration(seconds: 5));
         },
-      child: SingleChildScrollView(
-        // physics: AlwaysScrollableScrollPhysics(),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 3.0),
-              Container(
-                constraints: BoxConstraints(maxHeight: 140.0),
-                child: Hoje(),
-              ),
-              SizedBox(height: 3.0),
-              Container(
-                constraints: BoxConstraints(maxHeight: 140.0),
-                child: Atrasadas(),
-              ),
-              SizedBox(height: 3.0),
-              Container(
-                constraints: BoxConstraints(maxHeight: 140.0),
-                child: Amanha(),
-              ),
-              SizedBox(height: 3.0),
-              Container(
-                constraints: BoxConstraints(maxHeight: 140.0),
-                child: Futuras(),
-              ),
-              SizedBox(height: 3.0),
-            ],
+        child: SingleChildScrollView(
+          // physics: AlwaysScrollableScrollPhysics(),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 3.0),
+                Container(
+                  constraints: BoxConstraints(maxHeight: 140.0),
+                  child: Hoje(),
+                ),
+                SizedBox(height: 3.0),
+                Container(
+                  constraints: BoxConstraints(maxHeight: 140.0),
+                  child: Atrasadas(),
+                ),
+                SizedBox(height: 3.0),
+                Container(
+                  constraints: BoxConstraints(maxHeight: 140.0),
+                  child: Amanha(),
+                ),
+                SizedBox(height: 3.0),
+                Container(
+                  constraints: BoxConstraints(maxHeight: 140.0),
+                  child: Futuras(),
+                ),
+                SizedBox(height: 3.0),
+              ],
+            ),
           ),
         ),
-      ),
       ),
     );
   }
 }
-
-
-

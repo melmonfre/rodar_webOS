@@ -58,7 +58,7 @@ class _TelaColetarAssinaturaResponsavelState
             TextButton(
               child: const Text('Sim'),
               onPressed: () async {
-                await concluiOS().concluir(os);
+                concluiOS().concluir(os);
                 Navigator.of(context).pop();
                 Navigator.push(
                   context,

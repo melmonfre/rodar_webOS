@@ -37,6 +37,7 @@ class _TelaDeslocamentoState extends State<TelaDeslocamento> {
                 titulo: "Deslocamento",
                 onPressed: () {
                   salvardeslocamento().enviar();
+                  Navigator.of(context).pop();
                   Navigator.push(
                     context,
                     MaterialPageRoute(
