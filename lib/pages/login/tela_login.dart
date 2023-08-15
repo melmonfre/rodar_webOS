@@ -218,7 +218,7 @@ class _loginState extends State<login> {
   }
 
   vaiprapaginainicial() async {
-    await Future.delayed(Duration(seconds: 5));
+    await Future.delayed(Duration(seconds: 2));
     Navigator.of(context).pop();
     Navigator.push(
       context,
