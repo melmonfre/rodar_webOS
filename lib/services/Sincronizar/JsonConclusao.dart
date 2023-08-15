@@ -549,10 +549,18 @@ class Telefone {
 }
 
 class MotivosManutencao {
-  List? motivos;
+  List<MotivoManutencao>? motivos;
 
   MotivosManutencao({
     this.motivos,
   });
   Map<String, dynamic> toJson() => {'motivos': motivos};
+}
+
+class MotivoManutencao {
+  int? id;
+
+  MotivoManutencao({this.id});
+
+  Map<String, dynamic> toJson() => {'id': id};
 }
