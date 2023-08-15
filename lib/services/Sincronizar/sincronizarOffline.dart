@@ -266,7 +266,8 @@ class syncoff {
     var itensmotivos = moti['itensmotivos'];
     for (int i = 0; i < idmotivos.length; i++) {
       if (itensmotivos[i]) {
-        jsonconclusao.motivosManutencao.motivos?.add(idmotivos[i]);
+        jsonconclusao.motivosManutencao.motivos
+            ?.add(MotivoManutencao(id: idmotivos[i]));
       }
     }
     var itensconcjson = opcs.getString("conclusaoItens");

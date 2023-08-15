@@ -27,13 +27,13 @@ class _TelaInicialState extends State<TelaInicial> {
   void _decrementCounter() {
     Timer.periodic(const Duration(seconds: 1), (_) {
       try {
-        setState(() {
-          timer--;
-          if (timer == 0) {
+        timer--;
+        if (timer == 0) {
+          setState(() {
             getdata();
-            timer = 5;
-          }
-        });
+          });
+          timer = 5;
+        }
       } catch (e) {}
     });
   }
