@@ -35,11 +35,10 @@ class _ContainerOSState extends State<ContainerOS> {
       if (osid == element['id']) {
         print("ELEMENTO ${element}");
         osselecao = element;
-        lista.remove(element);
-
         opcs.setString("SessionOS", jsonEncode(lista));
       }
     });
+    lista.remove(osselecao);
     selecionado = jsonEncode(osselecao);
     opcs.setString("SelectedOS", selecionado);
   }
