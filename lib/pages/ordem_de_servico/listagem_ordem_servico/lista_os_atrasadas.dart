@@ -1,10 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:rodarwebos/pages/ordem_de_servico/ordem_servico.dart';
 import 'package:rodarwebos/widgets/botoes/botoes_os.dart';
 import 'package:rodarwebos/widgets/menu_inicial/containers/containers_os/containers_os.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../tela_inicial/tela_inicial.dart';
 
 class ListaOSAtrasadas extends StatefulWidget {
   @override
@@ -21,11 +20,13 @@ class _ListaOSAtrasadasState extends State<ListaOSAtrasadas> {
     opcs.setString("SessionOS", json);
     print("JSON: $json");
   }
+
   @override
   void initState() {
     getdata();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,16 +35,19 @@ class _ListaOSAtrasadasState extends State<ListaOSAtrasadas> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => TelaInicial()),
+            );
           },
         ),
         title: Text('OS Atrasadas'),
       ),
       body: Container(
-          child: ContainerOS(
-              botao: BotaoAtrasado(),
-            ),
+        child: ContainerOS(
+          botao: BotaoAtrasado(),
         ),
+      ),
     );
   }
 }
