@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -143,6 +144,7 @@ class _ContainerOSState extends State<ContainerOS> {
                           index]); // Chama a função setossessao() com o valor do elemento atual da lista os
                       print(
                           "OS ${os[index]}"); // Imprime a mensagem "OS" seguida do valor do elemento atual da lista os
+                      Navigator.of(context).pop();
                       Navigator.push(
                         context,
                         MaterialPageRoute(

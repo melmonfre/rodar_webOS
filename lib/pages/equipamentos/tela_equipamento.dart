@@ -264,6 +264,7 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
                 getequipamentos().setEquipamento(
                     equipamentos); // Define os equipamentos selecionados no objeto getequipamentos()
                 salvareqtec().enviar();
+                Navigator.of(context).pop();
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -407,9 +408,11 @@ class _ContainerManutencaoState extends State<ContainerManutencao> {
             onPressed: () {
               if (localInstalacao != null) {
                 salvareqtec().enviar();
+                Navigator.of(context).pop();
                 Navigator.push(
                   context,
                   //TODO ROTA Acessorios()
+
                   MaterialPageRoute(builder: (context) => FotoHodometro()),
                 );
               } else {
@@ -655,6 +658,7 @@ class _ContainerTrocaState extends State<ContainerTroca> {
                   };
                   getequipamentos().setEquipamento(equipamentos);
                   salvareqtec().enviar();
+                  Navigator.of(context).pop();
                   Navigator.push(
                     context,
                     //TODO ROTA Acessorios()
@@ -824,6 +828,7 @@ class _ContainerInstalacaoState extends State<ContainerInstalacao> {
 
               if (localInstalacao != null) {
                 salvareqtec().enviar();
+                Navigator.of(context).pop();
                 Navigator.push(
                   context,
                   //TODO ROTA Acessorios()

@@ -5,8 +5,6 @@ import 'package:rodarwebos/pages/confirmacao_dados/tela_confirmacao_dados_assina
 import 'package:rodarwebos/widgets/botoes/botao_confirmar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../widgets/ordem_servico/variaveis_resumo_os.dart';
-
 class TelaConfirmacaoDados extends StatefulWidget {
   @override
   _TelaConfirmacaoDadosState createState() => _TelaConfirmacaoDadosState();
@@ -77,7 +75,6 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
       }
     }
 
-
     os = element['id'];
     int numero = 0;
     var veiculo = element['veiculo'];
@@ -88,9 +85,9 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
     var pt = veiculo['plataforma'];
     ano = veiculo['ano'];
     renavam = veiculo['renavan'];
-    try{
+    try {
       plataforma = pt['nome'];
-    } catch(e){
+    } catch (e) {
       plataforma = "outro";
     }
     var clie = veiculo['cliente'];
@@ -117,15 +114,14 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
     eq.forEach((equip) {
       tiposervico = "$tiposervico \n ${equip["tipo"]}";
       var eqpment = equip['equipamento'];
-      try{
+      try {
         codequip = "$codequip \n ${eqpment["codigo"]}";
-      } catch (e){
+      } catch (e) {
         codequip = "";
       }
-      if(equip["localInstalacao"] != null){
+      if (equip["localInstalacao"] != null) {
         localequip = "$localequip ${equip["localInstalacao"]}";
       }
-
     });
 
     var desloc = opcs.getString('dadosdeslocamento');
@@ -656,6 +652,7 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
               ),
               SizedBox(height: 20.0),
               BotaoConfirmar(onPressed: () {
+                Navigator.of(context).pop();
                 Navigator.push(
                   context,
                   MaterialPageRoute(

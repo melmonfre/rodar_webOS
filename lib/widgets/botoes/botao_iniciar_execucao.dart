@@ -34,6 +34,7 @@ class _BotaoIniciarExecucaoServicoState
       opcs.setString("${osid}@checklist", check);
     });
   }
+
   Future<void> getdata() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     json = opcs.getString("SelectedOS");
@@ -44,16 +45,18 @@ class _BotaoIniciarExecucaoServicoState
     IniciaServico().iniciar(token, osid);
     getchecklist(empresaid, json);
   }
+
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
         getdata();
+        Navigator.of(context).pop();
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => CheckInTela()),
         );
-      }, 
+      },
       style: ElevatedButton.styleFrom(
         primary: Color(0xFF00204E), // Cor do botão
         shadowColor: Colors.black.withOpacity(0.2), // Cor da sombra

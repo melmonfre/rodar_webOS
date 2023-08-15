@@ -32,6 +32,7 @@ class _FotoHodometroState extends State<FotoHodometro> {
     });
     print("INDICEATUAL $indiceatual");
     if (indiceatual >= referencias.length) {
+      Navigator.of(context).pop();
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -69,6 +70,7 @@ class _FotoHodometroState extends State<FotoHodometro> {
     if (referenciaIndex < referencias.length) {
       // se ainda não estiver no fim das referencias volta para a tela de fotos do hodometro
       try {
+        Navigator.of(context).pop();
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -80,6 +82,7 @@ class _FotoHodometroState extends State<FotoHodometro> {
       opcs.setString('referenciaatual', referencias[0]);
       indiceatual = 0;
       // Última tela, redirecione para a próxima página
+      Navigator.of(context).pop();
       Navigator.push(
         context,
         MaterialPageRoute(
