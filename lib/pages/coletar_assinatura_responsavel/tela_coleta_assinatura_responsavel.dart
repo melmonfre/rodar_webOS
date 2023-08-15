@@ -20,11 +20,6 @@ class _TelaColetarAssinaturaResponsavelState
     SharedPreferences opcs = await SharedPreferences.getInstance();
     var assinatura = opcs.getString("base64assinatura");
     opcs.setString("assinaturaresponsavel", assinatura!);
-    try {
-      concluiOS().concluir(os);
-    } catch (e) {
-      syncoff().criarjson(os);
-    }
   }
 
   var os;
@@ -121,8 +116,9 @@ class _TelaColetarAssinaturaResponsavelState
               Imagem(
                 onPressed: () {
                   salvanocache();
-
+                  syncoff().criarjson(os);
                   validafim();
+                  Navigator.of(context).pop();
                 },
               )
             ],
