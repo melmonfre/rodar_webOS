@@ -114,6 +114,8 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
   var situequip;
   var eqnovodoc;
   var eqveiculodoc;
+  List<String>? codigosEq;
+
   getdata() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     var json = opcs.getString("equipamentos");
@@ -125,8 +127,16 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
       AcessoriosID = eqp["AcessoriosID"];
       AcessoriosDescricao = eqp["AcessoriosDescricao"];
       EquipamentosVeiculoIDs = eqp["EquipamentosVeiculoIDs"];
+      
       EquipamentoVeiculoCodigos =
           List<String>.from(eqp["EquipamentoVeiculoCodigos"] as List);
+
+      codigosEq = EquipamentoVeiculoCodigos;
+
+      if (codigosEq?.length == 1) {
+        selecionadoveiculo = codigosEq![0];
+      }
+
       localInstalacao = eqp["localInstalacao"];
       stringEquipamento = eqp["stringEquipamento"];
       eqnovodoc = eqp["EquipamentoNovoDocumento"];
@@ -144,7 +154,6 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> codigosEq = EquipamentoVeiculoCodigos;
 
     return Padding(
       padding: EdgeInsets.all(16.0),
@@ -160,7 +169,7 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
                     newValue; // Atualiza o valor selecionado no estado
               });
             },
-            items: codigosEq.map((String item) {
+            items: codigosEq?.map((String item) {
               return DropdownMenuItem<String>(
                 value: item, // Valor do item do dropdown
                 child: Row(
@@ -320,6 +329,11 @@ class _ContainerManutencaoState extends State<ContainerManutencao> {
       EquipamentosVeiculoIDs = eqp["EquipamentosVeiculoIDs"];
       EquipamentoVeiculoCodigos =
           List<String>.from(eqp["EquipamentoVeiculoCodigos"] as List);
+
+      if (EquipamentoVeiculoCodigos.length == 1) {
+        selecionadoveiculo = EquipamentoVeiculoCodigos[0];
+      }
+
       localInstalacao = eqp["localInstalacao"];
       stringEquipamento = eqp["stringEquipamento"];
     });
@@ -333,8 +347,6 @@ class _ContainerManutencaoState extends State<ContainerManutencao> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> codigosEq = EquipamentoVeiculoCodigos;
-
     return Padding(
       padding: EdgeInsets.all(16.0),
       child: Column(
@@ -459,11 +471,21 @@ class _ContainerTrocaState extends State<ContainerTroca> {
       EquipamentoNovoIDs = eqp["EquipamentoNovoIDs"];
       EquipamentoNovoCodigos =
           List<String>.from(eqp["EquipamentoNovoCodigos"] as List);
+      
+      if (EquipamentoNovoCodigos.length == 1) {
+        selecionadonovo = EquipamentoNovoCodigos[0];
+      }
+
       AcessoriosID = eqp["AcessoriosID"];
       AcessoriosDescricao = eqp["AcessoriosDescricao"];
       EquipamentosVeiculoIDs = eqp["EquipamentosVeiculoIDs"];
       EquipamentoVeiculoCodigos =
           List<String>.from(eqp["EquipamentoVeiculoCodigos"] as List);
+
+      if (EquipamentoVeiculoCodigos.length == 1) {
+        selecionadoveiculo = EquipamentoVeiculoCodigos[0];
+      }
+      
       localInstalacao = eqp["localInstalacao"];
       stringEquipamento = eqp["stringEquipamento"];
       eqnovodoc = eqp["EquipamentoNovoDocumento"];
@@ -698,6 +720,11 @@ class _ContainerInstalacaoState extends State<ContainerInstalacao> {
       EquipamentoNovoIDs = eqp["EquipamentoNovoIDs"];
       EquipamentoNovoCodigos =
           List<String>.from(eqp["EquipamentoNovoCodigos"] as List);
+            
+      if (EquipamentoNovoCodigos.length == 1) {
+        selecionadonovo = EquipamentoNovoCodigos[0];
+      }
+
       AcessoriosID = eqp["AcessoriosID"];
       AcessoriosDescricao = eqp["AcessoriosDescricao"];
       EquipamentosVeiculoIDs = eqp["EquipamentosVeiculoIDs"];
