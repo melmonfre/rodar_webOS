@@ -3,6 +3,8 @@ import 'package:rodarwebos/widgets/botoes/botoes_os.dart';
 import 'package:rodarwebos/widgets/menu_inicial/containers/containers_os/containers_os.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../tela_inicial/tela_inicial.dart';
+
 class ListaOSAmanha extends StatefulWidget {
   @override
   _ListaOSAmanhaState createState() => _ListaOSAmanhaState();
@@ -18,11 +20,13 @@ class _ListaOSAmanhaState extends State<ListaOSAmanha> {
     opcs.setString("SessionOS", json);
     print("JSON: $json");
   }
+
   @override
   void initState() {
     getdata();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +35,10 @@ class _ListaOSAmanhaState extends State<ListaOSAmanha> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => TelaInicial()),
+            );
           },
         ),
         title: Text('OS Amanhã'),

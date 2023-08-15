@@ -433,7 +433,7 @@ class _CheckOutTelaState extends State<CheckOutTela> {
       );
     } else {
       opcs.setString("checkoutitens", jsoncheckin);
-      Navigator.of(context).pop();
+      //Navigator.of(context).pop();
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => RelateMotivo()),

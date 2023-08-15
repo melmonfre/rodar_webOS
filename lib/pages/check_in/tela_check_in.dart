@@ -423,7 +423,7 @@ class _CheckInTelaState extends State<CheckInTela> {
         },
       );
     } else {
-      Navigator.of(context).pop();
+      //Navigator.of(context).pop();
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => Equipamentos()),

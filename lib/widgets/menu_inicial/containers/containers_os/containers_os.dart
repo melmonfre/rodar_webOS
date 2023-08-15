@@ -31,12 +31,17 @@ class _ContainerOSState extends State<ContainerOS> {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     var osselecao;
     String selecionado = '';
+    List lista2 = [];
     lista.forEach((element) {
       if (osid == element['id']) {
         print("ELEMENTO ${element}");
         osselecao = element;
-        opcs.setString("SessionOS", jsonEncode(lista));
+        lista2 = lista;
+        lista2.remove(element);
       }
+      var sess = jsonEncode(lista2);
+      print("SESSÃO ${sess}");
+      opcs.setString("SessionOS", sess);
     });
     lista.remove(osselecao);
     selecionado = jsonEncode(osselecao);

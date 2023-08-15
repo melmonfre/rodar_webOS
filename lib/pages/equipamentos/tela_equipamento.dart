@@ -127,7 +127,7 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
       AcessoriosID = eqp["AcessoriosID"];
       AcessoriosDescricao = eqp["AcessoriosDescricao"];
       EquipamentosVeiculoIDs = eqp["EquipamentosVeiculoIDs"];
-      
+
       EquipamentoVeiculoCodigos =
           List<String>.from(eqp["EquipamentoVeiculoCodigos"] as List);
 
@@ -154,7 +154,6 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
 
   @override
   Widget build(BuildContext context) {
-
     return Padding(
       padding: EdgeInsets.all(16.0),
       child: Column(
@@ -264,7 +263,7 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
                 getequipamentos().setEquipamento(
                     equipamentos); // Define os equipamentos selecionados no objeto getequipamentos()
                 salvareqtec().enviar();
-                Navigator.of(context).pop();
+                //Navigator.of(context).pop();
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -408,7 +407,7 @@ class _ContainerManutencaoState extends State<ContainerManutencao> {
             onPressed: () {
               if (localInstalacao != null) {
                 salvareqtec().enviar();
-                Navigator.of(context).pop();
+                //Navigator.of(context).pop();
                 Navigator.push(
                   context,
                   //TODO ROTA Acessorios()
@@ -474,7 +473,7 @@ class _ContainerTrocaState extends State<ContainerTroca> {
       EquipamentoNovoIDs = eqp["EquipamentoNovoIDs"];
       EquipamentoNovoCodigos =
           List<String>.from(eqp["EquipamentoNovoCodigos"] as List);
-      
+
       if (EquipamentoNovoCodigos.length == 1) {
         selecionadonovo = EquipamentoNovoCodigos[0];
       }
@@ -488,7 +487,7 @@ class _ContainerTrocaState extends State<ContainerTroca> {
       if (EquipamentoVeiculoCodigos.length == 1) {
         selecionadoveiculo = EquipamentoVeiculoCodigos[0];
       }
-      
+
       localInstalacao = eqp["localInstalacao"];
       stringEquipamento = eqp["stringEquipamento"];
       eqnovodoc = eqp["EquipamentoNovoDocumento"];
@@ -658,7 +657,7 @@ class _ContainerTrocaState extends State<ContainerTroca> {
                   };
                   getequipamentos().setEquipamento(equipamentos);
                   salvareqtec().enviar();
-                  Navigator.of(context).pop();
+                  //Navigator.of(context).pop();
                   Navigator.push(
                     context,
                     //TODO ROTA Acessorios()
@@ -724,7 +723,7 @@ class _ContainerInstalacaoState extends State<ContainerInstalacao> {
       EquipamentoNovoIDs = eqp["EquipamentoNovoIDs"];
       EquipamentoNovoCodigos =
           List<String>.from(eqp["EquipamentoNovoCodigos"] as List);
-            
+
       if (EquipamentoNovoCodigos.length == 1) {
         selecionadonovo = EquipamentoNovoCodigos[0];
       }
@@ -828,7 +827,7 @@ class _ContainerInstalacaoState extends State<ContainerInstalacao> {
 
               if (localInstalacao != null) {
                 salvareqtec().enviar();
-                Navigator.of(context).pop();
+                //Navigator.of(context).pop();
                 Navigator.push(
                   context,
                   //TODO ROTA Acessorios()
