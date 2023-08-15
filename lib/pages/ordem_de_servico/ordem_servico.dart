@@ -90,10 +90,23 @@ class _OrdemServicoState extends State<OrdemServico> {
 
     var eq = element['equipamentos'];
     eq.forEach((equip) {
-      tiposervico = "$tiposervico \n ${equip["tipo"]}";
+      if (equip["tipo"] != null) {
+        tiposervico = "$tiposervico \n ${equip["tipo"]}";
+      } 
 
-      codequip = "$codequip \n ${equip["id"]}";
-      if (equip["localInstalacao"] != null) {
+      var codigo;
+
+      if (equip['equipamento'] != null) {
+        var equipamento = equip['equipamento'];
+        codigo = equipamento["codigo"];
+      } else {
+        var equipamentoRetirado = equip['equipamentoRetirado'];
+        codigo = equipamentoRetirado["codigo"];
+      }
+
+      codequip = "$codequip \n ${codigo}";
+
+      if (equip["localInstalacao"] != null){
         localequip = "$localequip \n ${equip["localInstalacao"]}";
       }
     });
