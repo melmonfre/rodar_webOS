@@ -64,7 +64,7 @@ class _TelaConclusaoState extends State<TelaConclusao> {
 
                 onPressed: () {
                   enviaconclusao().enviar();
-                  Navigator.of(context).pop();
+                  //Navigator.of(context).pop();
                   Navigator.push(
                     context,
                     MaterialPageRoute(
