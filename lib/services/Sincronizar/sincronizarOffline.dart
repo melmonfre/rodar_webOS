@@ -141,10 +141,8 @@ class syncoff {
           "id":${eqs['EquipamentosRemovidoID']},
           "tipo":"RETIRADA",
           "tipoTec":"RETIRADA",
-          "equipamento":"",
-          "equipamentoTec":"",
-          "equipamentoRetirado":"${eqs['EquipamentoRemovidoCodigo']}",
-          "equipamentoRetiradoTec":"${eqs['EquipamentoRemovidoCodigo']}",
+          "equipamentoRetirado":{"id": ${eqs['EquipamentosRemovidoID']}, "codigo":"${eqs['EquipamentosRemovidoCodigo']}"},
+          "equipamentoRetiradoTec":{"id": ${eqs['EquipamentosRemovidoID']}, "codigo":"${eqs['EquipamentosRemovidoCodigo']}"},
           "localInstalacao":"",
           "localIntalacaoTec":""
         }''';
