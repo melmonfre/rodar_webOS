@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:image/image.dart' as Img;
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rodarwebos/widgets/botoes/botao_cancelar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:image/image.dart' as Img;
 
 class CameraButton extends StatefulWidget {
   final Function(bool) onFotoSelected;
@@ -39,6 +39,7 @@ class _CameraButtonState extends State<CameraButton> {
       if (image_temp != null) {
         Img.Image? resized_img =
             Img.copyResize(image_temp, width: 1024, height: 720);
+        print('alteração imagem nova');
         image = File(pickedFile.path)
           ..writeAsBytesSync(Img.encodeJpg(resized_img));
       }
