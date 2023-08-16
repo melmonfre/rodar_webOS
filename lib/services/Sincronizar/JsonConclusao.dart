@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class JsonConclusao {
   Checkin checkin;
   Equipamentos equipamentos;
@@ -303,10 +305,10 @@ class Equipamento {
   int? id;
   String? tipo;
   String? tipoTec;
-  String? equipamento;
-  String? equipamentoTec;
-  String? equipamentoRetirado;
-  String? equipamentoRetiradoTec;
+  EquipamentoTec? equipamento;
+  EquipamentoTec? equipamentoTec;
+  EquipamentoTec? equipamentoRetirado;
+  EquipamentoTec? equipamentoRetiradoTec;
   String? localInstalacao;
   String? localIntalacaoTec;
 
@@ -325,10 +327,18 @@ class Equipamento {
       : id = json['id'],
         tipo = json['tipo'],
         tipoTec = json['tipoTec'],
-        equipamento = json['equipamento'],
-        equipamentoTec = json['equipamentoTec'],
-        equipamentoRetirado = json['equipamentoRetirado'],
-        equipamentoRetiradoTec = json['equipamentoRetiradoTec'],
+        equipamento = json.containsKey('equipamento')
+            ? EquipamentoTec.fromJson(json['equipamento'])
+            : null,
+        equipamentoTec = json.containsKey('equipamentoTec')
+            ? EquipamentoTec.fromJson(json['equipamentoTec'])
+            : null,
+        equipamentoRetirado = json.containsKey('equipamentoRetirado')
+            ? EquipamentoTec.fromJson(json['equipamentoRetirado'])
+            : null,
+        equipamentoRetiradoTec = json.containsKey('equipamentoRetiradoTec')
+            ? EquipamentoTec.fromJson(json['equipamentoRetiradoTec'])
+            : null,
         localInstalacao = json['localInstalacao'],
         localIntalacaoTec = json['localIntalacaoTec'];
 
@@ -379,6 +389,11 @@ class EquipamentoTec {
     this.tecnico,
     this.localInstalacaoTec,
   });
+
+  EquipamentoTec.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        codigo = json['codigo'];
+
   Map<String, dynamic> toJson() => {
         'id': id,
         'numero': numero,
