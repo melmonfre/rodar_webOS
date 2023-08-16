@@ -321,18 +321,28 @@ class Equipamento {
       this.localInstalacao,
       this.localIntalacaoTec});
 
-  fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    id = json['id'];
-    tipo = json['tipo'];
-    tipoTec = json['tipoTec'];
-    equipamento = json['equipamento'];
-    equipamentoTec = json['equipamentoTec'];
-    equipamentoRetirado = json['equipamentoRetirado'];
-    equipamentoRetiradoTec = json['equipamentoRetiradoTec'];
-    localInstalacao = json['localInstalacao'];
-    localIntalacaoTec = json['localIntalacaoTec'];
-  }
+  Equipamento.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        tipo = json['tipo'],
+        tipoTec = json['tipoTec'],
+        equipamento = json['equipamento'],
+        equipamentoTec = json['equipamentoTec'],
+        equipamentoRetirado = json['equipamentoRetirado'],
+        equipamentoRetiradoTec = json['equipamentoRetiradoTec'],
+        localInstalacao = json['localInstalacao'],
+        localIntalacaoTec = json['localIntalacaoTec'];
+
+  // fromJson(Map<String, dynamic> json) {
+  //   id = json['id'];
+  //   tipo = json['tipo'];
+  //   tipoTec = json['tipoTec'];
+  //   equipamento = json['equipamento'];
+  //   equipamentoTec = json['equipamentoTec'];
+  //   equipamentoRetirado = json['equipamentoRetirado'];
+  //   equipamentoRetiradoTec = json['equipamentoRetiradoTec'];
+  //   localInstalacao = json['localInstalacao'];
+  //   localIntalacaoTec = json['localIntalacaoTec'];
+  // }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
