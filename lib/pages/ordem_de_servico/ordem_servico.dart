@@ -92,34 +92,52 @@ class _OrdemServicoState extends State<OrdemServico> {
     eq.forEach((equip) {
       if (equip["tipo"] != null) {
         tiposervico = "$tiposervico \n ${equip["tipo"]}";
-      } 
+      }
 
       var codigo;
 
-      if (equip['equipamento'] != null) {
-        var equipamento = equip['equipamento'];
-        codigo = equipamento["codigo"];
-      } else {
-        var equipamentoRetirado = equip['equipamentoRetirado'];
-        codigo = equipamentoRetirado["codigo"];
+      try {
+        if (equip['equipamento'] != null) {
+          var equipamento = equip['equipamento'];
+          codigo = equipamento["codigo"];
+        } else {
+          var equipamentoRetirado = equip['equipamentoRetirado'];
+          codigo = equipamentoRetirado["codigo"];
+        }
+      } catch (e) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Aviso'),
+              content: const Text('Equipamento inválido.'),
+              actions: [
+                TextButton(
+                  child: const Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
       }
 
       codequip = "$codequip \n ${codigo}";
 
-      if (equip["localInstalacao"] != null){
+      if (equip["localInstalacao"] != null) {
         localequip = "$localequip \n ${equip["localInstalacao"]}";
       }
     });
 
-    List servicos =
-        element['servicos']; // Obtém a lista de serviços do elemento atual
+    List servicos = element['servicos']; // Obtém a lista de serviços do elemento atual
     var serv; // Declaração da variável serv
     servicos.forEach((ser) {
       serv = ser[
           'servico']; // Obtém o valor da chave 'servico' de cada elemento da lista servicos e armazena em serv
     });
-    servico = serv[
-        'descricao']; // Armazena o valor da chave 'descricao' do objeto serv em servico
+    servico = serv['descricao']; // Armazena o valor da chave 'descricao' do objeto serv em servico
 
     if (tiposervico == "") {
       // Verifica se a variável tiposervico está vazia
@@ -135,19 +153,15 @@ class _OrdemServicoState extends State<OrdemServico> {
     var cit = end['cidade']; // Obtém o objeto cidade do objeto end
     var cidade = cit['nome']; // Obtém o valor da chave 'nome' do objeto cit
     var rua = end['rua']; // Obtém o valor da chave 'rua' do objeto end
-    var numerocasa =
-        end['numero']; // Obtém o valor da chave 'numero' do objeto end
+    var numerocasa = end['numero']; // Obtém o valor da chave 'numero' do objeto end
     local =
         "rua:${rua} numero:${numerocasa}, ${bairro}, ${cidade}"; // Monta a string local com as informações de endereço
 
-    var localtime = element[
-        'dataInstalacao']; // Obtém o valor da chave 'dataInstalacao' do elemento atual
-    var datahora =
-        localtime.split('T'); // Divide a string em data e hora com base no 'T'
-    var data =
-        datahora[0].split('-'); // Divide a parte de data em ano, mês e dia
-    var hora = datahora[1]
-        .split(':'); // Divide a parte de hora em hora, minuto e segundo
+    var localtime =
+        element['dataInstalacao']; // Obtém o valor da chave 'dataInstalacao' do elemento atual
+    var datahora = localtime.split('T'); // Divide a string em data e hora com base no 'T'
+    var data = datahora[0].split('-'); // Divide a parte de data em ano, mês e dia
+    var hora = datahora[1].split(':'); // Divide a parte de hora em hora, minuto e segundo
     var hr; // Declaração da variável hr
     if (int.parse(hora[0]) - 3 < 0) {
       hr = int.parse(hora[0]) - 3 + 24; // Realiza um ajuste de fuso horário
