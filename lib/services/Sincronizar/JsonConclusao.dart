@@ -1,7 +1,7 @@
 class JsonConclusao {
   Checkin checkin;
   Equipamentos equipamentos;
-  Acessorios acessorios;
+  String? acessorios;
   Arquivos arquivos;
   Deslocamento deslocamento;
   Checkout checkout;
@@ -301,23 +301,52 @@ class Equipamentos {
 
 class Equipamento {
   int? id;
+  String? tipo;
   String? tipoTec;
-  bool? situacaoTec;
-  EquipamentoTec? equipamentoTec;
+  String? equipamento;
+  String? equipamentoTec;
+  String? equipamentoRetirado;
+  String? equipamentoRetiradoTec;
+  String? localInstalacao;
+  String? localIntalacaoTec;
 
-  Equipamento({
-    this.id,
-    this.tipoTec,
-    this.situacaoTec,
-    this.equipamentoTec,
-  });
+  Equipamento(
+      {this.id,
+      this.tipo,
+      this.tipoTec,
+      this.equipamento,
+      this.equipamentoTec,
+      this.equipamentoRetirado,
+      this.equipamentoRetiradoTec,
+      this.localInstalacao,
+      this.localIntalacaoTec});
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'tipoTec': tipoTec,
-        'situacaoTec': situacaoTec,
-        'equipamentoTec': equipamentoTec
-      };
+  fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    id = json['id'];
+    tipo = json['tipo'];
+    tipoTec = json['tipoTec'];
+    equipamento = json['equipamento'];
+    equipamentoTec = json['equipamentoTec'];
+    equipamentoRetirado = json['equipamentoRetirado'];
+    equipamentoRetiradoTec = json['equipamentoRetiradoTec'];
+    localInstalacao = json['localInstalacao'];
+    localIntalacaoTec = json['localIntalacaoTec'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['tipo'] = this.tipo;
+    data['tipoTec'] = this.tipoTec;
+    data['equipamento'] = this.equipamento;
+    data['equipamentoTec'] = this.equipamentoTec;
+    data['equipamentoRetirado'] = this.equipamentoRetirado;
+    data['equipamentoRetiradoTec'] = this.equipamentoRetiradoTec;
+    data['localInstalacao'] = this.localInstalacao;
+    data['localIntalacaoTec'] = this.localIntalacaoTec;
+    return data;
+  }
 }
 
 class EquipamentoTec {

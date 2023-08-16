@@ -36,7 +36,7 @@ class syncoff {
     var jsonconclusao = JsonConclusao(
         checkin: checkin,
         equipamentos: equipamentos,
-        acessorios: acessorios,
+        acessorios: '',
         arquivos: arquivos,
         deslocamento: deslocamento,
         checkout: checkout,
@@ -126,109 +126,92 @@ class syncoff {
 
     // preenchendo equipamentos
     var jsoneqs = opcs.getStringList("EQProcess");
-    jsonconclusao.equipamentos.equipamentos = [];
+    List<Equipamento> listequipamentos = [];
+    var equipamento = Equipamento();
     jsoneqs?.forEach((element) {
       var eqs = jsonDecode(element);
-      var equipamento = Equipamento(
-          id: 0,
-          tipoTec: "",
-          situacaoTec: true,
-          equipamentoTec: EquipamentoTec(
-              id: 0,
-              numero: "0",
-              codigo: "0",
-              documento: "0",
-              status: "0",
-              cancelado: false,
-              tecnico: tecnico,
-              localInstalacaoTec: ""));
-
       /*"EquipamentoInstaladoID": ,
     "EquipamentoInstaladoCodigo": ,
     "EquipamentosRemovidoID": "",
     "EquipamentoRemovidoCodigo": "",
     "localInstalacao": localInstalacao,*/
+      String json = '';
       if (eqs["control"] == "RETIRADA") {
-        equipamento.equipamentoTec?.id = eqs['EquipamentosRemovidoID'];
-        equipamento.equipamentoTec?.numero = "";
-        equipamento.equipamentoTec?.codigo =
-            "${eqs['EquipamentoRemovidoCodigo']}";
-        equipamento.equipamentoTec?.documento =
-            "${eqs['EquipamentoRemovidoDocumento']}";
-        equipamento.equipamentoTec?.status = "INSTALADO";
-        equipamento.equipamentoTec?.cancelado = false;
-        equipamento.equipamentoTec?.tecnico = tecnico;
-        equipamento.equipamentoTec?.localInstalacaoTec =
-            "${eqs['localInstalacao']}";
-
-        equipamento.id = eqs['EquipamentosRemovidoID'];
-        equipamento.situacaoTec = true;
-        equipamento.tipoTec = "RETIRADA";
-        jsonconclusao.equipamentos.equipamentos?.add(equipamento);
+        json = '''{
+          "id":${eqs['EquipamentosRemovidoID']},
+          "tipo":"RETIRADA",
+          "tipoTec":"RETIRADA",
+          "equipamento":"",
+          "equipamentoTec":"",
+          "equipamentoRetirado":"${eqs['EquipamentoRemovidoCodigo']}",
+          "equipamentoRetiradoTec":"${eqs['EquipamentoRemovidoCodigo']}",
+          "localInstalacao":"",
+          "localIntalacaoTec":""
+        }''';
+        equipamento = equipamento.fromJson(jsonDecode(json));
       } else if (eqs["control"] == "INSTALACAO") {
-        equipamento.equipamentoTec?.id = eqs['EquipamentoInstaladoID'];
-        equipamento.equipamentoTec?.numero = "";
-        equipamento.equipamentoTec?.codigo =
-            "${eqs['EquipamentoInstaladoCodigo']}";
-        equipamento.equipamentoTec?.documento =
-            "${eqs['EquipamentoInstaladoDocumento']}";
-        equipamento.equipamentoTec?.status = "DISPONIVEL";
-        equipamento.equipamentoTec?.cancelado = false;
-        equipamento.equipamentoTec?.tecnico = tecnico;
-        equipamento.equipamentoTec?.localInstalacaoTec =
-            "${eqs['localInstalacao']}";
-
-        equipamento.id = eqs['EquipamentoInstaladoID'];
-        equipamento.situacaoTec = true;
-        equipamento.tipoTec = "INSTALACAO";
-        jsonconclusao.equipamentos.equipamentos?.add(equipamento);
+        json = '''
+        {
+          "id":${eqs['EquipamentoInstaladoID']},
+          "tipo":"INSTALACAO",
+          "tipoTec":"INSTALACAO",
+          "equipamento":"${eqs['EquipamentoInstaladoCodigo']}",
+          "equipamentoTec":"${eqs['EquipamentoInstaladoCodigo']}",
+          "equipamentoRetirado":"",
+          "equipamentoRetiradoTec":"",
+          "localInstalacao": "${eqs['localInstalacao']}",
+          "localIntalacaoTec": "${eqs['localInstalacao']}"
+        }
+        ''';
+        equipamento = equipamento.fromJson(jsonDecode(json));
       } else if (eqs["control"] == "TROCA") {
-        equipamento.equipamentoTec?.id = eqs['EquipamentoInstaladoID'];
-        equipamento.equipamentoTec?.numero = "";
-        equipamento.equipamentoTec?.codigo =
-            "${eqs['EquipamentoInstaladoCodigo']}";
-        equipamento.equipamentoTec?.documento =
-            "${eqs['EquipamentoInstaladoDocumento']}";
-        equipamento.equipamentoTec?.status = "DISPONIVEL";
-        equipamento.equipamentoTec?.cancelado = false;
-        equipamento.equipamentoTec?.tecnico = tecnico;
-        equipamento.equipamentoTec?.localInstalacaoTec =
-            "${eqs['localInstalacao']}";
+        json = '''
+          {
+            "id":${eqs['EquipamentoInstaladoID']},
+            "tipo":"TROCA",
+            "tipoTec":"TROCA",
+            "equipamento":"${eqs['EquipamentoInstaladoCodigo']}",
+            "equipamentoTec":"${eqs['EquipamentoInstaladoCodigo']}",
+            "equipamentoRetirado":"${eqs['EquipamentoRemovidoCodigo']}",
+            "equipamentoRetiradoTec":"${eqs['EquipamentoRemovidoCodigo']}",
+            "localInstalacao":"${eqs['localInstalacao']}",
+            "localIntalacaoTec":"${eqs['localInstalacao']}"
+          }
+        ''';
 
-        equipamento.id = eqs['EquipamentoInstaladoID'];
-        equipamento.situacaoTec = true;
-        equipamento.tipoTec = "TROCA";
-        jsonconclusao.equipamentos.equipamentos?.add(equipamento);
+        equipamento = equipamento.fromJson(jsonDecode(json));
       } else {
-        equipamento.equipamentoTec?.id = eqs['EquipamentosRemovidoID'];
-        equipamento.equipamentoTec?.numero = "";
-        equipamento.equipamentoTec?.codigo =
-            "${eqs['EquipamentoRemovidoCodigo']}";
-        equipamento.equipamentoTec?.documento =
-            "${eqs['EquipamentoRemovidoDocumento']}";
-        equipamento.equipamentoTec?.status = "INSTALADO";
-        equipamento.equipamentoTec?.cancelado = false;
-        equipamento.equipamentoTec?.tecnico = tecnico;
-        equipamento.equipamentoTec?.localInstalacaoTec =
-            "${eqs['localInstalacao']}";
+        json = '''
+        {
+          "id":${eqs['EquipamentosRemovidoID']},
+          "tipo":"MANUTENCAO",
+          "tipoTec":"MANUTENCAO",
+          "equipamento":"${eqs['EquipamentoInstaladoCodigo']}",
+          "equipamentoTec":"${eqs['EquipamentoInstaladoCodigo']}",
+          "equipamentoRetirado":"",
+          "equipamentoRetiradoTec":"",
+          "localInstalacao":"${eqs['localInstalacao']}";,
+          "localIntalacaoTec":"${eqs['localInstalacao']}";
+        }
+        ''';
+        equipamento = equipamento.fromJson(jsonDecode(json));
+      }
 
-        equipamento.id = eqs['EquipamentosRemovidoID'];
-        equipamento.situacaoTec = true;
-        equipamento.tipoTec = "MANUTENCAO";
-        jsonconclusao.equipamentos.equipamentos?.add(equipamento);
-      }
-      try {
-        jsonconclusao.acessorios.id =
-            equipamento.id = int.parse(eqs['EquipamentosRemovidoID']);
-      } catch (e) {
-        jsonconclusao.acessorios.id = 0;
-      }
-      jsonconclusao.acessorios.etapaApp = "ACESSORIOS";
-      jsonconclusao.acessorios.acessorios = [];
+      listequipamentos.add(equipamento);
+      // try {
+      //   jsonconclusao.acessorios?.id =
+      //       equipamento.id = int.parse(eqs['EquipamentosRemovidoID']);
+      //       jsonconclusao.acessorios?.etapaApp = "ACESSORIOS";
+      //       jsonconclusao.acessorios?.acessorios = [];
+      // } catch (e) {
+      //   jsonconclusao.acessorios =  null;
+      // }
+      jsonconclusao.acessorios = null;
     });
+    print(equipamentos);
     jsonconclusao.equipamentos.id = osid;
     jsonconclusao.equipamentos.etapaApp = "SERVICO_INICIADO";
-
+    jsonconclusao.equipamentos.equipamentos = listequipamentos;
     List referencias = opcs.getStringList('referencias')!;
     print(referencias);
     var indice = 0;

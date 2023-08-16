@@ -32,59 +32,66 @@ class salvareqtec {
     jsoneqs?.forEach((element) {
       var eqs = jsonDecode(element!);
       if (eqs["control"] == "RETIRADA") {
-        Map<String, dynamic> eqretiradoTec = {
-          "id": eqs['EquipamentosRemovidoID'],
-          "codigo": "${eqs['EquipamentoRemovidoCodigo']}",
-          "documento": "${eqs['EquipamentoRemovidoDocumento']}",
-          "status": "INSTALADO",
-          "cancelado": false
-        };
-        Map<String, dynamic> equipaments = {
-          "id": eqs["EquipamentosRemovidoID"],
-          "tipo": "RETIRADA",
-          "stringEquipamento": "Retirada",
-          "equipamentoRetiradoTec": eqretiradoTec,
-          "tipoTec": "RETIRADA",
-          "situacao": true,
-        };
-        dados["equipamentos"] = equipaments;
+        String equipaments = '''{
+          "id":${eqs['EquipamentosRemovidoID']},
+          "tipo":"RETIRADA",
+          "tipoTec":"RETIRADA",
+          "equipamento":"",
+          "equipamentoTec":"",
+          "equipamentoRetirado":"${eqs['EquipamentoRemovidoCodigo']}",
+          "equipamentoRetiradoTec":"${eqs['EquipamentoRemovidoCodigo']}",
+          "localInstalacao":"",
+          "localIntalacaoTec":""
+        }''';
+        dados["equipamentos"] = jsonDecode(equipaments);
         json = jsonEncode(dados);
       } else if (eqs["control"] == "INSTALACAO") {
-        Map<String, dynamic> eqretiradoTec = {
-          "id": eqs['EquipamentoInstaladoID'],
-          "codigo": eqs['EquipamentoInstaladoCodigo'],
-          "documento": eqs['EquipamentoInstaladoDocumento'],
-          "status": "DISPONIVEL",
-          "cancelado": false
-        };
-
-        Map<String, dynamic> equipaments = {
-          "id": eqs["EquipamentosRemovidoID"],
-          "tipo": "INSTALACAO",
-          "stringEquipamento": "Instalacao",
-          "equipamentoTec": eqretiradoTec,
-          "tipoTec": "INSTALACAO",
-          "situacao": true,
-        };
-        dados["equipamentos"] = equipaments;
+        String equipaments = '''
+        {
+          "id":${eqs['EquipamentoInstaladoID']},
+          "tipo":"INSTALACAO",
+          "tipoTec":"INSTALACAO",
+          "equipamento":"${eqs['EquipamentoInstaladoCodigo']}",
+          "equipamentoTec":"${eqs['EquipamentoInstaladoCodigo']}",
+          "equipamentoRetirado":"",
+          "equipamentoRetiradoTec":"",
+          "localInstalacao": "${eqs['localInstalacao']}",
+          "localIntalacaoTec": "${eqs['localInstalacao']}"
+        }
+        ''';
+        dados["equipamentos"] = jsonDecode(equipaments);
         json = jsonEncode(dados);
-      } else if (eqs["control"] == "INSTALAÇÃO") {
-        Map<String, dynamic> eqretiradoTec = {
-          "id": eqs['EquipamentoInstaladoID'],
-          "codigo": eqs['EquipamentoInstaladoCodigo'],
-          "documento": eqs['EquipamentoInstaladoDocumento'],
-          "status": "DISPONIVEL",
-          "cancelado": false
-        };
-        Map<String, dynamic> equipaments = {
-          "id": eqs["EquipamentosRemovidoID"],
-          "tipo": "INSTALAÇÃO",
-          "stringEquipamento": "Instalação",
-          "equipamentoTec": eqretiradoTec,
-          "tipoTec": "INSTALAÇÃO",
-          "situacao": true,
-        };
-        dados["equipamentos"] = equipaments;
+      } else if (eqs["control"] == "TROCA") {
+        var equipaments = '''
+          {
+            "id":${eqs['EquipamentoInstaladoID']},
+            "tipo":"TROCA",
+            "tipoTec":"TROCA",
+            "equipamento":"${eqs['EquipamentoInstaladoCodigo']}",
+            "equipamentoTec":"${eqs['EquipamentoInstaladoCodigo']}",
+            "equipamentoRetirado":"${eqs['EquipamentoRemovidoCodigo']}",
+            "equipamentoRetiradoTec":"${eqs['EquipamentoRemovidoCodigo']}",
+            "localInstalacao":"${eqs['localInstalacao']}",
+            "localIntalacaoTec":"${eqs['localInstalacao']}"
+          }
+        ''';
+        dados["equipamentos"] = jsonDecode(equipaments);
+        json = jsonEncode(dados);
+      } else {
+        var equipaments = '''
+        {
+          "id":${eqs['EquipamentosRemovidoID']},
+          "tipo":"MANUTENCAO",
+          "tipoTec":"MANUTENCAO",
+          "equipamento":"${eqs['EquipamentoInstaladoCodigo']}",
+          "equipamentoTec":"${eqs['EquipamentoInstaladoCodigo']}",
+          "equipamentoRetirado":"",
+          "equipamentoRetiradoTec":"",
+          "localInstalacao":"${eqs['localInstalacao']}";,
+          "localIntalacaoTec":"${eqs['localInstalacao']}";
+        }
+        ''';
+        dados["equipamentos"] = jsonDecode(equipaments);
         json = jsonEncode(dados);
       }
     });
