@@ -130,11 +130,6 @@ class syncoff {
     var equipamento = Equipamento();
     jsoneqs?.forEach((element) {
       var eqs = jsonDecode(element);
-      /*"EquipamentoInstaladoID": ,
-    "EquipamentoInstaladoCodigo": ,
-    "EquipamentosRemovidoID": "",
-    "EquipamentoRemovidoCodigo": "",
-    "localInstalacao": localInstalacao,*/
       String json = '';
       if (eqs["control"] == "RETIRADA") {
         json = '''{
