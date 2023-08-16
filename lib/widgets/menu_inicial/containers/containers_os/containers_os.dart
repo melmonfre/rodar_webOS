@@ -29,23 +29,14 @@ class _ContainerOSState extends State<ContainerOS> {
   var json;
   setossessao(osid) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
-    var osselecao;
-    String selecionado = '';
-    List lista2 = [];
-    lista.forEach((element) {
-      if (osid == element['id']) {
-        print("ELEMENTO ${element}");
-        osselecao = element;
-        lista2 = lista;
-        lista2.remove(element);
-      }
-      var sess = jsonEncode(lista2);
-      print("SESSÃO ${sess}");
-      opcs.setString("SessionOS", sess);
-    });
+
+    var osselecao = lista.firstWhere((element) => osid == element['id']);
+
     lista.remove(osselecao);
-    selecionado = jsonEncode(osselecao);
-    opcs.setString("SelectedOS", selecionado);
+
+    opcs.setString("SessionOS", jsonEncode(lista));
+
+    opcs.setString("SelectedOS", jsonEncode(osselecao));
   }
 
   Future<void> getdata() async {
@@ -146,11 +137,9 @@ class _ContainerOSState extends State<ContainerOS> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: GestureDetector(
-                    onTap: () {
-                      setossessao(os[
-                          index]); // Chama a função setossessao() com o valor do elemento atual da lista os
-                      print(
-                          "OS ${os[index]}"); // Imprime a mensagem "OS" seguida do valor do elemento atual da lista os
+                    onTap: () async {
+                      setossessao(os[index]); 
+                      print("OS ID ${os[index]}"); 
                       Navigator.of(context).pop();
                       Navigator.push(
                         context,
