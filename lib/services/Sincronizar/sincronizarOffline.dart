@@ -148,7 +148,7 @@ class syncoff {
           "localInstalacao":"",
           "localIntalacaoTec":""
         }''';
-        equipamento = equipamento.fromJson(jsonDecode(json));
+        equipamento = Equipamento.fromJson(jsonDecode(json));
       } else if (eqs["control"] == "INSTALACAO") {
         json = '''
         {
@@ -163,7 +163,7 @@ class syncoff {
           "localIntalacaoTec": "${eqs['localInstalacao']}"
         }
         ''';
-        equipamento = equipamento.fromJson(jsonDecode(json));
+        equipamento = Equipamento.fromJson(jsonDecode(json));
       } else if (eqs["control"] == "TROCA") {
         json = '''
           {
@@ -179,7 +179,7 @@ class syncoff {
           }
         ''';
 
-        equipamento = equipamento.fromJson(jsonDecode(json));
+        equipamento = Equipamento.fromJson(jsonDecode(json));
       } else {
         json = '''
         {
@@ -194,7 +194,7 @@ class syncoff {
           "localIntalacaoTec":"${eqs['localInstalacao']}";
         }
         ''';
-        equipamento = equipamento.fromJson(jsonDecode(json));
+        equipamento = Equipamento.fromJson(jsonDecode(json));
       }
 
       listequipamentos.add(equipamento);
