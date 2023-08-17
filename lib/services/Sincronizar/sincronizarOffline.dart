@@ -128,12 +128,19 @@ class syncoff {
     var jsoneqs = opcs.getStringList("EQProcess");
     List<Equipamento> listequipamentos = [];
     var equipamento = Equipamento();
-    jsoneqs?.forEach((element) {
-      var eqs = jsonDecode(element);
-      String json = '';
-      if (eqs["control"] == "RETIRADA") {
-        json = '''{
-          "id":${eqs['EquipamentosRemovidoID']},
+    if (jsoneqs != null) {
+      for (var equip in jsoneqs) {
+        var index = jsoneqs.indexOf(equip);
+        var eqs = jsonDecode(equip);
+        /*"EquipamentoInstaladoID": ,
+    "EquipamentoInstaladoCodigo": ,
+    "EquipamentosRemovidoID": "",
+    "EquipamentoRemovidoCodigo": "",
+    "localInstalacao": localInstalacao,*/
+        String json = '';
+        if (eqs["control"] == "RETIRADA") {
+          json = '''{
+          "id":${element['equipamentos'][index]['id']},
           "tipo":"RETIRADA",
           "tipoTec":"RETIRADA",
           "equipamentoRetirado":{"id": ${eqs['EquipamentosRemovidoID']}, "codigo":"${eqs['EquipamentoRemovidoCodigo']}"},
@@ -141,9 +148,9 @@ class syncoff {
           "localInstalacao":"",
           "localIntalacaoTec":""
         }''';
-        equipamento = Equipamento.fromJson(jsonDecode(json));
-      } else if (eqs["control"] == "INSTALACAO") {
-        json = '''
+          equipamento = Equipamento.fromJson(jsonDecode(json));
+        } else if (eqs["control"] == "INSTALACAO") {
+          json = '''
         {
           "id":${eqs['EquipamentoInstaladoID']},
           "tipo":"INSTALACAO",
@@ -156,9 +163,9 @@ class syncoff {
           "localIntalacaoTec": "${eqs['localInstalacao']}"
         }
         ''';
-        equipamento = Equipamento.fromJson(jsonDecode(json));
-      } else if (eqs["control"] == "TROCA") {
-        json = '''
+          equipamento = Equipamento.fromJson(jsonDecode(json));
+        } else if (eqs["control"] == "TROCA") {
+          json = '''
           {
             "id":${eqs['EquipamentoInstaladoID']},
             "tipo":"TROCA",
@@ -172,9 +179,9 @@ class syncoff {
           }
         ''';
 
-        equipamento = Equipamento.fromJson(jsonDecode(json));
-      } else {
-        json = '''
+          equipamento = Equipamento.fromJson(jsonDecode(json));
+        } else {
+          json = '''
         {
           "id":${eqs['EquipamentosRemovidoID']},
           "tipo":"MANUTENCAO",
@@ -187,20 +194,21 @@ class syncoff {
           "localIntalacaoTec":"${eqs['localInstalacao']}";
         }
         ''';
-        equipamento = Equipamento.fromJson(jsonDecode(json));
-      }
+          equipamento = Equipamento.fromJson(jsonDecode(json));
+        }
 
-      listequipamentos.add(equipamento);
-      // try {
-      //   jsonconclusao.acessorios?.id =
-      //       equipamento.id = int.parse(eqs['EquipamentosRemovidoID']);
-      //       jsonconclusao.acessorios?.etapaApp = "ACESSORIOS";
-      //       jsonconclusao.acessorios?.acessorios = [];
-      // } catch (e) {
-      //   jsonconclusao.acessorios =  null;
-      // }
-      jsonconclusao.acessorios = null;
-    });
+        listequipamentos.add(equipamento);
+        // try {
+        //   jsonconclusao.acessorios?.id =
+        //       equipamento.id = int.parse(eqs['EquipamentosRemovidoID']);
+        //       jsonconclusao.acessorios?.etapaApp = "ACESSORIOS";
+        //       jsonconclusao.acessorios?.acessorios = [];
+        // } catch (e) {
+        //   jsonconclusao.acessorios =  null;
+        // }
+        jsonconclusao.acessorios = null;
+      }
+    }
     print(equipamentos);
     jsonconclusao.equipamentos.id = osid;
     jsonconclusao.equipamentos.etapaApp = "SERVICO_INICIADO";
