@@ -218,6 +218,7 @@ class syncoff {
     var indice = 0;
     referencias.forEach((foto) {
       String? fotos = opcs.containsKey("$foto") ? opcs.getString("$foto") : "";
+      print("FOTOS: $fotos");
       files.add(Arquivo(
           base64: fotos,
           referencia: foto,

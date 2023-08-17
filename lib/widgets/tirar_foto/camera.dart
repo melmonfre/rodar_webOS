@@ -59,7 +59,8 @@ class _CameraButtonState extends State<CameraButton> {
 
       // Salvar a imagem na galeria
       final directory = await getApplicationDocumentsDirectory();
-      final imagePath = '${directory.path}/image.jpg';
+      final imagePath =
+          '${directory.path}/image${DateTime.now().millisecondsSinceEpoch}.jpg';
       await image.copy(imagePath);
     }
   }
@@ -232,7 +233,7 @@ class _CameraButtonState extends State<CameraButton> {
       List<int> imageBytes = image.readAsBytesSync();
       base64File = base64Encode(imageBytes);
       print(base64File);
-      salvanocache(base64File);
+      salvanocache("data:image/jpg;base64,$base64File");
     } else {}
   }
 }
