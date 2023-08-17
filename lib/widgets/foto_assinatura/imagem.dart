@@ -3,10 +3,9 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:rodarwebos/pages/responsavel/tela_responsavel.dart';
 import 'package:rodarwebos/widgets/foto_assinatura/assinatura.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signature/signature.dart';
@@ -48,9 +47,7 @@ class _ImagemState extends State<Imagem> {
     await imgFile.writeAsBytes(pngBytes!);
 
     if (imgFile.path != null) {
-      GallerySaver.saveImage(imgFile.path).then((a) {
-
-      });
+      GallerySaver.saveImage(imgFile.path).then((a) {});
     }
   }
 
@@ -58,12 +55,12 @@ class _ImagemState extends State<Imagem> {
     List<int> imageBytes = image;
     String base64File = base64Encode(imageBytes);
     print("BASE64 $base64File");
-    salvanocache('"data:image/png;base64,$base64File"');
+    salvanocache('"data:image/jpg;base64,$base64File"');
   }
 
   salvanocache(base64Files) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
-    opcs.setString("base64assinatura", base64Files);
+    opcs.setString("base64assinatura", '"data:image/png;base64,$base64Files"');
   }
 
   void _limparAssinatura() {
