@@ -144,10 +144,12 @@ class ManutencaoState {
 
   Map<String, dynamic> getEquipamento() {
 
+    final id = EquipamentosVeiculoIDs[EquipamentoVeiculoCodigos.indexOf(selecionadoveiculo)];
+
     Map<String, dynamic> equipamento = {
-      "EquipamentoInstaladoID": "",
+      "EquipamentoInstaladoID": id,
       "EquipamentoInstaladoCodigo": selecionadoveiculo,
-      "EquipamentoInstaladoDocumento": selecionadoveiculo,
+      "EquipamentoInstaladoDocumento": "",
       "EquipamentosRemovidoID": "", // Armazena o ID do equipamento removido
       "EquipamentoRemovidoCodigo": "", // Armazena o código do equipamento removido (veículo selecionado)
       "EquipamentoRemovidoDocumento": "",
