@@ -43,7 +43,8 @@ class _ImagemState extends State<Imagem> {
 
   void _salvarImagemNaGaleria(Uint8List? pngBytes) async {
     final directory = (await getApplicationDocumentsDirectory()).path;
-    File imgFile = File('$directory/photo.png');
+    File imgFile =
+        File('$directory/photo${DateTime.now().millisecondsSinceEpoch}.png');
     await imgFile.writeAsBytes(pngBytes!);
 
     if (imgFile.path != null) {
@@ -55,12 +56,12 @@ class _ImagemState extends State<Imagem> {
     List<int> imageBytes = image;
     String base64File = base64Encode(imageBytes);
     print("BASE64 $base64File");
-    salvanocache('"data:image/jpg;base64,$base64File"');
+    salvanocache("data:image/png;base64,$base64File");
   }
 
   salvanocache(base64Files) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
-    opcs.setString("base64assinatura", '"data:image/png;base64,$base64Files"');
+    opcs.setString("base64assinatura", base64Files);
   }
 
   void _limparAssinatura() {

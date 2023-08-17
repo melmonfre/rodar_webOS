@@ -155,8 +155,8 @@ class syncoff {
           "id":${element['equipamentos'][index]['id']},          
           "tipo":"INSTALACAO",
           "tipoTec":"INSTALACAO",
-          "equipamento":"{"id": ${eqs['EquipamentoInstaladoCodigo']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
-           "equipamentoTec":{"id": ${eqs['EquipamentoInstaladoCodigo']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},,
+          "equipamento":"{"id": ${eqs['EquipamentoInstaladoID']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
+           "equipamentoTec":{"id": ${eqs['EquipamentoInstaladoID']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},,
           "equipamentoRetirado":"",
           "equipamentoRetiradoTec":"",
           "localInstalacao": "${eqs['localInstalacao']}",
@@ -170,8 +170,8 @@ class syncoff {
             "id":${element['equipamentos'][index]['id']},
             "tipo":"TROCA",
             "tipoTec":"TROCA",
-            "equipamento":"{"id": ${eqs['EquipamentoInstaladoCodigo']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
-            "equipamentoTec":{"id": ${eqs['EquipamentoInstaladoCodigo']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
+            "equipamento":"{"id": ${eqs['EquipamentoInstaladoID']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
+            "equipamentoTec":{"id": ${eqs['EquipamentoInstaladoID']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
             "equipamentoRetirado":{"id": ${eqs['EquipamentosRemovidoID']}, "codigo":"${eqs['EquipamentoRemovidoCodigo']}"},
             "equipamentoRetiradoTec":{"id": ${eqs['EquipamentosRemovidoID']}, "codigo":"${eqs['EquipamentoRemovidoCodigo']}"},
             "localInstalacao":"${eqs['localInstalacao']}",
@@ -186,8 +186,8 @@ class syncoff {
           "id":${element['equipamentos'][index]['id']},
           "tipo":"MANUTENCAO",
           "tipoTec":"MANUTENCAO",
-          "equipamento":"{"id": ${eqs['EquipamentoInstaladoCodigo']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
-           "equipamentoTec":{"id": ${eqs['EquipamentoInstaladoCodigo']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
+          "equipamento":"{"id": ${eqs['EquipamentoInstaladoID']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
+           "equipamentoTec":{"id": ${eqs['EquipamentoInstaladoID']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
           "equipamentoRetirado":"",
           "equipamentoRetiradoTec":"",
           "localInstalacao":"${eqs['localInstalacao']}";,
@@ -218,6 +218,7 @@ class syncoff {
     var indice = 0;
     referencias.forEach((foto) {
       String? fotos = opcs.containsKey("$foto") ? opcs.getString("$foto") : "";
+      print("FOTOS: $fotos");
       files.add(Arquivo(
           base64: fotos,
           referencia: foto,
