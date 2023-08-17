@@ -152,11 +152,11 @@ class syncoff {
         } else if (eqs["control"] == "INSTALACAO") {
           json = '''
         {
-          "id":${eqs['EquipamentoInstaladoID']},
+          "id":${element['equipamentos'][index]['id']},          
           "tipo":"INSTALACAO",
           "tipoTec":"INSTALACAO",
-          "equipamento":"${eqs['EquipamentoInstaladoCodigo']}",
-          "equipamentoTec":"${eqs['EquipamentoInstaladoCodigo']}",
+          "equipamento":"{"id": ${eqs['EquipamentoInstaladoCodigo']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
+           "equipamentoTec":{"id": ${eqs['EquipamentoInstaladoCodigo']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},,
           "equipamentoRetirado":"",
           "equipamentoRetiradoTec":"",
           "localInstalacao": "${eqs['localInstalacao']}",
@@ -167,13 +167,13 @@ class syncoff {
         } else if (eqs["control"] == "TROCA") {
           json = '''
           {
-            "id":${eqs['EquipamentoInstaladoID']},
+            "id":${element['equipamentos'][index]['id']},
             "tipo":"TROCA",
             "tipoTec":"TROCA",
-            "equipamento":"${eqs['EquipamentoInstaladoCodigo']}",
-            "equipamentoTec":"${eqs['EquipamentoInstaladoCodigo']}",
-            "equipamentoRetirado":"${eqs['EquipamentoRemovidoCodigo']}",
-            "equipamentoRetiradoTec":"${eqs['EquipamentoRemovidoCodigo']}",
+            "equipamento":"{"id": ${eqs['EquipamentoInstaladoCodigo']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
+            "equipamentoTec":{"id": ${eqs['EquipamentoInstaladoCodigo']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
+            "equipamentoRetirado":{"id": ${eqs['EquipamentosRemovidoID']}, "codigo":"${eqs['EquipamentoRemovidoCodigo']}"},
+            "equipamentoRetiradoTec":{"id": ${eqs['EquipamentosRemovidoID']}, "codigo":"${eqs['EquipamentoRemovidoCodigo']}"},
             "localInstalacao":"${eqs['localInstalacao']}",
             "localIntalacaoTec":"${eqs['localInstalacao']}"
           }
@@ -183,11 +183,11 @@ class syncoff {
         } else {
           json = '''
         {
-          "id":${eqs['EquipamentosRemovidoID']},
+          "id":${element['equipamentos'][index]['id']},
           "tipo":"MANUTENCAO",
           "tipoTec":"MANUTENCAO",
-          "equipamento":"${eqs['EquipamentoInstaladoCodigo']}",
-          "equipamentoTec":"${eqs['EquipamentoInstaladoCodigo']}",
+          "equipamento":"{"id": ${eqs['EquipamentoInstaladoCodigo']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
+           "equipamentoTec":{"id": ${eqs['EquipamentoInstaladoCodigo']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
           "equipamentoRetirado":"",
           "equipamentoRetiradoTec":"",
           "localInstalacao":"${eqs['localInstalacao']}";,
