@@ -151,7 +151,7 @@ class syncoff {
           "id":${element['equipamentos'][index]['id']},          
           "tipo":"INSTALACAO",
           "tipoTec":"INSTALACAO",
-          "equipamento":"{"id": ${eqs['EquipamentoInstaladoID']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
+          "equipamento":{"id": ${eqs['EquipamentoInstaladoID']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
            "equipamentoTec":{"id": ${eqs['EquipamentoInstaladoID']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},,
           "localInstalacao": "${eqs['localInstalacao']}",
           "localIntalacaoTec": "${eqs['localInstalacao']}"
@@ -164,7 +164,7 @@ class syncoff {
             "id":${element['equipamentos'][index]['id']},
             "tipo":"TROCA",
             "tipoTec":"TROCA",
-            "equipamento":"{"id": ${eqs['EquipamentoInstaladoID']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
+            "equipamento":{"id": ${eqs['EquipamentoInstaladoID']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
             "equipamentoTec":{"id": ${eqs['EquipamentoInstaladoID']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
             "equipamentoRetirado":{"id": ${eqs['EquipamentosRemovidoID']}, "codigo":"${eqs['EquipamentoRemovidoCodigo']}"},
             "equipamentoRetiradoTec":{"id": ${eqs['EquipamentosRemovidoID']}, "codigo":"${eqs['EquipamentoRemovidoCodigo']}"},
