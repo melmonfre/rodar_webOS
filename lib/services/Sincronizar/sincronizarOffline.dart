@@ -142,7 +142,7 @@ class syncoff {
           "equipamentoRetirado":{"id": ${eqs['EquipamentosRemovidoID']}, "codigo":"${eqs['EquipamentoRemovidoCodigo']}"},
           "equipamentoRetiradoTec":{"id": ${eqs['EquipamentosRemovidoID']}, "codigo":"${eqs['EquipamentoRemovidoCodigo']}"},
           "localInstalacao":"",
-          "localIntalacaoTec":""
+          "localInstalacaoTec":""
         }''';
           equipamento = Equipamento.fromJson(jsonDecode(json));
         } else if (eqs["control"] == "INSTALACAO") {
@@ -154,7 +154,7 @@ class syncoff {
           "equipamento":{"id": ${eqs['EquipamentoInstaladoID']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
            "equipamentoTec":{"id": ${eqs['EquipamentoInstaladoID']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
           "localInstalacao": "${eqs['localInstalacao']}",
-          "localIntalacaoTec": "${eqs['localInstalacao']}"
+          "localInstalacaoTec": "${eqs['localInstalacao']}"
         }
         ''';
           equipamento = Equipamento.fromJson(jsonDecode(json));
@@ -169,7 +169,7 @@ class syncoff {
             "equipamentoRetirado":{"id": ${eqs['EquipamentosRemovidoID']}, "codigo":"${eqs['EquipamentoRemovidoCodigo']}"},
             "equipamentoRetiradoTec":{"id": ${eqs['EquipamentosRemovidoID']}, "codigo":"${eqs['EquipamentoRemovidoCodigo']}"},
             "localInstalacao":"${eqs['localInstalacao']}",
-            "localIntalacaoTec":"${eqs['localInstalacao']}"
+            "localInstalacaoTec":"${eqs['localInstalacao']}"
           }
         ''';
 
@@ -183,7 +183,7 @@ class syncoff {
           "equipamentoRetirado":{"id": ${eqs['EquipamentosRemovidoID']}, "codigo":"${eqs['EquipamentoRemovidoCodigo']}"},
           "equipamentoRetiradoTec":{"id": ${eqs['EquipamentosRemovidoID']}, "codigo":"${eqs['EquipamentoRemovidoCodigo']}"},
           "localInstalacao":"${eqs['localInstalacao']}";,
-          "localIntalacaoTec":"${eqs['localInstalacao']}";
+          "localInstalacaoTec":"${eqs['localInstalacao']}";
         }
         ''';
           equipamento = Equipamento.fromJson(jsonDecode(json));
