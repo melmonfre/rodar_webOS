@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rodarwebos/services/GetEquipamento.dart';
 import 'package:rodarwebos/services/conclusao/salvareqptecnico.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
@@ -22,6 +23,318 @@ class FormFieldLabel extends StatelessWidget {
         fontWeight: FontWeight.bold,
       ),
     );
+  }
+}
+
+class InstalacaoState {
+  EquipamentosChangeNotifier notifierInstance;
+
+  InstalacaoState(this.notifierInstance);
+
+  var EquipamentoNovoIDs;
+  List<String> EquipamentoNovoCodigos = [];
+  var AcessoriosID;
+  var AcessoriosDescricao;
+  var EquipamentosVeiculoIDs;
+  List<String> EquipamentoVeiculoCodigos = [];
+  String? localInstalacao;
+  var stringEquipamento;
+  var selecionadonovo;
+  var selecionadoveiculo;
+  var Control = "INSTALACAO";
+  var eqnovodoc;
+  var eqveiculodoc;
+
+  bool isValid() {
+    return localInstalacao != null;
+  }
+
+  Map<String, dynamic> getEquipamento() {
+    var eqnovosid;
+    var eqnovosdoc;
+    for (int i = 0; i < EquipamentoNovoCodigos.length; i++) {
+      if (EquipamentoNovoCodigos[i] == selecionadonovo) {
+        eqnovosid = EquipamentoNovoIDs[i];
+        eqnovosdoc = eqnovodoc[i];
+      }
+    }
+    Map<String, dynamic> equipamento = {
+      "EquipamentoInstaladoID": eqnovosid,
+      "EquipamentoInstaladoCodigo": selecionadonovo,
+      "EquipamentoInstaladoDocumento": eqnovosdoc,
+      "EquipamentosRemovidoID": "",
+      "EquipamentoRemovidoCodigo": "",
+      "EquipamentoRemovidoDocumento": "",
+      "localInstalacao": localInstalacao,
+      "control": Control,
+    };
+
+    return equipamento;
+  }
+
+  getData() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    var json = opcs.getString("equipamentos");
+    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaa");
+    print(json);
+    var eqp = jsonDecode(json!);
+    EquipamentoNovoIDs = eqp["EquipamentoNovoIDs"];
+    EquipamentoNovoCodigos = List<String>.from(eqp["EquipamentoNovoCodigos"] as List);
+
+    if (EquipamentoNovoCodigos.length == 1) {
+      selecionadonovo = EquipamentoNovoCodigos[0];
+    }
+
+    AcessoriosID = eqp["AcessoriosID"];
+    AcessoriosDescricao = eqp["AcessoriosDescricao"];
+    EquipamentosVeiculoIDs = eqp["EquipamentosVeiculoIDs"];
+    EquipamentoVeiculoCodigos = List<String>.from(eqp["EquipamentoVeiculoCodigos"] as List);
+    localInstalacao = eqp["localInstalacao"];
+    stringEquipamento = eqp["stringEquipamento"];
+    eqnovodoc = eqp["EquipamentoNovoDocumento"];
+    eqveiculodoc = eqp["EquipamentoVeiculoDocumento"];
+
+    notifierInstance.notifyListeners();
+  }
+}
+
+class ManutencaoState {
+  EquipamentosChangeNotifier notifierInstance;
+
+  ManutencaoState(this.notifierInstance);
+
+  String? situacaoEquipamento;
+  var EquipamentoNovoIDs;
+  List<String> EquipamentoNovoCodigos = [];
+  var AcessoriosID;
+  var AcessoriosDescricao;
+  var EquipamentosVeiculoIDs;
+  List<String> EquipamentoVeiculoCodigos = [];
+  String? localInstalacao;
+  var stringEquipamento;
+  var selecionadonovo;
+  var selecionadoveiculo;
+  var situequip;
+
+  getData() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    var json = opcs.getString("equipamentos");
+    var eqp = jsonDecode(json!);
+
+    EquipamentoNovoIDs = eqp["EquipamentoNovoIDs"];
+    EquipamentoNovoCodigos = List<String>.from(eqp["EquipamentoNovoCodigos"] as List);
+    AcessoriosID = eqp["AcessoriosID"];
+    AcessoriosDescricao = eqp["AcessoriosDescricao"];
+    EquipamentosVeiculoIDs = eqp["EquipamentosVeiculoIDs"];
+    EquipamentoVeiculoCodigos = List<String>.from(eqp["EquipamentoVeiculoCodigos"] as List);
+
+    if (EquipamentoVeiculoCodigos.length == 1) {
+      selecionadoveiculo = EquipamentoVeiculoCodigos[0];
+    }
+
+    localInstalacao = eqp["localInstalacao"];
+    stringEquipamento = eqp["stringEquipamento"];
+
+    notifierInstance.notifyListeners();
+  }
+
+  bool isValid() {
+    return localInstalacao != null;
+  }
+
+  Map<String, dynamic> getEquipamento() {
+
+    final id = EquipamentosVeiculoIDs[EquipamentoVeiculoCodigos.indexOf(selecionadoveiculo)];
+
+    Map<String, dynamic> equipamento = {
+      "EquipamentoInstaladoID": id,
+      "EquipamentoInstaladoCodigo": selecionadoveiculo,
+      "EquipamentoInstaladoDocumento": "",
+      "EquipamentosRemovidoID": "", // Armazena o ID do equipamento removido
+      "EquipamentoRemovidoCodigo": "", // Armazena o código do equipamento removido (veículo selecionado)
+      "EquipamentoRemovidoDocumento": "",
+      "localInstalacao": localInstalacao, // Armazena o local de instalação selecionado
+      "control": "MANUTENCAO",
+    };
+
+    return equipamento;
+  }
+}
+
+class RetiradaState {
+  EquipamentosChangeNotifier instanceNotifier;
+
+  RetiradaState(this.instanceNotifier);
+
+  String Control = "RETIRADA";
+  String? situacaoEquipamento;
+  var EquipamentoNovoIDs;
+  List<String> EquipamentoNovoCodigos = [];
+  var AcessoriosID;
+  var AcessoriosDescricao;
+  var EquipamentosVeiculoIDs;
+  List<String> EquipamentoVeiculoCodigos = [];
+  String? localInstalacao;
+  var stringEquipamento;
+  var selecionadonovo;
+  var selecionadoveiculo;
+  var situequip;
+  var eqnovodoc;
+  var eqveiculodoc;
+  List<String>? codigosEq;
+
+  getData() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    var json = opcs.getString("equipamentos");
+    var eqp = jsonDecode(json!);
+
+    EquipamentoNovoIDs = eqp["EquipamentoNovoIDs"];
+    EquipamentoNovoCodigos = List<String>.from(eqp["EquipamentoNovoCodigos"] as List);
+    AcessoriosID = eqp["AcessoriosID"];
+    AcessoriosDescricao = eqp["AcessoriosDescricao"];
+    EquipamentosVeiculoIDs = eqp["EquipamentosVeiculoIDs"];
+
+    EquipamentoVeiculoCodigos = List<String>.from(eqp["EquipamentoVeiculoCodigos"] as List);
+
+    codigosEq = EquipamentoVeiculoCodigos;
+
+    if (codigosEq?.length == 1) {
+      selecionadoveiculo = codigosEq![0];
+    }
+
+    localInstalacao = eqp["localInstalacao"];
+    stringEquipamento = eqp["stringEquipamento"];
+    eqnovodoc = eqp["EquipamentoNovoDocumento"];
+    eqveiculodoc = eqp["EquipamentoVeiculoDocumento"];
+
+    instanceNotifier.notifyListeners();
+  }
+
+  bool isValid() {
+    return situacaoEquipamento != null;
+  }
+
+
+  Map<String, dynamic> getEquipamento() {
+
+    final id = EquipamentosVeiculoIDs[EquipamentoVeiculoCodigos.indexOf(selecionadoveiculo)];
+
+    Map<String, dynamic> equipamento = {
+      "EquipamentoInstaladoID": "",
+      "EquipamentoInstaladoCodigo": "",
+      "EquipamentoInstaladoDocumento": "",
+      "EquipamentosRemovidoID": id, // Armazena o ID do equipamento removido
+      "EquipamentoRemovidoCodigo":
+          selecionadoveiculo, // Armazena o código do equipamento removido (veículo selecionado)
+      "EquipamentoRemovidoDocumento": "",
+      "localInstalacao": localInstalacao, // Armazena o local de instalação selecionado
+      "control": Control,
+    };
+
+    return equipamento;
+  }
+}
+
+class TrocaState {
+  EquipamentosChangeNotifier notifierInstance;
+
+  TrocaState(this.notifierInstance);
+
+  String? situacaoEquipamento;
+  var EquipamentoNovoIDs;
+  List<String> EquipamentoNovoCodigos = [];
+  var AcessoriosID;
+  var AcessoriosDescricao;
+  var EquipamentosVeiculoIDs;
+  List<String> EquipamentoVeiculoCodigos = [];
+  String? localInstalacao;
+  var stringEquipamento;
+  var selecionadonovo;
+  var selecionadoveiculo;
+  var situequip;
+  var eqnovodoc;
+  var eqveiculodoc;
+  var Control = "TROCA";
+
+  bool isValid() {
+    return situacaoEquipamento != null && localInstalacao != null;
+  }
+
+  Map<String, dynamic> getEquipamento() {
+    var eqremovid;
+    var eqremoviddoc;
+    for (int i = 0; i < EquipamentoVeiculoCodigos.length; i++) {
+      if (EquipamentoVeiculoCodigos[i] == selecionadoveiculo) {
+        eqremovid = EquipamentosVeiculoIDs[
+            i]; // Armazena o ID do equipamento removido correspondente ao veículo selecionado
+        eqremoviddoc = eqveiculodoc[i];
+      }
+    }
+    var eqnovosid;
+    var eqnovosdoc;
+    for (int i = 0; i < EquipamentoNovoCodigos.length; i++) {
+      if (EquipamentoNovoCodigos[i] == selecionadonovo) {
+        eqnovosid = EquipamentoNovoIDs[i];
+        eqnovosdoc = eqnovodoc[i];
+      }
+    }
+    Map<String, dynamic> equipamento = {
+      "EquipamentoInstaladoID": eqnovosid,
+      "EquipamentoInstaladoCodigo": selecionadonovo,
+      "EquipamentoInstaladoDocumento": eqnovosdoc,
+      "EquipamentosRemovidoID": eqremovid, // Armazena o ID do equipamento removido
+      "EquipamentoRemovidoCodigo":
+          selecionadoveiculo, // Armazena o código do equipamento removido (veículo selecionado)
+      "EquipamentoRemovidoDocumento": eqremoviddoc,
+      "localInstalacao": localInstalacao, // Armazena o local de instalação selecionado
+      "control": Control,
+    };
+
+    return equipamento;
+  }
+
+  getData() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    var json = opcs.getString("equipamentos");
+    var eqp = jsonDecode(json!);
+
+    EquipamentoNovoIDs = eqp["EquipamentoNovoIDs"];
+    EquipamentoNovoCodigos = List<String>.from(eqp["EquipamentoNovoCodigos"] as List);
+
+    if (EquipamentoNovoCodigos.length == 1) {
+      selecionadonovo = EquipamentoNovoCodigos[0];
+    }
+
+    AcessoriosID = eqp["AcessoriosID"];
+    AcessoriosDescricao = eqp["AcessoriosDescricao"];
+    EquipamentosVeiculoIDs = eqp["EquipamentosVeiculoIDs"];
+    EquipamentoVeiculoCodigos = List<String>.from(eqp["EquipamentoVeiculoCodigos"] as List);
+
+    if (EquipamentoVeiculoCodigos.length == 1) {
+      selecionadoveiculo = EquipamentoVeiculoCodigos[0];
+    }
+
+    localInstalacao = eqp["localInstalacao"];
+    stringEquipamento = eqp["stringEquipamento"];
+    eqnovodoc = eqp["EquipamentoNovoDocumento"];
+    eqveiculodoc = eqp["EquipamentoVeiculoDocumento"];
+    notifierInstance.notifyListeners();
+  }
+}
+
+class EquipamentosChangeNotifier extends ChangeNotifier {
+  InstalacaoState? instalacaoState;
+  ManutencaoState? manutencaoState;
+  RetiradaState? retiradaState;
+  TrocaState? trocaState;
+
+  bool isAllValid() {
+    final instalacaoValid = instalacaoState == null || instalacaoState!.isValid();
+    final manutencaoValid = manutencaoState == null || manutencaoState!.isValid();
+    final retiradaValid = retiradaState == null || retiradaState!.isValid();
+    final trocaValid = trocaState == null || trocaState!.isValid();
+
+    return instalacaoValid && manutencaoValid && retiradaValid && trocaValid;
   }
 }
 
@@ -60,53 +373,127 @@ class _EquipamentosState extends State<Equipamentos> {
     super.initState();
   }
 
+  irProximo(EquipamentosChangeNotifier state) {
+    debugPrint('botao proximo acionado');
+    debugPrint('manutencao exists: ${state.manutencaoState != null}');
+    debugPrint('retirada exists: ${state.retiradaState != null}');
+    debugPrint('troca exists: ${state.trocaState != null}');
+    debugPrint('instalacao exists: ${state.instalacaoState != null}');
+
+    List<Map<String, dynamic>> equipamentos = [];
+
+    if (state.manutencaoState != null) {
+      equipamentos.add(state.manutencaoState!.getEquipamento());
+    }
+
+    if (state.retiradaState != null) {
+      equipamentos.add(state.retiradaState!.getEquipamento());
+    }
+
+    if (state.trocaState != null) {
+      equipamentos.add(state.trocaState!.getEquipamento());
+    }
+
+    if (state.instalacaoState != null) {
+      equipamentos.add(state.instalacaoState!.getEquipamento());
+    }
+
+    // if (equipamentos.length != 0) {
+    //   getequipamentos().setEquipamento(jsonEncode(equipamentos) as dynamic);
+    // }
+
+    for (final equip in equipamentos) {
+      getequipamentos().setEquipamento(equip);
+    }
+
+    // equipamentos.forEach((element) {
+    //   getequipamentos().setEquipamento(element);
+    // });
+
+    Navigator.of(context).pop();
+
+    Navigator.push(
+      context,
+      // TODO: ROTA Acessorios()
+      MaterialPageRoute(builder: (context) => FotoHodometro()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: Text('Equipamentos'),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 2.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                alignment: Alignment.center,
-                child: Text(
-                  "$os", // Exibe o valor da variável "os"
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              SizedBox(height: 16.0), // Espaçamento vertical
-              if (control.toLowerCase().contains(
-                  "manut")) // Verifica se a variável "control" contém a palavra "manut" (em minúsculas)
-                ContainerManutencao(), // Exibe o widget ContainerManutencao
-              if (control.toLowerCase().contains(
-                  "retirada")) // Verifica se a variável "control" contém a palavra "retirada" (em minúsculas)
-                ContainerRetirada(), // Exibe o widget ContainerRetirada
-              if (control.toLowerCase().contains(
-                  "instal")) // Verifica se a variável "control" contém a palavra "instal" (em minúsculas)
-                ContainerInstalacao(), // Exibe o widget ContainerInstalacao
-              if (control.toLowerCase().contains(
-                  "troca")) // Verifica se a variável "control" contém a palavra "troca" (em minúsculas)
-                ContainerTroca(), // Exibe o widget ContainerTroca
-            ],
+    return ChangeNotifierProvider(
+        create: (context) => EquipamentosChangeNotifier(),
+        child: Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            title: Text('Equipamentos'),
           ),
-        ),
-      ),
-    );
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 2.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      "$os", // Exibe o valor da variável "os"
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16.0), // Espaçamento vertical
+                  if (control.toLowerCase().contains(
+                      "manut")) // Verifica se a variável "control" contém a palavra "manut" (em minúsculas)
+                    ContainerManutencao(), // Exibe o widget ContainerManutencao
+                  if (control.toLowerCase().contains(
+                      "retirada")) // Verifica se a variável "control" contém a palavra "retirada" (em minúsculas)
+                    ContainerRetirada(), // Exibe o widget ContainerRetirada
+                  if (control.toLowerCase().contains(
+                      "instal")) // Verifica se a variável "control" contém a palavra "instal" (em minúsculas)
+                    ContainerInstalacao(), // Exibe o widget ContainerInstalacao
+                  if (control.toLowerCase().contains(
+                      "troca")) // Verifica se a variável "control" contém a palavra "troca" (em minúsculas)
+                    ContainerTroca(), // Exibe o widget ContainerTroca
+
+                  Consumer<EquipamentosChangeNotifier>(builder: (context, state, child) {
+                    return BotaoProximo(onPressed: () {
+                      if (state.isAllValid()) {
+                        irProximo(state);
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text('Erro'),
+                              content: const Text('Por favor, preencha todas as respostas.'),
+                              actions: [
+                                TextButton(
+                                  child: const Text('OK'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                    });
+                  })
+                ],
+              ),
+            ),
+          ),
+        ));
   }
 }
 
@@ -116,59 +503,22 @@ class ContainerRetirada extends StatefulWidget {
 }
 
 class _ContainerRetiradaState extends State<ContainerRetirada> {
-  String Control = "RETIRADA";
-  String? situacaoEquipamento;
-  var EquipamentoNovoIDs;
-  List<String> EquipamentoNovoCodigos = [];
-  var AcessoriosID;
-  var AcessoriosDescricao;
-  var EquipamentosVeiculoIDs;
-  List<String> EquipamentoVeiculoCodigos = [];
-  String? localInstalacao;
-  var stringEquipamento;
-  var selecionadonovo;
-  var selecionadoveiculo;
-  var situequip;
-  var eqnovodoc;
-  var eqveiculodoc;
-  List<String>? codigosEq;
-
-  getdata() async {
-    SharedPreferences opcs = await SharedPreferences.getInstance();
-    var json = opcs.getString("equipamentos");
-    var eqp = jsonDecode(json!);
-    setState(() {
-      EquipamentoNovoIDs = eqp["EquipamentoNovoIDs"];
-      EquipamentoNovoCodigos = List<String>.from(eqp["EquipamentoNovoCodigos"] as List);
-      AcessoriosID = eqp["AcessoriosID"];
-      AcessoriosDescricao = eqp["AcessoriosDescricao"];
-      EquipamentosVeiculoIDs = eqp["EquipamentosVeiculoIDs"];
-
-      EquipamentoVeiculoCodigos = List<String>.from(eqp["EquipamentoVeiculoCodigos"] as List);
-
-      codigosEq = EquipamentoVeiculoCodigos;
-
-      if (codigosEq?.length == 1) {
-        selecionadoveiculo = codigosEq![0];
-      }
-
-      localInstalacao = eqp["localInstalacao"];
-      stringEquipamento = eqp["stringEquipamento"];
-      eqnovodoc = eqp["EquipamentoNovoDocumento"];
-      eqveiculodoc = eqp["EquipamentoVeiculoDocumento"];
-      //var mapanovo = Map.fromIterables(EquipamentoNovoIDs, EquipamentoNovoCodigos);
-      //var mapveiculo = Map.fromIterables(EquipamentosVeiculoIDs, EquipamentoVeiculoCodigos );
-    });
-  }
-
   @override
   void initState() {
-    getdata();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final wholeState = Provider.of<EquipamentosChangeNotifier>(context);
+    var state = wholeState.retiradaState;
+
+    if (wholeState.retiradaState == null) {
+      wholeState.retiradaState = RetiradaState(wholeState);
+      state = wholeState.retiradaState;
+      state?.getData();
+    }
+
     return Padding(
       padding: EdgeInsets.all(16.0),
       child: Column(
@@ -176,13 +526,14 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
         children: [
           // Input equipamento
           DropdownButton<String>(
-            value: selecionadoveiculo, // Valor selecionado no dropdown
+            value: state?.selecionadoveiculo, // Valor selecionado no dropdown
             onChanged: (String? newValue) {
               setState(() {
-                selecionadoveiculo = newValue; // Atualiza o valor selecionado no estado
+                state!.selecionadoveiculo = newValue; // Atualiza o valor selecionado no estado
+                state.instanceNotifier.notifyListeners();
               });
             },
-            items: codigosEq?.map((String item) {
+            items: state?.codigosEq?.map((String item) {
               return DropdownMenuItem<String>(
                 value: item, // Valor do item do dropdown
                 child: Row(
@@ -214,10 +565,12 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
                   style: TextStyle(fontSize: 14.0),
                 ),
                 value: 'OK', // Valor associado à opção "OK"
-                groupValue: situacaoEquipamento, // Valor selecionado atualmente no grupo de opções
+                groupValue:
+                    state?.situacaoEquipamento, // Valor selecionado atualmente no grupo de opções
                 onChanged: (String? value) {
                   setState(() {
-                    situacaoEquipamento = value; // Atualiza o valor selecionado no estado
+                    state!.situacaoEquipamento = value;
+                    state.instanceNotifier.notifyListeners();
                   });
                 },
               ),
@@ -227,77 +580,18 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
                   style: TextStyle(fontSize: 14.0),
                 ),
                 value: 'Com defeito', // Valor associado à opção "Com defeito"
-                groupValue: situacaoEquipamento, // Valor selecionado atualmente no grupo de opções
+                groupValue:
+                    state?.situacaoEquipamento, // Valor selecionado atualmente no grupo de opções
                 onChanged: (String? value) {
                   setState(() {
-                    situacaoEquipamento = value; // Atualiza o valor selecionado no estado
+                    state!.situacaoEquipamento = value;
+                    state.instanceNotifier
+                        .notifyListeners(); // Atualiza o valor selecionado no estado
                   });
                 },
               ),
             ],
           ),
-          SizedBox(height: 16.0),
-          // Input local de instalação
-
-          SizedBox(height: 8.0),
-
-          SizedBox(height: 8.0),
-          BotaoProximo(
-            onPressed: () {
-              if (situacaoEquipamento != null) {
-                // Verifica se a situação do equipamento foi preenchida
-                var eqremovid;
-                var eqremoviddoc;
-                for (int i = 0; i < EquipamentoVeiculoCodigos.length; i++) {
-                  if (EquipamentoVeiculoCodigos[i] == selecionadoveiculo) {
-                    eqremovid = EquipamentosVeiculoIDs[
-                        i]; // Armazena o ID do equipamento removido correspondente ao veículo selecionado
-                    eqremoviddoc = eqveiculodoc[i];
-                  }
-                }
-                Map<String, dynamic> equipamentos = {
-                  "EquipamentoInstaladoID": "",
-                  "EquipamentoInstaladoCodigo": "",
-                  "EquipamentoInstaladoDocumento": "",
-                  "EquipamentosRemovidoID": eqremovid, // Armazena o ID do equipamento removido
-                  "EquipamentoRemovidoCodigo":
-                      selecionadoveiculo, // Armazena o código do equipamento removido (veículo selecionado)
-                  "EquipamentoRemovidoDocumento": eqremoviddoc,
-                  "localInstalacao": localInstalacao, // Armazena o local de instalação selecionado
-                  "control": Control,
-                };
-                getequipamentos().setEquipamento(
-                    equipamentos); // Define os equipamentos selecionados no objeto getequipamentos()
-                salvareqtec().enviar();
-                //Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          FotoHodometro()), // Navega para a próxima tela (FotoHodometro)
-                );
-              } else {
-                // Exibir uma mensagem de erro informando que todas as respostas devem ser preenchidas
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: Text('Erro'),
-                      content: Text('Por favor, preencha todas as respostas.'),
-                      actions: [
-                        TextButton(
-                          child: Text('OK'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                );
-              }
-            },
-          )
         ],
       ),
     );
@@ -310,47 +604,22 @@ class ContainerManutencao extends StatefulWidget {
 }
 
 class _ContainerManutencaoState extends State<ContainerManutencao> {
-  String? situacaoEquipamento;
-  var EquipamentoNovoIDs;
-  List<String> EquipamentoNovoCodigos = [];
-  var AcessoriosID;
-  var AcessoriosDescricao;
-  var EquipamentosVeiculoIDs;
-  List<String> EquipamentoVeiculoCodigos = [];
-  String? localInstalacao;
-  var stringEquipamento;
-  var selecionadonovo;
-  var selecionadoveiculo;
-  var situequip;
-  getdata() async {
-    SharedPreferences opcs = await SharedPreferences.getInstance();
-    var json = opcs.getString("equipamentos");
-    var eqp = jsonDecode(json!);
-    setState(() {
-      EquipamentoNovoIDs = eqp["EquipamentoNovoIDs"];
-      EquipamentoNovoCodigos = List<String>.from(eqp["EquipamentoNovoCodigos"] as List);
-      AcessoriosID = eqp["AcessoriosID"];
-      AcessoriosDescricao = eqp["AcessoriosDescricao"];
-      EquipamentosVeiculoIDs = eqp["EquipamentosVeiculoIDs"];
-      EquipamentoVeiculoCodigos = List<String>.from(eqp["EquipamentoVeiculoCodigos"] as List);
-
-      if (EquipamentoVeiculoCodigos.length == 1) {
-        selecionadoveiculo = EquipamentoVeiculoCodigos[0];
-      }
-
-      localInstalacao = eqp["localInstalacao"];
-      stringEquipamento = eqp["stringEquipamento"];
-    });
-  }
-
   @override
   void initState() {
-    getdata();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final wholeState = Provider.of<EquipamentosChangeNotifier>(context);
+    var state = wholeState.manutencaoState;
+
+    if (wholeState.manutencaoState == null) {
+      wholeState.manutencaoState = ManutencaoState(wholeState);
+      state = wholeState.manutencaoState;
+      state?.getData();
+    }
+
     return Padding(
       padding: EdgeInsets.all(16.0),
       child: Column(
@@ -358,13 +627,14 @@ class _ContainerManutencaoState extends State<ContainerManutencao> {
         children: [
           // Input equipamento
           DropdownButton<String>(
-            value: selecionadoveiculo,
+            value: state?.selecionadoveiculo,
             onChanged: (String? newValue) {
               setState(() {
-                selecionadoveiculo = newValue;
+                state!.selecionadoveiculo = newValue;
+                state.notifierInstance.notifyListeners();
               });
             },
-            items: EquipamentoVeiculoCodigos.map((item) {
+            items: state?.EquipamentoVeiculoCodigos.map((item) {
               return DropdownMenuItem<String>(
                 value: item,
                 child: Row(
@@ -393,53 +663,21 @@ class _ContainerManutencaoState extends State<ContainerManutencao> {
             child: TextField(
               textAlignVertical: TextAlignVertical.center,
               decoration: InputDecoration(
-                hintText: localInstalacao,
+                hintText: state?.localInstalacao,
                 border: OutlineInputBorder(),
               ),
               onChanged: (String? value) {
                 setState(() {
-                  localInstalacao = value;
+                  state!.localInstalacao = value;
+                  state.notifierInstance.notifyListeners();
                 });
               },
               onSubmitted: (value) {
-                localInstalacao = value;
+                state!.localInstalacao = value;
+                state.notifierInstance.notifyListeners();
               },
             ),
           ),
-          SizedBox(height: 8.0),
-          BotaoProximo(
-            onPressed: () {
-              if (localInstalacao != null) {
-                salvareqtec().enviar();
-                //Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  //TODO ROTA Acessorios()
-
-                  MaterialPageRoute(builder: (context) => FotoHodometro()),
-                );
-              } else {
-                // Exibir uma mensagem de erro informando que todas as respostas devem ser preenchidas
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: Text('Erro'),
-                      content: Text('Por favor, preencha todas as respostas.'),
-                      actions: [
-                        TextButton(
-                          child: Text('OK'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                );
-              }
-            },
-          )
         ],
       ),
     );
@@ -454,56 +692,21 @@ class ContainerTroca extends StatefulWidget {
 }
 
 class _ContainerTrocaState extends State<ContainerTroca> {
-  String? situacaoEquipamento;
-  var EquipamentoNovoIDs;
-  List<String> EquipamentoNovoCodigos = [];
-  var AcessoriosID;
-  var AcessoriosDescricao;
-  var EquipamentosVeiculoIDs;
-  List<String> EquipamentoVeiculoCodigos = [];
-  String? localInstalacao;
-  var stringEquipamento;
-  var selecionadonovo;
-  var selecionadoveiculo;
-  var situequip;
-  var eqnovodoc;
-  var eqveiculodoc;
-  var Control = "TROCA";
-  getdata() async {
-    SharedPreferences opcs = await SharedPreferences.getInstance();
-    var json = opcs.getString("equipamentos");
-    var eqp = jsonDecode(json!);
-    setState(() {
-      EquipamentoNovoIDs = eqp["EquipamentoNovoIDs"];
-      EquipamentoNovoCodigos = List<String>.from(eqp["EquipamentoNovoCodigos"] as List);
-
-      if (EquipamentoNovoCodigos.length == 1) {
-        selecionadonovo = EquipamentoNovoCodigos[0];
-      }
-
-      AcessoriosID = eqp["AcessoriosID"];
-      AcessoriosDescricao = eqp["AcessoriosDescricao"];
-      EquipamentosVeiculoIDs = eqp["EquipamentosVeiculoIDs"];
-      EquipamentoVeiculoCodigos = List<String>.from(eqp["EquipamentoVeiculoCodigos"] as List);
-
-      if (EquipamentoVeiculoCodigos.length == 1) {
-        selecionadoveiculo = EquipamentoVeiculoCodigos[0];
-      }
-
-      localInstalacao = eqp["localInstalacao"];
-      stringEquipamento = eqp["stringEquipamento"];
-      eqnovodoc = eqp["EquipamentoNovoDocumento"];
-      eqveiculodoc = eqp["EquipamentoVeiculoDocumento"];
-    });
-  }
-
   @override
   void initState() {
-    getdata();
     super.initState();
   }
 
   Widget build(BuildContext context) {
+    final wholeState = Provider.of<EquipamentosChangeNotifier>(context);
+    var state = wholeState.trocaState;
+
+    if (wholeState.trocaState == null) {
+      wholeState.trocaState = TrocaState(wholeState);
+      state = wholeState.trocaState;
+      state?.getData();
+    }
+
     return Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
@@ -511,13 +714,14 @@ class _ContainerTrocaState extends State<ContainerTroca> {
           children: [
             // Input equipamento
             DropdownButton<String>(
-              value: selecionadonovo,
+              value: state?.selecionadonovo,
               onChanged: (String? newValue) {
                 setState(() {
-                  selecionadonovo = newValue;
+                  state!.selecionadonovo = newValue;
+                  state.notifierInstance.notifyListeners();
                 });
               },
-              items: EquipamentoNovoCodigos.map((item) {
+              items: state?.EquipamentoNovoCodigos.map((item) {
                 return DropdownMenuItem<String>(
                   value: item,
                   child: Row(
@@ -533,13 +737,14 @@ class _ContainerTrocaState extends State<ContainerTroca> {
             ),
             SizedBox(height: 16.0),
             DropdownButton<String>(
-              value: selecionadoveiculo,
+              value: state?.selecionadoveiculo,
               onChanged: (String? newValue) {
                 setState(() {
-                  selecionadoveiculo = newValue;
+                  state!.selecionadoveiculo = newValue;
+                  state.notifierInstance.notifyListeners();
                 });
               },
-              items: EquipamentoVeiculoCodigos.map((item) {
+              items: state?.EquipamentoVeiculoCodigos.map((item) {
                 return DropdownMenuItem<String>(
                   value: item,
                   child: Row(
@@ -573,10 +778,11 @@ class _ContainerTrocaState extends State<ContainerTroca> {
                     style: TextStyle(fontSize: 14.0),
                   ),
                   value: 'OK',
-                  groupValue: situacaoEquipamento,
+                  groupValue: state?.situacaoEquipamento,
                   onChanged: (String? value) {
                     setState(() {
-                      situacaoEquipamento = value;
+                      state!.situacaoEquipamento = value;
+                      state.notifierInstance.notifyListeners();
                     });
                   },
                 ),
@@ -586,10 +792,11 @@ class _ContainerTrocaState extends State<ContainerTroca> {
                     style: TextStyle(fontSize: 14.0),
                   ),
                   value: 'Com defeito',
-                  groupValue: situacaoEquipamento,
+                  groupValue: state?.situacaoEquipamento,
                   onChanged: (String? value) {
                     setState(() {
-                      situacaoEquipamento = value;
+                      state!.situacaoEquipamento = value;
+                      state.notifierInstance.notifyListeners();
                     });
                   },
                 ),
@@ -610,82 +817,22 @@ class _ContainerTrocaState extends State<ContainerTroca> {
               child: TextField(
                 textAlignVertical: TextAlignVertical.center,
                 decoration: InputDecoration(
-                  hintText: localInstalacao,
+                  hintText: state?.localInstalacao,
                   border: OutlineInputBorder(),
                 ),
                 onChanged: (String? value) {
                   setState(() {
-                    localInstalacao = value;
+                    state!.localInstalacao = value;
+                    state.notifierInstance.notifyListeners();
                   });
                 },
                 onSubmitted: (value) {
-                  localInstalacao = value;
+                  state!.localInstalacao = value;
+                  state.notifierInstance.notifyListeners();
                 },
               ),
             ),
             SizedBox(height: 8.0),
-            BotaoProximo(
-              onPressed: () {
-                if (situacaoEquipamento != null && localInstalacao != null) {
-                  var eqremovid;
-                  var eqremoviddoc;
-                  for (int i = 0; i < EquipamentoVeiculoCodigos.length; i++) {
-                    if (EquipamentoVeiculoCodigos[i] == selecionadoveiculo) {
-                      eqremovid = EquipamentosVeiculoIDs[
-                          i]; // Armazena o ID do equipamento removido correspondente ao veículo selecionado
-                      eqremoviddoc = eqveiculodoc[i];
-                    }
-                  }
-                  var eqnovosid;
-                  var eqnovosdoc;
-                  for (int i = 0; i < EquipamentoNovoCodigos.length; i++) {
-                    if (EquipamentoNovoCodigos[i] == selecionadonovo) {
-                      eqnovosid = EquipamentoNovoIDs[i];
-                      eqnovosdoc = eqnovodoc[i];
-                    }
-                  }
-                  Map<String, dynamic> equipamentos = {
-                    "EquipamentoInstaladoID": eqnovosid,
-                    "EquipamentoInstaladoCodigo": selecionadonovo,
-                    "EquipamentoInstaladoDocumento": eqnovosdoc,
-                    "EquipamentosRemovidoID": eqremovid, // Armazena o ID do equipamento removido
-                    "EquipamentoRemovidoCodigo":
-                        selecionadoveiculo, // Armazena o código do equipamento removido (veículo selecionado)
-                    "EquipamentoRemovidoDocumento": eqremoviddoc,
-                    "localInstalacao":
-                        localInstalacao, // Armazena o local de instalação selecionado
-                    "control": Control,
-                  };
-                  getequipamentos().setEquipamento(equipamentos);
-                  salvareqtec().enviar();
-                  //Navigator.of(context).pop();
-                  Navigator.push(
-                    context,
-                    //TODO ROTA Acessorios()
-                    MaterialPageRoute(builder: (context) => FotoHodometro()),
-                  );
-                } else {
-                  // Exibir uma mensagem de erro informando que todas as respostas devem ser preenchidas
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text('Erro'),
-                        content: Text('Por favor, preencha todas as respostas.'),
-                        actions: [
-                          TextButton(
-                            child: Text('OK'),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                }
-              },
-            )
           ],
         ));
   }
@@ -699,105 +846,22 @@ class ContainerInstalacao extends StatefulWidget {
 }
 
 class _ContainerInstalacaoState extends State<ContainerInstalacao> {
-  var EquipamentoNovoIDs;
-  List<String> EquipamentoNovoCodigos = [];
-  var AcessoriosID;
-  var AcessoriosDescricao;
-  var EquipamentosVeiculoIDs;
-  List<String> EquipamentoVeiculoCodigos = [];
-  String? localInstalacao;
-  var stringEquipamento;
-  var selecionadonovo;
-  var selecionadoveiculo;
-  var Control = "INSTALACAO";
-  var eqnovodoc;
-  var eqveiculodoc;
-
-  getdata() async {
-    SharedPreferences opcs = await SharedPreferences.getInstance();
-    var json = opcs.getString("equipamentos");
-    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaa");
-    print(json);
-    var eqp = jsonDecode(json!);
-    setState(() {
-      EquipamentoNovoIDs = eqp["EquipamentoNovoIDs"];
-      EquipamentoNovoCodigos = List<String>.from(eqp["EquipamentoNovoCodigos"] as List);
-
-      if (EquipamentoNovoCodigos.length == 1) {
-        selecionadonovo = EquipamentoNovoCodigos[0];
-      }
-
-      AcessoriosID = eqp["AcessoriosID"];
-      AcessoriosDescricao = eqp["AcessoriosDescricao"];
-      EquipamentosVeiculoIDs = eqp["EquipamentosVeiculoIDs"];
-      EquipamentoVeiculoCodigos = List<String>.from(eqp["EquipamentoVeiculoCodigos"] as List);
-      localInstalacao = eqp["localInstalacao"];
-      stringEquipamento = eqp["stringEquipamento"];
-      eqnovodoc = eqp["EquipamentoNovoDocumento"];
-      eqveiculodoc = eqp["EquipamentoVeiculoDocumento"];
-    });
-  }
-
   @override
   void initState() {
-    getdata();
     super.initState();
-  }
-
-  void proximo() {
-    var eqnovosid;
-    var eqnovosdoc;
-    for (int i = 0; i < EquipamentoNovoCodigos.length; i++) {
-      if (EquipamentoNovoCodigos[i] == selecionadonovo) {
-        eqnovosid = EquipamentoNovoIDs[i];
-        eqnovosdoc = eqnovodoc[i];
-      }
-    }
-    Map<String, dynamic> equipamentos = {
-      "EquipamentoInstaladoID": eqnovosid,
-      "EquipamentoInstaladoCodigo": selecionadonovo,
-      "EquipamentoInstaladoDocumento": eqnovosdoc,
-      "EquipamentosRemovidoID": "",
-      "EquipamentoRemovidoCodigo": "",
-      "EquipamentoRemovidoDocumento": "",
-      "localInstalacao": localInstalacao,
-      "control": Control,
-    };
-
-    getequipamentos().setEquipamento(equipamentos);
-
-    if (localInstalacao != null) {
-      salvareqtec().enviar();
-      //Navigator.of(context).pop();
-      Navigator.push(
-        context,
-        //TODO ROTA Acessorios()
-        MaterialPageRoute(builder: (context) => FotoHodometro()),
-      );
-    } else {
-      // Exibir uma mensagem de erro informando que todas as respostas devem ser preenchidas
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Erro'),
-            content: const Text('Por favor, preencha todas as respostas.'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final wholeState = Provider.of<EquipamentosChangeNotifier>(context);
+    var state = wholeState.instalacaoState;
+
+    if (wholeState.instalacaoState == null) {
+      wholeState.instalacaoState = InstalacaoState(wholeState);
+      state = wholeState.instalacaoState;
+      state?.getData();
+    }
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -805,13 +869,14 @@ class _ContainerInstalacaoState extends State<ContainerInstalacao> {
         children: [
           // Input equipamento
           DropdownButton<String>(
-            value: selecionadonovo,
+            value: state?.selecionadonovo,
             onChanged: (String? newValue) {
               setState(() {
-                selecionadonovo = newValue;
+                state!.selecionadonovo = newValue;
+                state.notifierInstance.notifyListeners();
               });
             },
-            items: EquipamentoNovoCodigos.map((String item) {
+            items: state?.EquipamentoNovoCodigos.map((String item) {
               return DropdownMenuItem<String>(
                 value: item,
                 child: Row(
@@ -834,23 +899,21 @@ class _ContainerInstalacaoState extends State<ContainerInstalacao> {
             child: TextField(
               textAlignVertical: TextAlignVertical.center,
               decoration: InputDecoration(
-                hintText: localInstalacao,
+                hintText: state?.localInstalacao,
                 border: const OutlineInputBorder(),
               ),
               onChanged: (String? value) {
                 setState(() {
-                  localInstalacao = value;
+                  state!.localInstalacao = value;
+                  state.notifierInstance.notifyListeners();
                 });
               },
               onSubmitted: (value) {
-                localInstalacao = value;
+                state!.localInstalacao = value;
+                state.notifierInstance.notifyListeners();
               },
             ),
           ),
-          const SizedBox(height: 8.0),
-          BotaoProximo(
-            onPressed: proximo,
-          )
         ],
       ),
     );

@@ -308,7 +308,7 @@ class Equipamento {
   EquipamentoTec? equipamentoRetirado;
   EquipamentoTec? equipamentoRetiradoTec;
   String? localInstalacao;
-  String? localIntalacaoTec;
+  String? localInstalacaoTec;
 
   Equipamento(
       {this.id,
@@ -319,7 +319,7 @@ class Equipamento {
       this.equipamentoRetirado,
       this.equipamentoRetiradoTec,
       this.localInstalacao,
-      this.localIntalacaoTec});
+      this.localInstalacaoTec});
 
   Equipamento.fromJson(Map<String, dynamic> json)
       : id = json['id'],
@@ -338,7 +338,7 @@ class Equipamento {
             ? EquipamentoTec.fromJson(json['equipamentoRetiradoTec'])
             : null,
         localInstalacao = json['localInstalacao'],
-        localIntalacaoTec = json['localIntalacaoTec'];
+        localInstalacaoTec = json['localInstalacaoTec'];
 
   // fromJson(Map<String, dynamic> json) {
   //   id = json['id'];
@@ -362,7 +362,7 @@ class Equipamento {
     data['equipamentoRetirado'] = this.equipamentoRetirado;
     data['equipamentoRetiradoTec'] = this.equipamentoRetiradoTec;
     data['localInstalacao'] = this.localInstalacao;
-    data['localIntalacaoTec'] = this.localIntalacaoTec;
+    data['localInstalacaoTec'] = this.localInstalacaoTec;
     return data;
   }
 }

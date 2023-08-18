@@ -63,12 +63,13 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
       osid = element['id'];
       try {
         var contacto = contatos[0];
-        id = contacto["id"];
+        id = contacto["id"].toString();
         var contact = contacto["contato"];
         nome = contact['nome'];
         email = contact['email'];
         telefone = contact['telefone'];
       } catch (e) {
+        debugPrint(e.toString());
         nome = "Não informado";
         email = "";
         telefone = "";

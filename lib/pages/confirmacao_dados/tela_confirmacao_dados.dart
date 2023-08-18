@@ -167,26 +167,27 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
     var checkin = opcs.getString('checkinitens');
     var checkinitens = jsonDecode(checkin!);
     List itenscheckin = checkinitens['itenscheckin'];
-    var checkout = opcs.getString('checkinitens');
-    var checkoutitens = jsonDecode(checkin!);
+
+    var checkout = opcs.getString('checkoutitens');
+    var checkoutitens = jsonDecode(checkout!);
     nomeschecklist = checkinitens["nomescheckin"];
-    List itenscheckout = checkinitens['itenscheckin'];
+    List itenscheckout = checkoutitens['itenscheckin'];
 
     for (int i = 0; i < itenscheckin.length; i++) {
-      var element = itenscheckin[i];
-      var elemento = itenscheckout[i];
-      if (element == 0) {
+      var checkin  = itenscheckin[i];
+      var checkout = itenscheckout[i];
+      if (checkin  == 0) {
         checkinsitu.add("OK");
-      } else if (element == 1) {
+      } else if (checkin  == 1) {
         checkinsitu.add("Com Defeito");
-      } else if (element == 2) {
+      } else if (checkin  == 2) {
         checkinsitu.add("Não Possui");
       }
-      if (elemento == 0) {
+      if (checkout == 0) {
         checkoutsitu.add("OK");
-      } else if (elemento == 1) {
+      } else if (checkout == 1) {
         checkoutsitu.add("Com Defeito");
-      } else if (elemento == 2) {
+      } else if (checkout == 2) {
         checkoutsitu.add("Não Possui");
       }
       checklist = checklist +
