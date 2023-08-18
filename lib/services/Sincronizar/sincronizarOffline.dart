@@ -152,7 +152,7 @@ class syncoff {
           "tipo":"INSTALACAO",
           "tipoTec":"INSTALACAO",
           "equipamento":{"id": ${eqs['EquipamentoInstaladoID']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
-           "equipamentoTec":{"id": ${eqs['EquipamentoInstaladoID']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},,
+           "equipamentoTec":{"id": ${eqs['EquipamentoInstaladoID']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
           "localInstalacao": "${eqs['localInstalacao']}",
           "localIntalacaoTec": "${eqs['localInstalacao']}"
         }
