@@ -132,11 +132,7 @@ class syncoff {
       for (var equip in jsoneqs) {
         var index = jsoneqs.indexOf(equip);
         var eqs = jsonDecode(equip);
-        /*"EquipamentoInstaladoID": ,
-    "EquipamentoInstaladoCodigo": ,
-    "EquipamentosRemovidoID": "",
-    "EquipamentoRemovidoCodigo": "",
-    "localInstalacao": localInstalacao,*/
+
         String json = '';
         if (eqs["control"] == "RETIRADA") {
           json = '''{
@@ -155,10 +151,8 @@ class syncoff {
           "id":${element['equipamentos'][index]['id']},          
           "tipo":"INSTALACAO",
           "tipoTec":"INSTALACAO",
-          "equipamento":"{"id": ${eqs['EquipamentoInstaladoID']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
-           "equipamentoTec":{"id": ${eqs['EquipamentoInstaladoID']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},,
-          "equipamentoRetirado":"",
-          "equipamentoRetiradoTec":"",
+          "equipamento":{"id": ${eqs['EquipamentoInstaladoID']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
+           "equipamentoTec":{"id": ${eqs['EquipamentoInstaladoID']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
           "localInstalacao": "${eqs['localInstalacao']}",
           "localIntalacaoTec": "${eqs['localInstalacao']}"
         }
@@ -170,7 +164,7 @@ class syncoff {
             "id":${element['equipamentos'][index]['id']},
             "tipo":"TROCA",
             "tipoTec":"TROCA",
-            "equipamento":"{"id": ${eqs['EquipamentoInstaladoID']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
+            "equipamento":{"id": ${eqs['EquipamentoInstaladoID']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
             "equipamentoTec":{"id": ${eqs['EquipamentoInstaladoID']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
             "equipamentoRetirado":{"id": ${eqs['EquipamentosRemovidoID']}, "codigo":"${eqs['EquipamentoRemovidoCodigo']}"},
             "equipamentoRetiradoTec":{"id": ${eqs['EquipamentosRemovidoID']}, "codigo":"${eqs['EquipamentoRemovidoCodigo']}"},
@@ -186,10 +180,8 @@ class syncoff {
           "id":${element['equipamentos'][index]['id']},
           "tipo":"MANUTENCAO",
           "tipoTec":"MANUTENCAO",
-          "equipamento":"{"id": ${eqs['EquipamentoInstaladoID']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
-           "equipamentoTec":{"id": ${eqs['EquipamentoInstaladoID']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
-          "equipamentoRetirado":"",
-          "equipamentoRetiradoTec":"",
+          "equipamentoRetirado":{"id": ${eqs['EquipamentosRemovidoID']}, "codigo":"${eqs['EquipamentoRemovidoCodigo']}"},
+          "equipamentoRetiradoTec":{"id": ${eqs['EquipamentosRemovidoID']}, "codigo":"${eqs['EquipamentoRemovidoCodigo']}"},
           "localInstalacao":"${eqs['localInstalacao']}";,
           "localIntalacaoTec":"${eqs['localInstalacao']}";
         }

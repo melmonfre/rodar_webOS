@@ -29,8 +29,7 @@ class confirmacaopresencial {
     };
 
     final data =
-        '{\n    "id": ${contato['id']}, \n    "nome": "${contato['nome']}",\n    "tipoEnvio": "$tipoenvio",\n    "email": "${contato['email']}",\n    "telefone": "${contato['telefone']}",\n    "idOs": $osid,\n    "etapa": "REENVIO_RESPONSAVEL"\n}';
-
+        '{"id":${contato['id']},"nome":"${contato['nome']}","tipoEnvio":"presencial","email":"${contato['email']}","telefone":"${contato['telefone']}","idOs":$osid,"etapa":"ASSINATURA_TECNICO"}';
     final url = Uri.parse('${Urlconst().url}ordem_servico/inicia_confirmacao');
 
     final res = await http.post(url, headers: headers, body: data);

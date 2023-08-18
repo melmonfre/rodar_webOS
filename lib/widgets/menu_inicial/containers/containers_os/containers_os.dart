@@ -29,7 +29,7 @@ class _ContainerOSState extends State<ContainerOS> {
   var json;
   setossessao(osid) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
- 
+
     var osselecao = lista.firstWhere((element) => osid == element['id']);
 
     lista.remove(osselecao);
@@ -138,8 +138,7 @@ class _ContainerOSState extends State<ContainerOS> {
                   ),
                   child: GestureDetector(
                     onTap: () async {
-                      setossessao(os[index]); 
-                      Navigator.of(context).pop();
+                      setossessao(os[index]);
                       Navigator.push(
                         context,
                         MaterialPageRoute(

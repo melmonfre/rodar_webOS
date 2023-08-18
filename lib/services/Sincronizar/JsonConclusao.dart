@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class JsonConclusao {
   Checkin checkin;
   Equipamentos equipamentos;
@@ -371,39 +369,17 @@ class Equipamento {
 
 class EquipamentoTec {
   int? id;
-  String? numero;
   String? codigo;
-  String? documento;
-  String? status;
-  bool? cancelado;
-  Tecnico? tecnico;
-  String? localInstalacaoTec;
 
   EquipamentoTec({
     this.id,
-    this.numero,
     this.codigo,
-    this.documento,
-    this.status,
-    this.cancelado,
-    this.tecnico,
-    this.localInstalacaoTec,
   });
 
   EquipamentoTec.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         codigo = json['codigo'];
-
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'numero': numero,
-        'codigo': codigo,
-        'documento': documento,
-        'status': status,
-        'cancelado': cancelado,
-        'tecnico': tecnico,
-        'localInstalacaoTec': localInstalacaoTec
-      };
+  Map<String, dynamic> toJson() => {'id': id, 'codigo': codigo};
 }
 
 class Tecnico {
