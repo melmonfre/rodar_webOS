@@ -269,34 +269,49 @@ class syncoff {
     if (contato['responsavelAusente']) {
       tipoenvio = "email";
       jsonconclusao.presencial = false;
+      jsonconclusao.notificacaoResponsavel.notificacaoResponsavel = '''
+             {
+            "id": ${contato['id'] != "" ? int.parse(contato['id']) : 0},
+            "nome": "${contato['nome']}",
+            "email": "a${contato['email']}",
+            "telefone": "${contato['telefone']}",
+            "tipoEnvio": "tipoenvio",
+            "idOs": $osid,
+            "documento": "",
+            "referencia": "",
+            "observacaoCliente": "",
+            "etapa": "ENVIO_RESPONSAVEL"
+          }
+      ''';
     } else {
       tipoenvio = "presencial";
       jsonconclusao.presencial = true;
+      jsonconclusao.confirmacaoPresencial.etapa = "CONCLUSAO";
+      jsonconclusao.confirmacaoPresencial.id =
+          contato['id'] != "" ? int.parse(contato['id']) : 0;
+      jsonconclusao.confirmacaoPresencial.nome = contato['nome'];
+      jsonconclusao.confirmacaoPresencial.email = contato['email'];
+      jsonconclusao.confirmacaoPresencial.telefone = contato['telefone'];
+      jsonconclusao.confirmacaoPresencial.tipoEnvio = tipoenvio;
+      jsonconclusao.confirmacaoPresencial.idOs = osid;
+      jsonconclusao.confirmacaoPresencial.documento = "";
+      jsonconclusao.confirmacaoPresencial.referencia = "";
+      jsonconclusao.confirmacaoPresencial.assinatura = base64!;
+      jsonconclusao.confirmacaoPresencial.observacaoCliente = "";
+      jsonconclusao.assinaturaResponsavel.etapa = "ASSINATURA_RESPONSAVEL";
+      jsonconclusao.assinaturaResponsavel.id =
+          contato['id'] != "" ? int.parse(contato['id']) : 0;
+      jsonconclusao.assinaturaResponsavel.nome = contato['nome'];
+      jsonconclusao.assinaturaResponsavel.email = contato['email'];
+      jsonconclusao.assinaturaResponsavel.telefone = contato['telefone'];
+      jsonconclusao.assinaturaResponsavel.tipoEnvio = tipoenvio;
+      jsonconclusao.assinaturaResponsavel.idOs = osid;
+      jsonconclusao.assinaturaResponsavel.documento = "";
+      jsonconclusao.assinaturaResponsavel.referencia = "";
+      jsonconclusao.assinaturaResponsavel.assinatura = assinatura!;
+      jsonconclusao.assinaturaResponsavel.observacaoCliente = "";
+      jsonconclusao.notificacaoResponsavel.notificacaoResponsavel = null;
     }
-    jsonconclusao.confirmacaoPresencial.etapa = "CONCLUSAO";
-    jsonconclusao.confirmacaoPresencial.id =
-        contato['id'] != "" ? int.parse(contato['id']) : 0;
-    jsonconclusao.confirmacaoPresencial.nome = contato['nome'];
-    jsonconclusao.confirmacaoPresencial.email = contato['email'];
-    jsonconclusao.confirmacaoPresencial.telefone = contato['telefone'];
-    jsonconclusao.confirmacaoPresencial.tipoEnvio = tipoenvio;
-    jsonconclusao.confirmacaoPresencial.idOs = osid;
-    jsonconclusao.confirmacaoPresencial.documento = "";
-    jsonconclusao.confirmacaoPresencial.referencia = "";
-    jsonconclusao.confirmacaoPresencial.assinatura = base64!;
-    jsonconclusao.confirmacaoPresencial.observacaoCliente = "";
-    jsonconclusao.assinaturaResponsavel.etapa = "ASSINATURA_RESPONSAVEL";
-    jsonconclusao.assinaturaResponsavel.id =
-        contato['id'] != "" ? int.parse(contato['id']) : 0;
-    jsonconclusao.assinaturaResponsavel.nome = contato['nome'];
-    jsonconclusao.assinaturaResponsavel.email = contato['email'];
-    jsonconclusao.assinaturaResponsavel.telefone = contato['telefone'];
-    jsonconclusao.assinaturaResponsavel.tipoEnvio = tipoenvio;
-    jsonconclusao.assinaturaResponsavel.idOs = osid;
-    jsonconclusao.assinaturaResponsavel.documento = "";
-    jsonconclusao.assinaturaResponsavel.referencia = "";
-    jsonconclusao.assinaturaResponsavel.assinatura = assinatura!;
-    jsonconclusao.assinaturaResponsavel.observacaoCliente = "";
 
     /*
     required Checkin checkin,
