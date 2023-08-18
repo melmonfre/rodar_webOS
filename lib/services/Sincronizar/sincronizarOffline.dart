@@ -275,7 +275,7 @@ class syncoff {
             "nome": "${contato['nome']}",
             "email": "a${contato['email']}",
             "telefone": "${contato['telefone']}",
-            "tipoEnvio": "tipoenvio",
+            "tipoEnvio": "$tipoenvio",
             "idOs": $osid,
             "documento": "",
             "referencia": "",
