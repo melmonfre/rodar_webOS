@@ -70,6 +70,7 @@ class _TelaConclusaoDadosAssinaturaState
                 onPressed: () async {
                   await salvanocache();
                   confirmassinatura().enviar();
+
                   //Navigator.of(context).pop();
                   Navigator.push(
                     context,

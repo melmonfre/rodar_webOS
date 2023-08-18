@@ -12,6 +12,7 @@ import 'package:rodarwebos/widgets/inputs/input_number.dart';
 import 'package:rodarwebos/widgets/inputs/input_text.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../services/Sincronizar/sincronizarOffline.dart';
 import '../../services/conclusao/confirmacaopresencial.dart';
 import '../../services/conclusao/enviardocumentopresencial.dart';
 
@@ -273,6 +274,7 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                 child: responsavelAusente
                     ? BotaoEnviar(
                         onPressed: () {
+                          syncoff().criarjson(osid);
                           showDialog(
                             context: context,
                             builder: (context) {
@@ -287,6 +289,7 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                                       confirmacaopresencial().enviar();
                                       enviardocconfirmacaopresencial().enviar();
                                       concluiOS().concluir(osid);
+
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(

@@ -265,6 +265,7 @@ class syncoff {
     var base64 = opcs.getString("assinaturaconfirmacao");
 
     var tipoenvio;
+    print("CONTATOOO $contato");
     if (contato['responsavelAusente']) {
       tipoenvio = "email";
       jsonconclusao.presencial = false;
