@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../services/GetEquipamento.dart';
 import '../../widgets/botoes/botao_proximo.dart';
+import '../conclusao/tela_conclusao.dart';
 
 class CheckOutTela extends StatefulWidget {
   @override
@@ -19,6 +20,7 @@ class _CheckOutTelaState extends State<CheckOutTela> {
   List checklistItens = [];
   List ChecklistOBS = [];
   List checkinsitu = [];
+  bool ismanut = true;
   int tamanho = 0;
   String selectedButton = '';
   var obsadc;
@@ -434,10 +436,17 @@ class _CheckOutTelaState extends State<CheckOutTela> {
     } else {
       opcs.setString("checkoutitens", jsoncheckin);
       //Navigator.of(context).pop();
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => RelateMotivo()),
-      );
+      if (ismanut) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => RelateMotivo()),
+        );
+      } else {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => TelaConclusao()),
+        );
+      }
     }
   }
 }
