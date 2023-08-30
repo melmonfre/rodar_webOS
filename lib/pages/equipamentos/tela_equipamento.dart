@@ -213,8 +213,6 @@ class TrocaState {
 }
 
 class EquipamentosChangeNotifier extends ChangeNotifier {
-  RetiradaState? retiradaState;
-
   List<InstalacaoState> instalacoes = [];
   List<ManutencaoState> manutencoes = [];
   List<RetiradaState> retiradas = [];

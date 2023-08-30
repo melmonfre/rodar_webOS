@@ -20,7 +20,8 @@ class _CheckOutTelaState extends State<CheckOutTela> {
   List checklistItens = [];
   List ChecklistOBS = [];
   List checkinsitu = [];
-  bool ismanut = true;
+  bool ismanut = false;
+
   int tamanho = 0;
   String selectedButton = '';
   var obsadc;
@@ -42,6 +43,7 @@ class _CheckOutTelaState extends State<CheckOutTela> {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     getequipamentos().get();
     json = opcs.getString("SelectedOS");
+
     empresaid = opcs.getInt('sessionid');
     var checkin = opcs.getString('checkinitens');
     var checkinitens = jsonDecode(checkin!);
@@ -56,6 +58,22 @@ class _CheckOutTelaState extends State<CheckOutTela> {
       }
     });
     element = jsonDecode(json);
+
+    try {
+      List<dynamic> equipamentos = element["equipamentos"];
+      equipamentos?.forEach((equipamento) {
+        final tipo = equipamento["tipo"];
+
+        if (tipo == "MANUTENCAO") {
+          setState(() {
+            ismanut = true;
+          });
+        }
+      });
+    } catch (e) {
+      debugPrint("erro isManut: $e");
+    }
+
     token = opcs.getString("${empresaid}@token")!;
     osid = element['id'];
     check = opcs.getString("${osid}@checklist");
@@ -103,8 +121,7 @@ class _CheckOutTelaState extends State<CheckOutTela> {
                                 Container(
                                   padding: EdgeInsets.all(16.0),
                                   child: Container(
-                                    width:
-                                        MediaQuery.of(context).size.width - 48,
+                                    width: MediaQuery.of(context).size.width - 48,
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       border: Border.all(
@@ -134,22 +151,19 @@ class _CheckOutTelaState extends State<CheckOutTela> {
                                         ),
                                         SizedBox(height: 5.0),
                                         Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             Row(
                                               children: [
                                                 Radio(
                                                   value: 0,
-                                                  groupValue:
-                                                      checklistItens[index],
+                                                  groupValue: checklistItens[index],
                                                   onChanged: (value) {
                                                     setState(() {
                                                       if (checklistItens
                                                           .asMap()
                                                           .containsKey(index)) {
-                                                        checklistItens[index] =
-                                                            value;
+                                                        checklistItens[index] = value;
                                                       } else {
                                                         checklistItens.add(
                                                             value); // Atualize o valor selecionado
@@ -159,21 +173,18 @@ class _CheckOutTelaState extends State<CheckOutTela> {
                                                 ),
                                                 Text(
                                                   'OK',
-                                                  style:
-                                                      TextStyle(fontSize: 14.0),
+                                                  style: TextStyle(fontSize: 14.0),
                                                 ),
                                                 SizedBox(width: 13),
                                                 Radio(
                                                   value: 1,
-                                                  groupValue:
-                                                      checklistItens[index],
+                                                  groupValue: checklistItens[index],
                                                   onChanged: (value) {
                                                     setState(() {
                                                       if (checklistItens
                                                           .asMap()
                                                           .containsKey(index)) {
-                                                        checklistItens[index] =
-                                                            value;
+                                                        checklistItens[index] = value;
                                                       } else {
                                                         checklistItens.add(
                                                             value); // Atualize o valor selecionado
@@ -183,21 +194,18 @@ class _CheckOutTelaState extends State<CheckOutTela> {
                                                 ),
                                                 Text(
                                                   'Com \nDefeito',
-                                                  style:
-                                                      TextStyle(fontSize: 14.0),
+                                                  style: TextStyle(fontSize: 14.0),
                                                 ),
                                                 SizedBox(width: 13),
                                                 Radio(
                                                   value: 2,
-                                                  groupValue:
-                                                      checklistItens[index],
+                                                  groupValue: checklistItens[index],
                                                   onChanged: (value) {
                                                     setState(() {
                                                       if (checklistItens
                                                           .asMap()
                                                           .containsKey(index)) {
-                                                        checklistItens[index] =
-                                                            value;
+                                                        checklistItens[index] = value;
                                                       } else {
                                                         checklistItens.add(
                                                             value); // Atualize o valor selecionado
@@ -207,8 +215,7 @@ class _CheckOutTelaState extends State<CheckOutTela> {
                                                 ),
                                                 Text(
                                                   'Não \nPossui',
-                                                  style:
-                                                      TextStyle(fontSize: 14.0),
+                                                  style: TextStyle(fontSize: 14.0),
                                                 ),
                                               ],
                                             ),
@@ -246,8 +253,7 @@ class _CheckOutTelaState extends State<CheckOutTela> {
                                   ),
                                   padding: EdgeInsets.all(16.0),
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
+                                    crossAxisAlignment: CrossAxisAlignment.stretch,
                                     children: <Widget>[
                                       Text(
                                         'Possui alguma observação adicional?',
@@ -264,15 +270,13 @@ class _CheckOutTelaState extends State<CheckOutTela> {
                                             child: RadioListTile(
                                               title: Text(
                                                 'Sim',
-                                                style:
-                                                    TextStyle(fontSize: 14.0),
+                                                style: TextStyle(fontSize: 14.0),
                                               ),
                                               value: 'Sim',
                                               groupValue: selectedButton,
                                               onChanged: (value) {
                                                 setState(() {
-                                                  selectedButton =
-                                                      value.toString();
+                                                  selectedButton = value.toString();
                                                 });
                                               },
                                             ),
@@ -281,15 +285,13 @@ class _CheckOutTelaState extends State<CheckOutTela> {
                                             child: RadioListTile(
                                               title: Text(
                                                 'Não Possui',
-                                                style:
-                                                    TextStyle(fontSize: 14.0),
+                                                style: TextStyle(fontSize: 14.0),
                                               ),
                                               value: 'Não Possui',
                                               groupValue: selectedButton,
                                               onChanged: (value) {
                                                 setState(() {
-                                                  selectedButton =
-                                                      value.toString();
+                                                  selectedButton = value.toString();
                                                 });
                                               },
                                             ),
@@ -319,26 +321,20 @@ class _CheckOutTelaState extends State<CheckOutTela> {
                                               "itenscheckin": checklistItens,
                                               "obscheckin": ChecklistOBS
                                             };
-                                            if (selectedButton
-                                                .contains("Sim")) {
-                                              if (obsadc == null ||
-                                                  obsadc == "") {
+                                            if (selectedButton.contains("Sim")) {
+                                              if (obsadc == null || obsadc == "") {
                                                 showDialog(
                                                   context: context,
-                                                  builder:
-                                                      (BuildContext context) {
+                                                  builder: (BuildContext context) {
                                                     return AlertDialog(
-                                                      title: Text(
-                                                          'Campos não preenchidos'),
+                                                      title: Text('Campos não preenchidos'),
                                                       content: Text(
                                                           'Por favor, preencha todos os campos de observação adicional.'),
                                                       actions: <Widget>[
                                                         TextButton(
                                                           child: Text('Fechar'),
                                                           onPressed: () {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
+                                                            Navigator.of(context).pop();
                                                           },
                                                         ),
                                                       ],
@@ -346,12 +342,10 @@ class _CheckOutTelaState extends State<CheckOutTela> {
                                                   },
                                                 );
                                               } else {
-                                                checkNavigation(
-                                                    json.encode(values));
+                                                checkNavigation(json.encode(values));
                                               }
                                             } else {
-                                              checkNavigation(
-                                                  json.encode(values));
+                                              checkNavigation(json.encode(values));
                                             }
 
                                             // Navega para a próxima tela, passando os valores do checklist em formato JSON
@@ -361,16 +355,14 @@ class _CheckOutTelaState extends State<CheckOutTela> {
                                               context: context,
                                               builder: (BuildContext context) {
                                                 return AlertDialog(
-                                                  title: Text(
-                                                      'Campos não preenchidos'),
+                                                  title: Text('Campos não preenchidos'),
                                                   content: Text(
                                                       'Por favor, preencha todos os campos de observação adicional.'),
                                                   actions: <Widget>[
                                                     TextButton(
                                                       child: Text('Fechar'),
                                                       onPressed: () {
-                                                        Navigator.of(context)
-                                                            .pop();
+                                                        Navigator.of(context).pop();
                                                       },
                                                     ),
                                                   ],
@@ -420,8 +412,7 @@ class _CheckOutTelaState extends State<CheckOutTela> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Aviso'),
-            content: Text(
-                'Por favor, preencha todas as opções antes de prosseguir.'),
+            content: Text('Por favor, preencha todas as opções antes de prosseguir.'),
             actions: [
               TextButton(
                 child: Text('OK'),
