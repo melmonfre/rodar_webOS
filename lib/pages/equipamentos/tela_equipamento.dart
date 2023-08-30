@@ -67,43 +67,36 @@ class InstalacaoState {
 }
 
 class ManutencaoState {
-
   EquipamentosChangeNotifier notifierInstance;
 
   int id;
   String codigo;
   String documento;
+  String localInstalacao;
 
-  ManutencaoState(this.notifierInstance, {required this.id, required this.codigo, required this.documento});
+  ManutencaoState(this.notifierInstance,
+      {required this.id,
+      required this.codigo,
+      required this.documento,
+      required this.localInstalacao});
 
   String? situacaoEquipamento;
-  // var EquipamentoNovoIDs;
-  // List<String> EquipamentoNovoCodigos = [];
-  // var AcessoriosID;
-  // var AcessoriosDescricao;
-  // var EquipamentosVeiculoIDs;
-  // List<String> EquipamentoVeiculoCodigos = [];
-  // String? localInstalacao;
-  // var stringEquipamento;
-  // var selecionadonovo;
-  // var selecionadoveiculo;
-  // var situequip;
 
+  List<String> selectCodigos = [];
 
   getData() async {
+    selectCodigos = [codigo];
     notifierInstance.notifyListeners();
   }
 
   bool isValid() {
-    return localInstalacao != null;
+    return localInstalacao != "";
   }
 
   Map<String, dynamic> getEquipamento() {
-    final id = EquipamentosVeiculoIDs[EquipamentoVeiculoCodigos.indexOf(selecionadoveiculo)];
-
     Map<String, dynamic> equipamento = {
       "EquipamentoInstaladoID": id,
-      "EquipamentoInstaladoCodigo": selecionadoveiculo,
+      "EquipamentoInstaladoCodigo": codigo,
       "EquipamentoInstaladoDocumento": documento,
       "EquipamentosRemovidoID": "", // Armazena o ID do equipamento removido
       "EquipamentoRemovidoCodigo":
@@ -120,49 +113,24 @@ class ManutencaoState {
 class RetiradaState {
   EquipamentosChangeNotifier instanceNotifier;
 
-  RetiradaState(this.instanceNotifier);
+  int id;
+  String codigo;
+  String documento;
+  String localInstalacao;
 
-  String Control = "RETIRADA";
+  RetiradaState(this.instanceNotifier,
+      {required this.id,
+      required this.codigo,
+      required this.documento,
+      required this.localInstalacao});
+
   String? situacaoEquipamento;
-  var EquipamentoNovoIDs;
-  List<String> EquipamentoNovoCodigos = [];
-  var AcessoriosID;
-  var AcessoriosDescricao;
-  var EquipamentosVeiculoIDs;
-  List<String> EquipamentoVeiculoCodigos = [];
-  String? localInstalacao;
-  var stringEquipamento;
-  var selecionadonovo;
-  var selecionadoveiculo;
   var situequip;
-  var eqnovodoc;
-  var eqveiculodoc;
-  List<String>? codigosEq;
+
+  List<String> selectCodigo = [];
 
   getData() async {
-    SharedPreferences opcs = await SharedPreferences.getInstance();
-    var json = opcs.getString("equipamentos");
-    var eqp = jsonDecode(json!);
-
-    EquipamentoNovoIDs = eqp["EquipamentoNovoIDs"];
-    EquipamentoNovoCodigos = List<String>.from(eqp["EquipamentoNovoCodigos"] as List);
-    AcessoriosID = eqp["AcessoriosID"];
-    AcessoriosDescricao = eqp["AcessoriosDescricao"];
-    EquipamentosVeiculoIDs = eqp["EquipamentosVeiculoIDs"];
-
-    EquipamentoVeiculoCodigos = List<String>.from(eqp["EquipamentoVeiculoCodigos"] as List);
-
-    codigosEq = EquipamentoVeiculoCodigos;
-
-    if (codigosEq?.length == 1) {
-      selecionadoveiculo = codigosEq![0];
-    }
-
-    localInstalacao = eqp["localInstalacao"];
-    stringEquipamento = eqp["stringEquipamento"];
-    eqnovodoc = eqp["EquipamentoNovoDocumento"];
-    eqveiculodoc = eqp["EquipamentoVeiculoDocumento"];
-
+    selectCodigo = [codigo];
     instanceNotifier.notifyListeners();
   }
 
@@ -171,18 +139,16 @@ class RetiradaState {
   }
 
   Map<String, dynamic> getEquipamento() {
-    final id = EquipamentosVeiculoIDs[EquipamentoVeiculoCodigos.indexOf(selecionadoveiculo)];
-
     Map<String, dynamic> equipamento = {
       "EquipamentoInstaladoID": "",
       "EquipamentoInstaladoCodigo": "",
       "EquipamentoInstaladoDocumento": "",
       "EquipamentosRemovidoID": id, // Armazena o ID do equipamento removido
       "EquipamentoRemovidoCodigo":
-          selecionadoveiculo, // Armazena o código do equipamento removido (veículo selecionado)
-      "EquipamentoRemovidoDocumento": "",
+          codigo, // Armazena o código do equipamento removido (veículo selecionado)
+      "EquipamentoRemovidoDocumento": documento,
       "localInstalacao": localInstalacao, // Armazena o local de instalação selecionado
-      "control": Control,
+      "control": "RETIRADA",
     };
 
     return equipamento;
@@ -192,94 +158,62 @@ class RetiradaState {
 class TrocaState {
   EquipamentosChangeNotifier notifierInstance;
 
-  TrocaState(this.notifierInstance);
+  int id;
+  String codigo;
+  String documento;
+
+  int idRemovido;
+  String codigoRemovido;
+  String documentoRemovido;
+
+  String localInstalacao;
+
+  TrocaState(this.notifierInstance,
+      {required this.id,
+      required this.codigo,
+      required this.documento,
+      required this.idRemovido,
+      required this.codigoRemovido,
+      required this.documentoRemovido,
+      required this.localInstalacao});
 
   String? situacaoEquipamento;
-  var EquipamentoNovoIDs;
-  List<String> EquipamentoNovoCodigos = [];
-  var AcessoriosID;
-  var AcessoriosDescricao;
-  var EquipamentosVeiculoIDs;
-  List<String> EquipamentoVeiculoCodigos = [];
-  String? localInstalacao;
-  var stringEquipamento;
-  var selecionadonovo;
-  var selecionadoveiculo;
+
+  List<String> selectCodigo = [];
+  List<String> selectCodigoRemovido = [];
+
   var situequip;
-  var eqnovodoc;
-  var eqveiculodoc;
-  var Control = "TROCA";
 
   bool isValid() {
-    return situacaoEquipamento != null && localInstalacao != null;
+    return situacaoEquipamento != null && localInstalacao != "";
   }
 
   Map<String, dynamic> getEquipamento() {
-    var eqremovid;
-    var eqremoviddoc;
-    for (int i = 0; i < EquipamentoVeiculoCodigos.length; i++) {
-      if (EquipamentoVeiculoCodigos[i] == selecionadoveiculo) {
-        eqremovid = EquipamentosVeiculoIDs[
-            i]; // Armazena o ID do equipamento removido correspondente ao veículo selecionado
-        eqremoviddoc = eqveiculodoc[i];
-      }
-    }
-    var eqnovosid;
-    var eqnovosdoc;
-    for (int i = 0; i < EquipamentoNovoCodigos.length; i++) {
-      if (EquipamentoNovoCodigos[i] == selecionadonovo) {
-        eqnovosid = EquipamentoNovoIDs[i];
-        eqnovosdoc = eqnovodoc[i];
-      }
-    }
     Map<String, dynamic> equipamento = {
-      "EquipamentoInstaladoID": eqnovosid,
-      "EquipamentoInstaladoCodigo": selecionadonovo,
-      "EquipamentoInstaladoDocumento": eqnovosdoc,
-      "EquipamentosRemovidoID": eqremovid, // Armazena o ID do equipamento removido
+      "EquipamentoInstaladoID": id,
+      "EquipamentoInstaladoCodigo": codigo,
+      "EquipamentoInstaladoDocumento": documento,
+      "EquipamentosRemovidoID": idRemovido, // Armazena o ID do equipamento removido
       "EquipamentoRemovidoCodigo":
-          selecionadoveiculo, // Armazena o código do equipamento removido (veículo selecionado)
-      "EquipamentoRemovidoDocumento": eqremoviddoc,
+          codigoRemovido, // Armazena o código do equipamento removido (veículo selecionado)
+      "EquipamentoRemovidoDocumento": documentoRemovido,
       "localInstalacao": localInstalacao, // Armazena o local de instalação selecionado
-      "control": Control,
+      "control": "TROCA",
     };
 
     return equipamento;
   }
 
   getData() async {
-    SharedPreferences opcs = await SharedPreferences.getInstance();
-    var json = opcs.getString("equipamentos");
-    var eqp = jsonDecode(json!);
+    selectCodigo = [codigo];
+    selectCodigoRemovido = [codigoRemovido];
 
-    EquipamentoNovoIDs = eqp["EquipamentoNovoIDs"];
-    EquipamentoNovoCodigos = List<String>.from(eqp["EquipamentoNovoCodigos"] as List);
-
-    if (EquipamentoNovoCodigos.length == 1) {
-      selecionadonovo = EquipamentoNovoCodigos[0];
-    }
-
-    AcessoriosID = eqp["AcessoriosID"];
-    AcessoriosDescricao = eqp["AcessoriosDescricao"];
-    EquipamentosVeiculoIDs = eqp["EquipamentosVeiculoIDs"];
-    EquipamentoVeiculoCodigos = List<String>.from(eqp["EquipamentoVeiculoCodigos"] as List);
-
-    if (EquipamentoVeiculoCodigos.length == 1) {
-      selecionadoveiculo = EquipamentoVeiculoCodigos[0];
-    }
-
-    localInstalacao = eqp["localInstalacao"];
-    stringEquipamento = eqp["stringEquipamento"];
-    eqnovodoc = eqp["EquipamentoNovoDocumento"];
-    eqveiculodoc = eqp["EquipamentoVeiculoDocumento"];
     notifierInstance.notifyListeners();
   }
 }
 
 class EquipamentosChangeNotifier extends ChangeNotifier {
-  ManutencaoState? manutencaoState;
   RetiradaState? retiradaState;
-  TrocaState? trocaState;
 
   List<InstalacaoState> instalacoes = [];
   List<ManutencaoState> manutencoes = [];
@@ -307,31 +241,61 @@ class EquipamentosChangeNotifier extends ChangeNotifier {
             codigo: eqp["codigo"],
             documento: eqp["documento"],
             localInstalacao: localInstalacao);
+
         state.getData();
         instalacoes.add(state);
       } else if (tipo == "MANUTENCAO") {
-        final state = InstalacaoState(this,
+        final eqp = equipamento["equipamento"];
+        final localInstalacao = equipamento["localInstalacao"] ?? "";
+        final state = ManutencaoState(this,
+            id: eqp["id"],
+            codigo: eqp["codigo"],
+            documento: eqp["documento"],
+            localInstalacao: localInstalacao);
+
+        state.getData();
+        manutencoes.add(state);
+      } else if (tipo == "TROCA") {
+        final eqp = equipamento["equipamento"];
+        final eqpRetirado = equipamento["equipamentoRetirado"];
+        final localInstalacao = equipamento["localInstalacao"] ?? "";
+
+        final state = TrocaState(this,
+            codigo: eqp["codigo"],
+            codigoRemovido: eqpRetirado["codigo"],
+            documento: eqp["documento"],
+            documentoRemovido: eqpRetirado["documento"],
+            id: eqp["id"],
+            idRemovido: eqpRetirado["id"],
+            localInstalacao: localInstalacao);
+
+        state.getData();
+        trocas.add(state);
+
+      } else if (tipo == "RETIRADA") {
+
+        final eqp = equipamento["equipamentoRetirado"];
+        final localInstalacao = equipamento["localInstalacao"] ?? "";
+
+        final state = RetiradaState(this,
             id: eqp["id"],
             codigo: eqp["codigo"],
             documento: eqp["documento"],
             localInstalacao: localInstalacao);
         state.getData();
-        manutencoes.add(state);
-      } else if (tipo == "TROCA") {
-      } else if (tipo == "RETIRADA") {}
+
+        retiradas.add(state);
+      }
     });
+
+    notifyListeners();
   }
 
   bool isAllValid() {
-    // final instalacaoValid = instalacaoState == null || instalacaoState!.isValid();
-    // final manutencaoValid = manutencaoState == null || manutencaoState!.isValid();
-    // final retiradaValid = retiradaState == null || retiradaState!.isValid();
-    // final trocaValid = trocaState == null || trocaState!.isValid();
-
     final instalacaoValid = instalacoes.every((instalacao) => instalacao.isValid());
-    final manutencaoValid = true;
-    final retiradaValid = true;
-    final trocaValid = true;
+    final manutencaoValid = manutencoes.every((manutencao) => manutencao.isValid());
+    final retiradaValid = retiradas.every((retirada) => retirada.isValid());
+    final trocaValid = trocas.every((troca) => troca.isValid());
 
     return instalacaoValid && manutencaoValid && retiradaValid && trocaValid;
   }
@@ -382,17 +346,17 @@ class _EquipamentosState extends State<Equipamentos> {
   irProximo(EquipamentosChangeNotifier state) {
     List<Map<String, dynamic>> equipamentos = [];
 
-    if (state.manutencaoState != null) {
-      equipamentos.add(state.manutencaoState!.getEquipamento());
-    }
+    state.manutencoes.forEach((st) {
+      equipamentos.add(st.getEquipamento());
+    });
 
-    if (state.retiradaState != null) {
-      equipamentos.add(state.retiradaState!.getEquipamento());
-    }
+    state.trocas.forEach((st) {
+      equipamentos.add(st.getEquipamento());
+    });
 
-    if (state.trocaState != null) {
-      equipamentos.add(state.trocaState!.getEquipamento());
-    }
+    state.retiradas.forEach((st) {
+      equipamentos.add(st.getEquipamento());
+    });
 
     state.instalacoes.forEach((st) {
       equipamentos.add(st.getEquipamento());
@@ -405,10 +369,6 @@ class _EquipamentosState extends State<Equipamentos> {
     for (final equip in equipamentos) {
       getequipamentos().setEquipamento(equip);
     }
-
-    // equipamentos.forEach((element) {
-    //   getequipamentos().setEquipamento(element);
-    // });
 
     Navigator.of(context).pop();
 
@@ -463,9 +423,13 @@ class _EquipamentosState extends State<Equipamentos> {
                     );
                   }),
 
-                  if (control.toLowerCase().contains(
-                      "retirada")) // Verifica se a variável "control" contém a palavra "retirada" (em minúsculas)
-                    ContainerRetirada(), // Exibe o widget ContainerRetirada
+                  Consumer<EquipamentosChangeNotifier>(builder: (context, state, child) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children:
+                          state.retiradas.map((e) => ContainerRetirada(state: e)).toList(),
+                    );
+                  }),// Exibe o widget ContainerRetirada
 
                   Consumer<EquipamentosChangeNotifier>(builder: (context, state, child) {
                     return Column(
@@ -474,9 +438,13 @@ class _EquipamentosState extends State<Equipamentos> {
                           state.instalacoes.map((e) => ContainerInstalacao(state: e)).toList(),
                     );
                   }),
-                  if (control.toLowerCase().contains(
-                      "troca")) // Verifica se a variável "control" contém a palavra "troca" (em minúsculas)
-                    ContainerTroca(), // Exibe o widget ContainerTroca
+
+                  Consumer<EquipamentosChangeNotifier>(builder: (context, state, child) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: state.trocas.map((e) => ContainerTroca(state: e)).toList(),
+                    );
+                  }),
 
                   Consumer<EquipamentosChangeNotifier>(builder: (context, state, child) {
                     return BotaoProximo(onPressed: () {
@@ -512,11 +480,20 @@ class _EquipamentosState extends State<Equipamentos> {
 }
 
 class ContainerRetirada extends StatefulWidget {
+  RetiradaState state;
+
+  ContainerRetirada({super.key, required this.state});
+  
   @override
-  State<ContainerRetirada> createState() => _ContainerRetiradaState();
+  State<ContainerRetirada> createState() => _ContainerRetiradaState(state: state);
 }
 
 class _ContainerRetiradaState extends State<ContainerRetirada> {
+
+  RetiradaState state;
+
+  _ContainerRetiradaState({required this.state});
+
   @override
   void initState() {
     super.initState();
@@ -525,13 +502,6 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
   @override
   Widget build(BuildContext context) {
     final wholeState = Provider.of<EquipamentosChangeNotifier>(context);
-    var state = wholeState.retiradaState;
-
-    if (wholeState.retiradaState == null) {
-      wholeState.retiradaState = RetiradaState(wholeState);
-      state = wholeState.retiradaState;
-      state?.getData();
-    }
 
     return Padding(
       padding: EdgeInsets.all(16.0),
@@ -540,14 +510,14 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
         children: [
           // Input equipamento
           DropdownButton<String>(
-            value: state?.selecionadoveiculo, // Valor selecionado no dropdown
+            value: state?.codigo, // Valor selecionado no dropdown
             onChanged: (String? newValue) {
               setState(() {
-                state!.selecionadoveiculo = newValue; // Atualiza o valor selecionado no estado
+                state!.codigo = newValue ?? ""; // Atualiza o valor selecionado no estado
                 state.instanceNotifier.notifyListeners();
               });
             },
-            items: state?.codigosEq?.map((String item) {
+            items: state?.selectCodigo?.map((String item) {
               return DropdownMenuItem<String>(
                 value: item, // Valor do item do dropdown
                 child: Row(
@@ -614,7 +584,7 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
 
 class ContainerManutencao extends StatefulWidget {
   ManutencaoState state;
-  
+
   ContainerManutencao({super.key, required this.state});
 
   @override
@@ -622,7 +592,6 @@ class ContainerManutencao extends StatefulWidget {
 }
 
 class _ContainerManutencaoState extends State<ContainerManutencao> {
-
   ManutencaoState state;
 
   _ContainerManutencaoState({required this.state});
@@ -641,14 +610,14 @@ class _ContainerManutencaoState extends State<ContainerManutencao> {
         children: [
           // Input equipamento
           DropdownButton<String>(
-            value: state?.selecionadoveiculo,
+            value: state?.codigo,
             onChanged: (String? newValue) {
               setState(() {
-                state!.selecionadoveiculo = newValue;
+                state!.codigo = newValue ?? "";
                 state.notifierInstance.notifyListeners();
               });
             },
-            items: state?.EquipamentoVeiculoCodigos.map((item) {
+            items: state?.selectCodigos.map((item) {
               return DropdownMenuItem<String>(
                 value: item,
                 child: Row(
@@ -682,7 +651,7 @@ class _ContainerManutencaoState extends State<ContainerManutencao> {
               ),
               onChanged: (String? value) {
                 setState(() {
-                  state!.localInstalacao = value;
+                  state!.localInstalacao = value ?? "";
                   state.notifierInstance.notifyListeners();
                 });
               },
@@ -701,11 +670,18 @@ class _ContainerManutencaoState extends State<ContainerManutencao> {
 //  TROCA
 
 class ContainerTroca extends StatefulWidget {
+  TrocaState state;
+  ContainerTroca({super.key, required this.state});
+
   @override
-  State<ContainerTroca> createState() => _ContainerTrocaState();
+  State<ContainerTroca> createState() => _ContainerTrocaState(state: state);
 }
 
 class _ContainerTrocaState extends State<ContainerTroca> {
+  TrocaState state;
+
+  _ContainerTrocaState({required this.state});
+
   @override
   void initState() {
     super.initState();
@@ -713,13 +689,6 @@ class _ContainerTrocaState extends State<ContainerTroca> {
 
   Widget build(BuildContext context) {
     final wholeState = Provider.of<EquipamentosChangeNotifier>(context);
-    var state = wholeState.trocaState;
-
-    if (wholeState.trocaState == null) {
-      wholeState.trocaState = TrocaState(wholeState);
-      state = wholeState.trocaState;
-      state?.getData();
-    }
 
     return Padding(
         padding: EdgeInsets.all(16.0),
@@ -728,14 +697,14 @@ class _ContainerTrocaState extends State<ContainerTroca> {
           children: [
             // Input equipamento
             DropdownButton<String>(
-              value: state?.selecionadonovo,
+              value: state?.codigo,
               onChanged: (String? newValue) {
                 setState(() {
-                  state!.selecionadonovo = newValue;
+                  state!.codigo = newValue ?? "";
                   state.notifierInstance.notifyListeners();
                 });
               },
-              items: state?.EquipamentoNovoCodigos.map((item) {
+              items: state?.selectCodigo.map((item) {
                 return DropdownMenuItem<String>(
                   value: item,
                   child: Row(
@@ -751,14 +720,14 @@ class _ContainerTrocaState extends State<ContainerTroca> {
             ),
             SizedBox(height: 16.0),
             DropdownButton<String>(
-              value: state?.selecionadoveiculo,
+              value: state?.codigoRemovido,
               onChanged: (String? newValue) {
                 setState(() {
-                  state!.selecionadoveiculo = newValue;
+                  state!.codigoRemovido = newValue ?? "";
                   state.notifierInstance.notifyListeners();
                 });
               },
-              items: state?.EquipamentoVeiculoCodigos.map((item) {
+              items: state?.selectCodigoRemovido.map((item) {
                 return DropdownMenuItem<String>(
                   value: item,
                   child: Row(
@@ -836,7 +805,7 @@ class _ContainerTrocaState extends State<ContainerTroca> {
                 ),
                 onChanged: (String? value) {
                   setState(() {
-                    state?.localInstalacao = value;
+                    state?.localInstalacao = value ?? "";
                     state?.notifierInstance.notifyListeners();
                   });
                 },
