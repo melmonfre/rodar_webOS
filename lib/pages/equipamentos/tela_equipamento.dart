@@ -42,7 +42,7 @@ class InstalacaoState {
   List<String> selectCodigos = [];
 
   bool isValid() {
-    return localInstalacao == "";
+    return localInstalacao != "";
   }
 
   Map<String, dynamic> getEquipamento() {
