@@ -232,7 +232,7 @@ class EquipamentosChangeNotifier extends ChangeNotifier {
       final tipo = equipamento["tipo"];
 
       if (tipo == "INSTALACAO") {
-        final eqp = equipamento["equipamento"];
+        final eqp = equipamento["equipamento"] ?? equipamento["equipamentoRetirado"];
         final localInstalacao = equipamento["localInstalacao"] ?? "";
         final state = InstalacaoState(this,
             id: eqp["id"],
@@ -243,7 +243,7 @@ class EquipamentosChangeNotifier extends ChangeNotifier {
         state.getData();
         instalacoes.add(state);
       } else if (tipo == "MANUTENCAO") {
-        final eqp = equipamento["equipamento"];
+        final eqp = equipamento["equipamento"] ?? equipamento["equipamentoRetirado"];
         final localInstalacao = equipamento["localInstalacao"] ?? "";
         final state = ManutencaoState(this,
             id: eqp["id"],
