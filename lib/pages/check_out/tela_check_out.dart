@@ -368,7 +368,7 @@ class _CheckOutTelaState extends State<CheckOutTela> {
                                           labelText: 'Observação...',
                                           border: OutlineInputBorder(),
                                         ),
-                                        onSubmitted: (value) {
+                                        onChanged: (value) {
                                           setState(() {
                                             obsadc = value;
                                           }); 
