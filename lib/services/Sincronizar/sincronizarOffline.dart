@@ -127,7 +127,7 @@ class syncoff {
     // preenchendo equipamentos
     var jsoneqs = opcs.getStringList("EQProcess");
     List<Equipamento> listequipamentos = [];
-    var equipamento = Equipamento();
+    Equipamento? equipamento = Equipamento();
     if (jsoneqs != null) {
       for (var equip in jsoneqs) {
         var index = jsoneqs.indexOf(equip);
@@ -175,7 +175,8 @@ class syncoff {
 
           equipamento = Equipamento.fromJson(jsonDecode(json));
         } else {
-          json = '''
+          try {
+            json = '''
         {
           "id":${element['equipamentos'][index]['id']},
           "tipo":"MANUTENCAO",
@@ -186,10 +187,15 @@ class syncoff {
           "localInstalacaoTec":"${eqs['localInstalacao']}";
         }
         ''';
-          equipamento = Equipamento.fromJson(jsonDecode(json));
+            equipamento = Equipamento.fromJson(jsonDecode(json));
+          } catch (e) {
+            equipamento = null;
+          }
         }
 
-        listequipamentos.add(equipamento);
+        try {
+          listequipamentos.add(equipamento!);
+        } catch (e) {}
         // try {
         //   jsonconclusao.acessorios?.id =
         //       equipamento.id = int.parse(eqs['EquipamentosRemovidoID']);
