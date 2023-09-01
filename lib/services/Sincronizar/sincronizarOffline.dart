@@ -237,16 +237,25 @@ class syncoff {
     var mots = opcs.getString("motivositens");
     print("MOTIVOS:");
     print(mots);
-    var moti = jsonDecode(mots!);
-    jsonconclusao.motivosManutencao.motivos = [];
-    var idmotivos = moti['idsmotivos'];
-    var itensmotivos = moti['itensmotivos'];
-    for (int i = 0; i < idmotivos.length; i++) {
-      if (itensmotivos[i]) {
-        jsonconclusao.motivosManutencao.motivos
-            ?.add(MotivoManutencao(id: idmotivos[i]));
+    var moti;
+    var idmotivos;
+    var itensmotivos;
+    try {
+      moti = jsonDecode(mots!);
+      idmotivos = moti['idsmotivos'];
+      itensmotivos = moti['itensmotivos'];
+      jsonconclusao.motivosManutencao.motivos = [];
+      for (int i = 0; i < idmotivos.length; i++) {
+        if (itensmotivos[i]) {
+          jsonconclusao.motivosManutencao.motivos
+              ?.add(MotivoManutencao(id: idmotivos[i]));
+        }
       }
+    } catch (e) {
+      moti = "";
+      jsonconclusao.motivosManutencao.motivos = [];
     }
+
     var itensconcjson = opcs.getString("conclusaoItens");
     var itenscon = jsonDecode(itensconcjson!);
 
