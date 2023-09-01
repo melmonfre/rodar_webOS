@@ -66,13 +66,24 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
     json = opcs.getString("SelectedOS");
     element = jsonDecode(json);
     var motivos = opcs.getString("motivositens");
-    var mots = jsonDecode(motivos!);
-    List nomesmotivos = mots["nomesmotivos"];
-    List itensmotivos = mots["itensmotivos"];
-    for (int i = 0; i < nomesmotivos.length; i++) {
-      if (itensmotivos[i]) {
-        motivo = motivo + " ${nomesmotivos[i]}";
+    var mots;
+    try {
+      mots = jsonDecode(motivos!);
+    } catch (e) {
+      mots = "";
+    }
+    List nomesmotivos;
+    List itensmotivos;
+    try {
+      nomesmotivos = mots["nomesmotivos"];
+      itensmotivos = mots["itensmotivos"];
+      for (int i = 0; i < nomesmotivos.length; i++) {
+        if (itensmotivos[i]) {
+          motivo = motivo + " ${nomesmotivos[i]}";
+        }
       }
+    } catch (e) {
+      motivo = "";
     }
 
     os = element['id'];
@@ -174,13 +185,13 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
     List itenscheckout = checkoutitens['itenscheckin'];
 
     for (int i = 0; i < itenscheckin.length; i++) {
-      var checkin  = itenscheckin[i];
+      var checkin = itenscheckin[i];
       var checkout = itenscheckout[i];
-      if (checkin  == 0) {
+      if (checkin == 0) {
         checkinsitu.add("OK");
-      } else if (checkin  == 1) {
+      } else if (checkin == 1) {
         checkinsitu.add("Com Defeito");
-      } else if (checkin  == 2) {
+      } else if (checkin == 2) {
         checkinsitu.add("Não Possui");
       }
       if (checkout == 0) {
