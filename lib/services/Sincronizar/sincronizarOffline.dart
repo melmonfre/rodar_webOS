@@ -281,15 +281,21 @@ class syncoff {
 
     var tipoenvio;
     print("CONTATOOO $contato");
-    if (contato['responsavelAusente']) {
+    if (contato['responsavelAusente'] == true) {
       tipoenvio = "email";
       jsonconclusao.presencial = false;
+
+      final id = contato['id'] != "" ? int.parse(contato['id']) : 0;
+      final nome = contato['nome'];
+      final email = contato['email'];
+      final telefone = contato['telefone'];
+
       jsonconclusao.notificacaoResponsavel.notificacaoResponsavel = '''
              {
-            "id": ${contato['id'] != "" ? int.parse(contato['id']) : 0},
-            "nome": "${contato['nome']}",
-            "email": "a${contato['email']}",
-            "telefone": "${contato['telefone']}",
+            "id": $id,
+            "nome": "$nome",
+            "email": "$email",
+            "telefone": "$telefone",
             "tipoEnvio": "$tipoenvio",
             "idOs": $osid,
             "documento": "",

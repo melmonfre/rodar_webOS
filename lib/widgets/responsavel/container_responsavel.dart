@@ -52,6 +52,8 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
       "responsavelAusente": responsavelAusente
     };
     opcs.setString("DadosContato", jsonEncode(values));
+
+    syncoff().criarjson(osid);
   }
 
   setContato(String contatoToSelect) {
@@ -240,6 +242,10 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                       onChanged: (value) {
                         setState(() {
                           email = value;
+                        });
+                      },
+                      onSubmitted: (value) {
+                        setState(() {
                           validateEmail(email);
                         });
                       },
@@ -299,8 +305,8 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                 padding: EdgeInsets.fromLTRB(12.0, 1.0, 12.0, 17.0),
                 child: responsavelAusente
                     ? BotaoEnviar(
-                        onPressed: () {
-                          syncoff().criarjson(osid);
+                        onPressed: () async {
+                          saveoncache();
                           showDialog(
                             context: context,
                             builder: (context) {
@@ -309,7 +315,6 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                                 actions: [
                                   TextButton(
                                     onPressed: () {
-                                      saveoncache();
                                       envianot().enviar();
                                       reenvianot().enviar();
                                       confirmacaopresencial().enviar();
