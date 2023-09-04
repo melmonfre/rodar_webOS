@@ -7,7 +7,7 @@ class InputNumber extends StatefulWidget {
   final bool showInfoIcon;
   final bool enabled;
 
-  const InputNumber({
+  const InputNumber({super.key, 
     required this.labelText,
     this.onChanged,
     this.initialValue,

@@ -9,7 +9,7 @@ class InputText extends StatefulWidget {
   final bool enabled;
 
   const InputText(
-      {required this.labelText,
+      {super.key, required this.labelText,
       this.initialValue,
       this.onChanged,
       this.onSubmitted,

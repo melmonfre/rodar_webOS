@@ -24,8 +24,7 @@ class _CameraButtonState extends State<CameraButton> {
 
   salvanocache(base64Files) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
-    opcs.setString("base64camera",
-        base64Files); // Salva a lista de strings base64 no cache
+    opcs.setString("base64camera", base64Files); // Salva a lista de strings base64 no cache
     print("Foto $base64Files");
   }
 
@@ -37,38 +36,31 @@ class _CameraButtonState extends State<CameraButton> {
       var image = File(pickedFile.path);
       Img.Image? image_temp = Img.decodeImage(image.readAsBytesSync());
       if (image_temp != null) {
-        Img.Image? resized_img =
-            Img.copyResize(image_temp, width: 1024, height: 720);
+        Img.Image? resized_img = Img.copyResize(image_temp, width: 1024, height: 720);
         print('alteração imagem nova');
-        image = File(pickedFile.path)
-          ..writeAsBytesSync(Img.encodeJpg(resized_img));
+        image = File(pickedFile.path)..writeAsBytesSync(Img.encodeJpg(resized_img));
       }
       final imageSize = await image.length();
 
-      final fileName = pickedFile.path
-          .split('/')
-          .last; // Obter o nome do arquivo corretamente
+      final fileName = pickedFile.path.split('/').last; // Obter o nome do arquivo corretamente
       setState(() {
         _image = image; // Define a imagem selecionada
         _imageName = fileName; // Define o nome da imagem selecionada
-        _imageSize =
-            imageSize.toDouble(); // Define o tamanho da imagem selecionada
+        _imageSize = imageSize.toDouble(); // Define o tamanho da imagem selecionada
         createbase64(_image); // Converte a imagem em string base64
       });
       widget.onFotoSelected(true);
 
       // Salvar a imagem na galeria
       final directory = await getApplicationDocumentsDirectory();
-      final imagePath =
-          '${directory.path}/image${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final imagePath = '${directory.path}/image${DateTime.now().millisecondsSinceEpoch}.jpg';
       await image.copy(imagePath);
     }
   }
 
   String _truncateFileName(String fileName) {
     const maxLength = 10; // Comprimento máximo do nome do arquivo truncado
-    const lineBreakAt =
-        5; // Índice de quebra de linha no nome do arquivo truncado
+    const lineBreakAt = 5; // Índice de quebra de linha no nome do arquivo truncado
 
     if (fileName.length <= maxLength) {
       return fileName; // Retorna o nome completo se for menor ou igual ao comprimento máximo
@@ -90,8 +82,7 @@ class _CameraButtonState extends State<CameraButton> {
       return SizedBox(); // Retorna um widget vazio se não houver imagem selecionada
     }
 
-    final imageName =
-        _image!.path.split('/').last; // Nome da imagem selecionada
+    final imageName = _image!.path.split('/').last; // Nome da imagem selecionada
     final imageSize = _getImageSize(_image);
 
     return Padding(
@@ -115,8 +106,7 @@ class _CameraButtonState extends State<CameraButton> {
                   style: TextStyle(fontSize: 11),
                 ),
                 Text(
-                  _truncateFileName(
-                      imageName), // Exibe o nome truncado da imagem
+                  _truncateFileName(imageName), // Exibe o nome truncado da imagem
                   style: TextStyle(fontSize: 11),
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
@@ -172,6 +162,8 @@ class _CameraButtonState extends State<CameraButton> {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
+                            contentPadding:
+                                EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 16),
                             title: Text(
                               'Selecione uma opção',
                               style: TextStyle(fontWeight: FontWeight.bold),
@@ -180,24 +172,20 @@ class _CameraButtonState extends State<CameraButton> {
                               child: ListBody(
                                 children: <Widget>[
                                   GestureDetector(
-                                    child: Row(
-                                      children: [
-                                        SizedBox(width: 8),
-                                        Text('Tirar foto'),
-                                      ],
+                                    child: const Padding(
+                                      padding: EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+                                      child: Text('Tirar foto'),
                                     ),
                                     onTap: () {
                                       _takePicture(ImageSource.camera);
                                       Navigator.of(context).pop();
                                     },
                                   ),
-                                  SizedBox(height: 16),
+                                  const SizedBox(height: 8),
                                   GestureDetector(
-                                    child: Row(
-                                      children: [
-                                        SizedBox(width: 8),
-                                        Text('Galeria'),
-                                      ],
+                                    child: const Padding(
+                                      padding: EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+                                      child: Text('Galeria'),
                                     ),
                                     onTap: () {
                                       _takePicture(ImageSource.gallery);

@@ -33,6 +33,8 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
   String? email;
   String? telefone;
 
+  var contatoExistente;
+
   String contatoSelecionado = '';
   bool responsavelAusente = false;
   String motivoAusencia = '';
@@ -52,6 +54,26 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
     opcs.setString("DadosContato", jsonEncode(values));
   }
 
+  setContato(String contatoToSelect) {
+    setState(() {
+      if (contatoToSelect == "existente") {
+        try {
+          nome = contatoExistente['nome'];
+          telefone = contatoExistente['telefone'];
+          email = contatoExistente['email'];
+        } catch (e) {
+          nome = "";
+          telefone = "";
+          email = "";
+        }
+      } else {
+        nome = "";
+        telefone = "";
+        email = "";
+      }
+    });
+  }
+
   Future<void> getdata() async {
     var json;
     var element;
@@ -69,6 +91,7 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
         nome = contact['nome'];
         email = contact['email'];
         telefone = contact['telefone'];
+        contatoExistente = contact;
       } catch (e) {
         debugPrint(e.toString());
         nome = "Não informado";
@@ -119,16 +142,18 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                     onChanged: (value) {
                       setState(() {
                         contatoSelecionado = value.toString();
+                        setContato('existente');
                       });
                     },
                   ),
-                  Text('$nome'),
+                  Text(contatoExistente?["nome"] ?? "Não Informado"),
                   Radio(
                     value: 'outro',
                     groupValue: contatoSelecionado,
                     onChanged: (value) {
                       setState(() {
                         contatoSelecionado = value.toString();
+                        setContato('outro');
                       });
                     },
                   ),
@@ -151,8 +176,7 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                   children: [
                     InputText(
                       labelText: 'Nome',
-                      initialValue:
-                          nome, //valor inicial do preenchimento automatico
+                      initialValue: nome, //valor inicial do preenchimento automatico
                       onChanged: (String? value) {
                         if (mounted) {
                           setState(() {
@@ -160,8 +184,7 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                           });
                         }
                       },
-                      enabled:
-                          false, // Desabilitar o campo preenchido automaticamente
+                      enabled: false, // Desabilitar o campo preenchido automaticamente
                     ),
                     InputText(
                       labelText: 'Email',
@@ -180,8 +203,7 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                           email = value;
                         });
                       },
-                      enabled:
-                          false, // Desabilitar o campo preenchido automaticamente
+                      enabled: false, // Desabilitar o campo preenchido automaticamente
                     ),
                     InputText(
                       labelText: 'Telefone',
@@ -194,8 +216,7 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                           });
                         }
                       },
-                      enabled:
-                          false, // Desabilitar o campo preenchido automaticamente
+                      enabled: false, // Desabilitar o campo preenchido automaticamente
                     ),
                   ],
                 ),
@@ -203,7 +224,9 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                 Column(
                   children: [
                     InputText(
+                      key: const Key("outroNome"),
                       labelText: 'Nome',
+                      initialValue: "",
                       onChanged: (value) {
                         setState(() {
                           nome = value;
@@ -211,8 +234,10 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                       },
                     ),
                     InputText(
+                      key: const Key("outroEmail"),
                       labelText: 'Email',
-                      onSubmitted: (value) {
+                      initialValue: "",
+                      onChanged: (value) {
                         setState(() {
                           email = value;
                           validateEmail(email);
@@ -220,7 +245,9 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                       },
                     ),
                     InputNumber(
+                      key: const Key("outroTelefone"),
                       labelText: 'Telefone',
+                      initialValue: null,
                       onChanged: (value) {
                         setState(() {
                           telefone = value;
@@ -264,8 +291,7 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                   Text('Não'),
                 ],
               ),
-              if (responsavelAusente)
-                InputText(labelText: 'Informar motivo da ausência'),
+              if (responsavelAusente) InputText(labelText: 'Informar motivo da ausência'),
               SizedBox(height: 5.0),
               SizedBox(height: 10.0),
               Container(
@@ -307,9 +333,7 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                       )
                     : ColetarAssinaturaResponsavel(
                         onPressed: () {
-                          if (nome != null ||
-                              email != null ||
-                              telefone != null) {
+                          if (nome != null || email != null || telefone != null) {
                             saveoncache();
                             envianot().enviar();
                             reenvianot().enviar();
@@ -320,8 +344,7 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    TelaColetarAssinaturaResponsavel(),
+                                builder: (context) => TelaColetarAssinaturaResponsavel(),
                               ),
                             );
                           } else {
@@ -330,8 +353,8 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                               builder: (context) {
                                 return AlertDialog(
                                   title: Text('Erro'),
-                                  content: Text(
-                                      'Por favor, preencha todos os campos obrigatórios.'),
+                                  content:
+                                      Text('Por favor, preencha todos os campos obrigatórios.'),
                                   actions: [
                                     TextButton(
                                       child: Text('OK'),
