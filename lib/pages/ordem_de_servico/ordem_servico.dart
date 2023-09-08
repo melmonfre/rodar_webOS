@@ -7,6 +7,45 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../tela_inicial/tela_inicial.dart';
 
+class SectionHeading extends StatelessWidget {
+  String text;
+
+  SectionHeading({super.key, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+}
+
+class ContextText extends StatelessWidget {
+  String text;
+
+  ContextText(this.text, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontSize: 14,
+        ),
+      ),
+    );
+  }
+}
+
 class OrdemServico extends StatefulWidget {
   OrdemServico({Key? key}) : super(key: key);
 
@@ -45,6 +84,9 @@ class _OrdemServicoState extends State<OrdemServico> {
   var localequip = "";
   // endereço ok
   var local;
+
+  List<dynamic> acessorios = [];
+
   Future<void> getdata() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     json = opcs.getString("SelectedOS");
@@ -129,6 +171,16 @@ class _OrdemServicoState extends State<OrdemServico> {
       if (equip["localInstalacao"] != null) {
         localequip = "$localequip \n ${equip["localInstalacao"]}";
       }
+
+      if (element["acessorios"] != null) {
+        setState(() {
+          acessorios = element["acessorios"];
+
+          for (var ac in acessorios!) {
+            ac.putIfAbsent("nomeAcessorio", () => ac["acessorio"]["descricao"]);
+          }
+        });
+      }
     });
 
     List servicos = element['servicos']; // Obtém a lista de serviços do elemento atual
@@ -193,7 +245,7 @@ class _OrdemServicoState extends State<OrdemServico> {
       appBar: AppBar(
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.push(
               context,
@@ -201,11 +253,11 @@ class _OrdemServicoState extends State<OrdemServico> {
             );
           },
         ),
-        title: Text('Ordem de Serviço'),
+        title: const Text('Ordem de Serviço'),
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -213,301 +265,117 @@ class _OrdemServicoState extends State<OrdemServico> {
                 alignment: Alignment.center,
                 child: Text(
                   os.toString(),
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-              SizedBox(height: 16.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Dados de Agendamento',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "${agendamento}",
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 12.0),
+              const SizedBox(height: 16.0),
+              SectionHeading(text: 'Dados de Agendamento'),
+              const SizedBox(height: 3.0),
+              ContextText("${agendamento}"),
+              const SizedBox(height: 12.0),
               Container(
                 height: 1.0,
                 color: Colors.grey[500],
               ),
-              SizedBox(height: 10.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Dados do Cliente',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Cliente: ${cliente}',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Empresa: ${empresa}',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Telefones: ${telefone}',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 12.0),
+              const SizedBox(height: 10.0),
+              SectionHeading(text: 'Dados do Cliente'),
+              const SizedBox(height: 3.0),
+              ContextText('Cliente: ${cliente}'),
+              const SizedBox(height: 3.0),
+              ContextText('Empresa: ${empresa}'),
+              const SizedBox(height: 3.0),
+              ContextText('Telefones: ${telefone}'),
+              const SizedBox(height: 12.0),
               Container(
                 height: 1.0,
                 color: Colors.grey[500],
               ),
-              SizedBox(height: 10.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Contatos',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Nome: ${contatonome}',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Obs: ${contatoobs}',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 12.0),
+              const SizedBox(height: 10.0),
+              SectionHeading(text: 'Contatos'),
+              const SizedBox(height: 3.0),
+              ContextText('Nome: ${contatonome}'),
+              const SizedBox(height: 3.0),
+              ContextText('Obs: ${contatoobs}'),
+              const SizedBox(height: 12.0),
               Container(
                 height: 1.0,
                 color: Colors.grey[500],
               ),
-              SizedBox(height: 12.0),
+              const SizedBox(height: 12.0),
               // -----------------------------------------------------------
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Dados do Veiculo',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Placa: ${placa}',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Cor: ${corcarro}',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Chassi: ${chassi}',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Plataforma: ${plataforma}',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Modelo: ${modelo}',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Ano: ${ano}',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Renavan: ${renavam}',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 12.0),
+              SectionHeading(text: 'Dados do Veiculo'),
+              const SizedBox(height: 3.0),
+              ContextText('Placa: ${placa}'),
+              const SizedBox(height: 3.0),
+              ContextText('Cor: ${corcarro}'),
+              const SizedBox(height: 3.0),
+              ContextText('Chassi: ${chassi}'),
+              const SizedBox(height: 3.0),
+              ContextText('Plataforma: ${plataforma}'),
+              const SizedBox(height: 3.0),
+              ContextText('Modelo: ${modelo}'),
+              const SizedBox(height: 3.0),
+              ContextText('Ano: ${ano}'),
+              const SizedBox(height: 3.0),
+              ContextText('Renavan: ${renavam}'),
+              const SizedBox(height: 12.0),
               Container(
                 height: 1.0,
                 color: Colors.grey[500],
               ),
-              SizedBox(height: 12.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Serviços',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "${servico}",
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 12.0),
+              const SizedBox(height: 12.0),
+              SectionHeading(text: 'Serviços'),
+              const SizedBox(height: 3.0),
+              ContextText("${servico}"),
+              const SizedBox(height: 12.0),
               Container(
                 height: 1.0,
                 color: Colors.grey[500],
               ),
-              SizedBox(height: 12.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Equipamentos',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
+              const SizedBox(height: 12.0),
+              SectionHeading(text: 'Equipamentos'),
+              const SizedBox(height: 3.0),
+              ContextText('Tipo de Serviço: ${tiposervico}'),
+              const SizedBox(height: 3.0),
+              ContextText('Código equipamento ${codequip}'),
+              const SizedBox(height: 3.0),
+              ContextText('Local de instalação: ${localequip}'),
+
+              if (acessorios.isNotEmpty)
+                Column(
+                  children: [
+                    const SizedBox(height: 12.0),
+                    Container(
+                      height: 1.0,
+                      color: Colors.grey[500],
+                    ),
+                    const SizedBox(height: 12.0),
+                    SectionHeading(text: 'Acessórios'),
+                    for (final ac in acessorios) Column(
+                      children: [
+                        ContextText("Acessório: ${ac['nomeAcessorio']}"),
+                        ContextText("Qnt.: ${ac['quantidade'].toInt()}"),
+                        if (ac['quantidadeRetirada'] != null && ac['quantidadeRetirada'] > 0) ContextText("Qnt. Retirada: ${ac['quantidadeRetirada'].toInt()}"),
+                        if (ac['localInstalacao'] != null) ContextText("Local de Instalação: ${ac['localInstalacao']}"),
+                        const SizedBox(height: 12,)
+                      ],
+                    ),
+                  ],
                 ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Tipo de Serviço: ${tiposervico}',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Código equipamento ${codequip}',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Local de instalação: ${localequip}',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 12.0),
+
+              if (acessorios.isEmpty) const SizedBox(height: 12.0),
               Container(
                 height: 1.0,
                 color: Colors.grey[500],
               ),
-              SizedBox(height: 12.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Endereço',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "${local}",
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 12.0),
+              SectionHeading(text: 'Endereço'),
+              const SizedBox(height: 3.0),
+              ContextText("${local}"),
+              const SizedBox(height: 20.0),
               Row(
                 children: [
                   Flexible(
@@ -517,7 +385,7 @@ class _OrdemServicoState extends State<OrdemServico> {
                       child: BotaoVisitaFrustada(),
                     ),
                   ),
-                  SizedBox(width: 10.0), // Espaçamento entre os botões
+                  const SizedBox(width: 10.0), // Espaçamento entre os botões
                   Flexible(
                     flex: 1,
                     child: Container(
@@ -527,7 +395,7 @@ class _OrdemServicoState extends State<OrdemServico> {
                   ),
                 ],
               ),
-              SizedBox(height: 10.0)
+              const SizedBox(height: 10.0)
             ],
           ),
         ),

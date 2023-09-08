@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rodarwebos/pages/acessorios/tela_acessorios.dart';
 import 'package:rodarwebos/services/GetEquipamento.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -269,9 +270,7 @@ class EquipamentosChangeNotifier extends ChangeNotifier {
 
         state.getData();
         trocas.add(state);
-
       } else if (tipo == "RETIRADA") {
-
         final eqp = equipamento["equipamentoRetirado"];
         final localInstalacao = equipamento["localInstalacao"] ?? "";
 
@@ -309,6 +308,7 @@ class _EquipamentosState extends State<Equipamentos> {
   var json;
   var element;
   var os;
+  bool hasAccessorios = false;
 
   List<dynamic>? equipamentos;
 
@@ -333,6 +333,15 @@ class _EquipamentosState extends State<Equipamentos> {
     });
 
     print("CONTROL $control");
+
+    setState(() {
+      try {
+        List<dynamic> acessorios = element["acessorios"];
+        hasAccessorios = acessorios.isNotEmpty;
+      } catch (e) {
+        hasAccessorios = false;
+      }
+    });
   }
 
   @override
@@ -370,11 +379,17 @@ class _EquipamentosState extends State<Equipamentos> {
 
     Navigator.of(context).pop();
 
-    Navigator.push(
-      context,
-      // TODO: ROTA Acessorios()
-      MaterialPageRoute(builder: (context) => FotoHodometro()),
-    );
+    if (hasAccessorios) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Acessorios()),
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => FotoHodometro()),
+      );
+    }
   }
 
   @override
@@ -424,10 +439,9 @@ class _EquipamentosState extends State<Equipamentos> {
                   Consumer<EquipamentosChangeNotifier>(builder: (context, state, child) {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children:
-                          state.retiradas.map((e) => ContainerRetirada(state: e)).toList(),
+                      children: state.retiradas.map((e) => ContainerRetirada(state: e)).toList(),
                     );
-                  }),// Exibe o widget ContainerRetirada
+                  }), // Exibe o widget ContainerRetirada
 
                   Consumer<EquipamentosChangeNotifier>(builder: (context, state, child) {
                     return Column(
@@ -481,13 +495,12 @@ class ContainerRetirada extends StatefulWidget {
   RetiradaState state;
 
   ContainerRetirada({super.key, required this.state});
-  
+
   @override
   State<ContainerRetirada> createState() => _ContainerRetiradaState(state: state);
 }
 
 class _ContainerRetiradaState extends State<ContainerRetirada> {
-
   RetiradaState state;
 
   _ContainerRetiradaState({required this.state});
