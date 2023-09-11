@@ -36,10 +36,10 @@ class ContainerWithHeading extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const Center(
+              Center(
                 child: Text(
-                  'Acessórios para troca:',
-                  style: TextStyle(
+                  title,
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16.0,
                   ),
@@ -296,7 +296,7 @@ class _AcessoriosState extends State<Acessorios> {
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                  ),
+                 ),
                 ),
               ),
               if (aTrocar.isNotEmpty)
@@ -320,7 +320,7 @@ class _AcessoriosState extends State<Acessorios> {
                           .expand((element) => element)
                           .toList(),
                     )),
-              if (aTrocar.isNotEmpty)
+              if (aInstalar.isNotEmpty)
                 ContainerWithHeading(
                     title: "Acessorios a instalar: ",
                     child: Column(
