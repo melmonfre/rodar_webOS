@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -12,7 +13,6 @@ class syncoff {
   //getters para instanciar o model
   get checkin => Checkin();
   get equipamentos => Equipamentos();
-  get acessorios => Acessorios();
   get arquivos => Arquivos();
   get deslocamento => Deslocamento();
   get checkout => Checkout();
@@ -36,8 +36,8 @@ class syncoff {
     var jsonconclusao = JsonConclusao(
         checkin: checkin,
         equipamentos: equipamentos,
-        acessorios: '',
-        arquivos: arquivos,
+        acessorios: Acessorios(encodedStr: "[]", osid: 0),
+        arquivos: arquivos, 
         deslocamento: deslocamento,
         checkout: checkout,
         motivosManutencao: motivosManutencao,
@@ -333,6 +333,25 @@ class syncoff {
       jsonconclusao.assinaturaResponsavel.observacaoCliente = "";
       jsonconclusao.notificacaoResponsavel.notificacaoResponsavel = null;
     }
+
+    jsonconclusao.acessorios?.osid = osid;
+
+    final acessoriosStr = opcs.getString("${osid}@AcessoriosAEnviar");
+
+    if (acessoriosStr != null) {
+
+      try {
+        List<dynamic> acessorios = jsonDecode(acessoriosStr);
+
+        jsonconclusao.acessorios = Acessorios(encodedStr: acessoriosStr, osid: osid);
+
+      } catch (e) {
+        debugPrint("erro ao colocar acessorios no jsonconclusao: ${e}");
+      }
+    } else {
+      jsonconclusao.acessorios = Acessorios(encodedStr: "[]", osid: osid);
+    }
+
 
     /*
     required Checkin checkin,

@@ -56,21 +56,6 @@ class ContainerWithHeading extends StatelessWidget {
   }
 }
 
-//       "acessorio": {
-//         "descricao": "Equipamento X"
-//       },
-//       "localInstalacao": "interior",
-//       "quantidade": 1.0,
-//       "quantidadeRetirada": 1.0,
-
-//       "acessorio": {
-//         "descricao": "SIERRA 2MB"
-//       },
-//       "quantidade": 1.0,
-//       "quantidadeRetirada": 0.0,
-
-class AcessoriosNotifier extends ChangeNotifier {}
-
 class AcessorioATrocar extends StatelessWidget {
   String localInstalacao;
   double quantidadeAInstalar;
@@ -237,7 +222,32 @@ class _AcessoriosState extends State<Acessorios> {
     return true;
   }
 
-  saveAcessorios() async {}
+  saveAcessorios() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+
+    final json = opcs.getString("SelectedOS");
+    final element = jsonDecode(json!);
+
+    setState(() {
+      os = element['id'].toString();
+    });
+
+    List<dynamic> acessorios = element["acessorios"];
+
+    List<dynamic> allAcessorios = [aTrocar, aInstalar].expand((e) => {...e}).toList();
+
+    for (var ac in acessorios) {
+      final upAcessorio = allAcessorios.firstWhere((e) => e["id"] == ac["id"]);
+
+      ac["localInstalacao"] = upAcessorio?["localInstalacao"] ?? "";
+      ac["localInstalacaoTec"] = upAcessorio?["localInstalacao"] ?? "";
+    }
+    
+
+    opcs.setString("${os}@AcessoriosAEnviar", jsonEncode(acessorios));
+
+    debugPrint("acessorios salvos em ${os}@AcessoriosAEnviar");
+  }
 
   irProximo() {
     if (isAllValid()) {

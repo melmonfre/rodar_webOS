@@ -44,3 +44,5 @@ ${osid}@OSaFinalizarenviarimagem@${referencia} // Retorna o body da função env
 ${osid}@OSaFinalizarenviarreferencias // retorna as referencias da os
 ${osid}@OSaFinalizainiciarconfirmacao // retorna o body da função iniciar confirmação
 ${osid}@OSaFinalizaenviarconfirmacao // retorna o body da função enviar confirmação
+
+${osid}@AcessoriosAEnviar // acessorios da OS

@@ -1,7 +1,9 @@
+import 'dart:convert';
+
 class JsonConclusao {
   Checkin checkin;
   Equipamentos equipamentos;
-  String? acessorios;
+  Acessorios? acessorios;
   Arquivos arquivos;
   Deslocamento deslocamento;
   Checkout checkout;
@@ -34,7 +36,7 @@ class JsonConclusao {
   Map<String, dynamic> toJson() => {
         'checkin': checkin,
         'equipamentos': equipamentos,
-        'acessorios': acessorios,
+        'acessorios': acessorios ?? [],
         'arquivos': arquivos,
         'deslocamento': deslocamento,
         'checkout': checkout,
@@ -49,18 +51,20 @@ class JsonConclusao {
       };
 }
 
+
 class Acessorios {
-  int? id;
-  List<NotificacaoResponsavel>? acessorios;
-  String? etapaApp;
+  String encodedStr;
+  int osid;
 
   Acessorios({
-    this.id,
-    this.acessorios,
-    this.etapaApp,
+    required this.osid,
+    required this.encodedStr,
   });
-  Map<String, dynamic> toJson() =>
-      {'id': id, 'acessorios': acessorios, 'etapaApp': etapaApp};
+  Map<String, dynamic> toJson() => ({
+    "id": osid,
+    "acessorios": jsonDecode(encodedStr),
+    "etapaAPP": "ACESSORIOS",
+  });
 }
 
 class NotificacaoResponsavel {
