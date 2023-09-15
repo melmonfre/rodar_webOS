@@ -46,7 +46,7 @@ class JsonConclusao {
         'presencial': presencial,
         'notificacaoResponsavel': notificacaoResponsavel,
         'confirmacaoPresencial': confirmacaoPresencial,
-        'documentosResponsavel': documentosResponsavel,
+        'documentosResponsavel': null,
         'assinaturaResponsavel': assinaturaResponsavel
       };
 }

@@ -37,8 +37,8 @@ class _ImagemState extends State<Imagem> {
     setState(() {
       data = result;
     });
-    createbase64(data);
-    _salvarImagemNaGaleria(data);
+    _salvarImagemNaGaleria(result);
+    await createbase64(result);
   }
 
   void _salvarImagemNaGaleria(Uint8List? pngBytes) async {
@@ -52,16 +52,17 @@ class _ImagemState extends State<Imagem> {
     }
   }
 
-  void createbase64(image) {
+  createbase64(image) async {
     List<int> imageBytes = image;
     String base64File = base64Encode(imageBytes);
-    print("BASE64 $base64File");
-    salvanocache("data:image/png;base64,$base64File");
+    debugPrint("BASE64 abaixo");
+    debugPrint("data:image/png;base64,  $base64File");
+    await salvanocache("data:image/png;base64,$base64File");
   }
 
   salvanocache(base64Files) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
-    opcs.setString("base64assinatura", base64Files);
+    await opcs.setString("base64assinatura", base64Files);
   }
 
   void _limparAssinatura() {
