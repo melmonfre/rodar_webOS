@@ -36,13 +36,19 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
   var contatoExistente;
 
   String contatoSelecionado = '';
+  int contatoSelecionadoIndex = -2;
+
   bool responsavelAusente = false;
   String motivoAusencia = '';
   String id = '';
   var osid;
 
+  List<Map<String, dynamic>> contatos = [];
+
   saveoncache() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
+
+    var id = contatoSelecionadoIndex < 0 ? "0" : contatos[contatoSelecionadoIndex]["id"].toString();
 
     Map<String, dynamic> values = {
       "id": id,
@@ -56,13 +62,15 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
     syncoff().criarjson(osid);
   }
 
-  setContato(String contatoToSelect) {
+  setContato(int contatoToSelect) {
     setState(() {
-      if (contatoToSelect == "existente") {
+      contatoSelecionadoIndex = contatoToSelect;
+
+      if (!contatoToSelect.isNegative) {
         try {
-          nome = contatoExistente['nome'];
-          telefone = contatoExistente['telefone'];
-          email = contatoExistente['email'];
+          nome = contatos[contatoToSelect]['nome'];
+          telefone = contatos[contatoToSelect]['telefone'];
+          email = contatos[contatoToSelect]['email'];
         } catch (e) {
           nome = "";
           telefone = "";
@@ -82,24 +90,29 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     json = opcs.getString("SelectedOS");
     element = jsonDecode(json);
-    var contatos = element['contatos'];
+    var sContatos = element['contatos'];
 
     setState(() {
-      osid = element['id'];
       try {
-        var contacto = contatos[0];
-        id = contacto["id"].toString();
-        var contact = contacto["contato"];
-        nome = contact['nome'];
-        email = contact['email'];
-        telefone = contact['telefone'];
-        contatoExistente = contact;
+        sContatos.forEach((contatoItem) {
+          var c = contatoItem["contato"];
+
+          contatos.add({
+            "id": contatoItem["id"].toString(),
+            "nome": c["nome"],
+            "email": c["email"],
+            "telefone": c["telefone"],
+          });
+        });
+
+        if (contatos.isEmpty) {
+          contatoSelecionadoIndex = -1;
+        }
       } catch (e) {
-        debugPrint(e.toString());
-        nome = "Não informado";
-        email = "";
-        telefone = "";
+        debugPrint("erro ao listar contatos. ${e}");
       }
+
+      osid = element['id'];
     });
   }
 
@@ -107,6 +120,122 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
   void initState() {
     super.initState();
     getdata();
+  }
+
+  bool isValid() {
+    bool nomeValido = !(nome == null || nome == "");
+    bool emailValido = validateEmail(email);
+    bool telefoneValido = true;
+
+    return nomeValido && emailValido && telefoneValido;
+  }
+
+  void buttonHandler() async {
+    if (isValid()) {
+      if (responsavelAusente) {
+        enviar();
+      } else {
+        coletarAssinaturaResponsavel();
+      }
+    } else {
+      if (nome == null || nome == "")  {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text('Erro'),
+              content: const Text('Por favor, preencha todos os campos obrigatórios.'),
+              actions: [
+                TextButton(
+                  child: const Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      } else
+
+      {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Erro'),
+              content: const Text('Por favor, insira um e-mail válido.'),
+              actions: [
+                TextButton(
+                  child: Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+    }
+  }
+
+  void enviar() async {
+    saveoncache();
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Salvo com sucesso'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                envianot().enviar();
+                reenvianot().enviar();
+                confirmacaopresencial().enviar();
+                enviardocconfirmacaopresencial().enviar();
+                concluiOS().concluir(osid);
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TelaInicial(),
+                  ),
+                );
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void coletarAssinaturaResponsavel() {
+    saveoncache();
+    envianot().enviar();
+    reenvianot().enviar();
+    confirmacaopresencial().enviar();
+    enviardocconfirmacaopresencial().enviar();
+
+    //concluiOS().concluir(osid);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TelaColetarAssinaturaResponsavel(),
+      ),
+    );
+  }
+
+  bool validateEmail(String? email) {
+    final emailRegExp = RegExp(
+      r'^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$',
+    );
+
+    if (email == null || email.isEmpty || !emailRegExp.hasMatch(email)) {
+      return false;
+    }
+    return true;
   }
 
   @override
@@ -121,12 +250,12 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
       ),
       child: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 5.0),
+          padding: const EdgeInsets.symmetric(horizontal: 5.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 20.0),
-              Center(
+              const Center(
                 child: Text(
                   'Selecione um contato',
                   style: TextStyle(
@@ -135,35 +264,34 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                   ),
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Radio(
-                    value: 'nome',
-                    groupValue: contatoSelecionado,
-                    onChanged: (value) {
-                      setState(() {
-                        contatoSelecionado = value.toString();
-                        setContato('existente');
-                      });
-                    },
-                  ),
-                  Text(contatoExistente?["nome"] ?? "Não Informado"),
-                  Radio(
-                    value: 'outro',
-                    groupValue: contatoSelecionado,
-                    onChanged: (value) {
-                      setState(() {
-                        contatoSelecionado = value.toString();
-                        setContato('outro');
-                      });
-                    },
-                  ),
-                  Text('Outro'),
-                ],
+              Padding(
+                padding: const EdgeInsets.only(right: 60, left: 60, bottom: 10, top: 10),
+                child: DropdownButton<int>(
+                  isExpanded: true,
+                  value: contatoSelecionadoIndex < -1 ? null : contatoSelecionadoIndex,
+                  onChanged: (int? newValue) {
+                    setState(() {
+                      contatoSelecionadoIndex = newValue ?? -2;
+
+                      if (newValue != null) {
+                        setContato(contatoSelecionadoIndex);
+                      }
+                    });
+                  },
+                  items: [
+                    ...contatos
+                        .asMap()
+                        .map((key, value) =>
+                            MapEntry(key, DropdownMenuItem(value: key, child: Text(value["nome"]))))
+                        .values
+                        .toList(),
+                    const DropdownMenuItem(value: -1, child: Text("Outro")),
+                  ],
+                  hint: const Text('Contato'),
+                ),
               ),
-              SizedBox(height: 10.0),
-              Center(
+              const SizedBox(height: 10.0),
+              const Center(
                 child: Text(
                   'Contato selecionado',
                   style: TextStyle(
@@ -173,12 +301,13 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                 ),
               ),
               SizedBox(height: 10.0),
-              if (contatoSelecionado == 'nome')
+              if (contatoSelecionadoIndex > -2)
                 Column(
                   children: [
                     InputText(
-                      labelText: 'Nome',
-                      initialValue: nome, //valor inicial do preenchimento automatico
+                      key: Key("$contatoSelecionadoIndex@nome"),
+                      labelText: 'Nome *',
+                      initialValue: nome,
                       onChanged: (String? value) {
                         if (mounted) {
                           setState(() {
@@ -186,84 +315,36 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                           });
                         }
                       },
-                      enabled: false, // Desabilitar o campo preenchido automaticamente
+                      enabled: !(contatoSelecionadoIndex > -1),
                     ),
                     InputText(
-                      labelText: 'Email',
+                      key: Key("$contatoSelecionadoIndex@email"),
+                      labelText: 'Email *',
                       initialValue: email,
-                      onSubmitted: (value) {
-                        if (mounted) {
-                          // Verificar se o widget ainda está montado
-                          setState(() {
-                            email = value;
-                            validateEmail(email);
-                          });
-                        }
-                      },
                       onChanged: (String? value) {
                         setState(() {
                           email = value;
                         });
                       },
-                      enabled: false, // Desabilitar o campo preenchido automaticamente
+                      enabled: !(contatoSelecionadoIndex > -1),
                     ),
                     InputText(
+                      key: Key("$contatoSelecionadoIndex@telefone"),
                       labelText: 'Telefone',
                       initialValue: telefone,
                       onChanged: (String? value) {
                         if (mounted) {
-                          // Verificar se o widget ainda está montado
                           setState(() {
                             telefone = value;
                           });
                         }
                       },
-                      enabled: false, // Desabilitar o campo preenchido automaticamente
+                      enabled: !(contatoSelecionadoIndex > -1),
                     ),
                   ],
                 ),
-              if (contatoSelecionado == 'outro')
-                Column(
-                  children: [
-                    InputText(
-                      key: const Key("outroNome"),
-                      labelText: 'Nome',
-                      initialValue: "",
-                      onChanged: (value) {
-                        setState(() {
-                          nome = value;
-                        });
-                      },
-                    ),
-                    InputText(
-                      key: const Key("outroEmail"),
-                      labelText: 'Email',
-                      initialValue: "",
-                      onChanged: (value) {
-                        setState(() {
-                          email = value;
-                        });
-                      },
-                      onSubmitted: (value) {
-                        setState(() {
-                          validateEmail(email);
-                        });
-                      },
-                    ),
-                    InputNumber(
-                      key: const Key("outroTelefone"),
-                      labelText: 'Telefone',
-                      initialValue: null,
-                      onChanged: (value) {
-                        setState(() {
-                          telefone = value;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              SizedBox(height: 10.0),
-              Center(
+              const SizedBox(height: 10.0),
+              const Center(
                 child: Text(
                   'Responsável ausente?',
                   style: TextStyle(
@@ -304,110 +385,13 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                 alignment: Alignment.center,
                 padding: EdgeInsets.fromLTRB(12.0, 1.0, 12.0, 17.0),
                 child: responsavelAusente
-                    ? BotaoEnviar(
-                        onPressed: () async {
-                          saveoncache();
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: Text('Salvo com sucesso'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      envianot().enviar();
-                                      reenvianot().enviar();
-                                      confirmacaopresencial().enviar();
-                                      enviardocconfirmacaopresencial().enviar();
-                                      concluiOS().concluir(osid);
-
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => TelaInicial(),
-                                        ),
-                                      );
-                                    },
-                                    child: Text('OK'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                      )
-                    : ColetarAssinaturaResponsavel(
-                        onPressed: () {
-                          if (nome != null || email != null || telefone != null) {
-                            saveoncache();
-                            envianot().enviar();
-                            reenvianot().enviar();
-                            confirmacaopresencial().enviar();
-                            enviardocconfirmacaopresencial().enviar();
-
-                            //concluiOS().concluir(osid);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => TelaColetarAssinaturaResponsavel(),
-                              ),
-                            );
-                          } else {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: Text('Erro'),
-                                  content:
-                                      Text('Por favor, preencha todos os campos obrigatórios.'),
-                                  actions: [
-                                    TextButton(
-                                      child: Text('OK'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          }
-                        },
-                      ),
+                    ? BotaoEnviar(onPressed: buttonHandler)
+                    : ColetarAssinaturaResponsavel(onPressed: buttonHandler),
               ),
             ],
           ),
         ),
       ),
     );
-  }
-
-  // Função de validação de e-mail
-  bool validateEmail(String? email) {
-    final emailRegExp = RegExp(
-      r'^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$',
-    );
-
-    if (email == null || email.isEmpty || !emailRegExp.hasMatch(email)) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Aviso'),
-            content: Text('Por favor, insira um e-mail válido.'),
-            actions: [
-              TextButton(
-                child: Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-      return false;
-    }
-    return true;
   }
 }
