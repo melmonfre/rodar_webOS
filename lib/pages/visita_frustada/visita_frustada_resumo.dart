@@ -6,6 +6,45 @@ import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+class ContentHeading extends StatelessWidget {
+  String text;
+
+  ContentHeading(this.text, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+}
+
+class ContentText extends StatelessWidget {
+  String text;
+
+  ContentText(this.text, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontSize: 14,
+        ),
+      ),
+    );
+  }
+}
+
 class VisitaFrustadaResumo extends StatefulWidget {
   @override
   _VisitaFrustadaResumoState createState() => _VisitaFrustadaResumoState();
@@ -14,7 +53,7 @@ class VisitaFrustadaResumo extends StatefulWidget {
 class _VisitaFrustadaResumoState extends State<VisitaFrustadaResumo> {
   var variaveis = VariaveisResumo();
 
-  int num =0;
+  int num = 0;
 
   var element;
   var agendamento; //ok
@@ -32,13 +71,13 @@ class _VisitaFrustadaResumoState extends State<VisitaFrustadaResumo> {
 
   //cliente
   var cliente; //ok
-  var empresa;//ok
-  var telefone;//ok
+  var empresa; //ok
+  var telefone; //ok
   //contatos
   var contatonome; //ok
   var contatoobs; //ok
   //servicos ok
-  var servico;//ok
+  var servico; //ok
   //equipamentos
   var tiposervico = "";
   var codequip = "";
@@ -50,7 +89,7 @@ class _VisitaFrustadaResumoState extends State<VisitaFrustadaResumo> {
     json = opcs.getString("SelectedOS");
     element = jsonDecode(json);
     os = element['id'];
-    int numero =0;
+    int numero = 0;
     var veiculo = element['veiculo'];
     placa = veiculo['placa'];
     corcarro = veiculo['cor'];
@@ -59,9 +98,9 @@ class _VisitaFrustadaResumoState extends State<VisitaFrustadaResumo> {
     var pt = veiculo['plataforma'];
     ano = veiculo['ano'];
     renavam = veiculo['renavan'];
-    try{
+    try {
       plataforma = pt['nome'];
-    } catch(e){
+    } catch (e) {
       plataforma = "outro";
     }
     var clie = veiculo['cliente'];
@@ -74,20 +113,19 @@ class _VisitaFrustadaResumoState extends State<VisitaFrustadaResumo> {
     telefone = numtel['numero'];
     var cont = element['contatos'];
     var contacto;
-    try{
+    try {
       contacto = cont[0];
       var contact = contacto["contato"];
       contatonome = contact['nome'];
       contatoobs = contact['observacao'];
-    } catch(e){
-      contatonome ="não informado";
+    } catch (e) {
+      contatonome = "não informado";
       contatoobs = "";
     }
 
-
     var eq = element['equipamentos'];
     eq.forEach((equip) {
-      tiposervico = "$tiposervico ${equip["tipo"] }";
+      tiposervico = "$tiposervico ${equip["tipo"]}";
       codequip = "$codequip ${equip["id"]}";
       localequip = "$localequip ${equip["localInstalacao"]}";
     });
@@ -104,16 +142,16 @@ class _VisitaFrustadaResumoState extends State<VisitaFrustadaResumo> {
     var cidade = cit['nome'];
     var rua = end['rua'];
     var numerocasa = end['numero'];
-    local = "rua:${rua} numero:${numerocasa}, ${bairro}, ${cidade}";
+    local = "${rua}, ${numerocasa}, ${bairro}, ${cidade}";
     var localtime = element['dataInstalacao'];
     var datahora = localtime.split('T');
     var data = datahora[0].split('-');
     var hora = datahora[1].split(':');
     var hr;
-    if(int.parse(hora[0])-3  <0){
-      hr = int.parse(hora[0])-3  + 24;
+    if (int.parse(hora[0]) - 3 < 0) {
+      hr = int.parse(hora[0]) - 3 + 24;
     } else {
-      hr = int.parse(hora[0])-3;
+      hr = int.parse(hora[0]) - 3;
     }
     var agend = "${data[2]}/${data[1]}/${data[0]} ${hr}:${hora[1]}";
     //TODO: fazer calculo do tempo de espera
@@ -125,27 +163,29 @@ class _VisitaFrustadaResumoState extends State<VisitaFrustadaResumo> {
       num = numero;
     });
   }
+
   @override
   void initState() {
     getdata();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: Text('Visita frustada'),
+        title: const Text('Visita frustada'),
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -153,235 +193,94 @@ class _VisitaFrustadaResumoState extends State<VisitaFrustadaResumo> {
                 alignment: Alignment.center,
                 child: Text(
                   '${os}',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-              SizedBox(height: 16.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Dados de Agendamento',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  '$agendamento',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
+              const SizedBox(height: 16.0),
+              ContentHeading('Dados de Agendamento'),
+              const SizedBox(height: 3.0),
+              ContentText('$agendamento'),
               //SizedBox(height: 12.0),
               //Container(
-             //   height: 1.0,
+              //   height: 1.0,
               //  color: Colors.grey[500],
-             // ),
-             // SizedBox(height: 12.0),
-             // Align(
+              // ),
+              // SizedBox(height: 12.0),
+              // Align(
               //  alignment: Alignment.centerLeft,
               //  child: Text(
-                //  'Tempo de espera',
-                //  style: TextStyle(
-                 //   fontSize: 15,
-                  //  fontWeight: FontWeight.bold,
-                 // ),
-               // ),
+              //  'Tempo de espera',
+              //  style: TextStyle(
+              //   fontSize: 15,
+              //  fontWeight: FontWeight.bold,
+              // ),
+              // ),
               //),
-             // SizedBox(height: 3.0),
+              // SizedBox(height: 3.0),
               //Align(
               //  alignment: Alignment.centerLeft,
-               // child: Text(
-                //  'Não houve tempo de espera, agendamento marcado para ${variaveis.minutos} minutos',
-                //  style: TextStyle(
-                //    fontSize: 14,
-                //  ),
-               // ),
-             // ),
-             // SizedBox(height: 12.0),
+              // child: Text(
+              //  'Não houve tempo de espera, agendamento marcado para ${variaveis.minutos} minutos',
+              //  style: TextStyle(
+              //    fontSize: 14,
+              //  ),
+              // ),
+              // ),
+              const SizedBox(height: 12.0),
               Container(
                 height: 1.0,
                 color: Colors.grey[500],
               ),
-              SizedBox(height: 10.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Dados do Cliente',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Cliente: ${cliente}',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Empresa: ${empresa}',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 12.0),
+              const SizedBox(height: 10.0),
+              ContentHeading('Dados do Cliente'),
+              const SizedBox(height: 3.0),
+              ContentText('Cliente: ${cliente}'),
+              const SizedBox(height: 3.0),
+              ContentText('Empresa: ${empresa}'),
+              const SizedBox(height: 12.0),
               Container(
                 height: 1.0,
                 color: Colors.grey[500],
               ),
-              SizedBox(height: 12.0),
+              const SizedBox(height: 12.0),
               // -----------------------------------------------------------
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Dados do Veiculo',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Placa: ${placa}',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Cor: ${corcarro}',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Chassis: ${chassi}',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Plataforma: ${plataforma}',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Modelo: ${modelo}',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Ano: ${ano}',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Renavan: ${renavam}',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 12.0),
+              ContentHeading('Dados do Veiculo'),
+              const SizedBox(height: 3.0),
+              ContentText('Placa: ${placa}'),
+              const SizedBox(height: 3.0),
+              ContentText('Cor: ${corcarro}'),
+              const SizedBox(height: 3.0),
+              ContentText('Chassis: ${chassi}'),
+              const SizedBox(height: 3.0),
+              ContentText('Plataforma: ${plataforma}'),
+              const SizedBox(height: 3.0),
+              ContentText('Modelo: ${modelo}'),
+              const SizedBox(height: 3.0),
+              ContentText('Ano: ${ano}'),
+              const SizedBox(height: 3.0),
+              ContentText('Renavan: ${renavam}'),
+              const SizedBox(height: 12.0),
               Container(
                 height: 1.0,
                 color: Colors.grey[500],
               ),
-              SizedBox(height: 12.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Serviços',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "$servico",
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 12.0),
+              const SizedBox(height: 12.0),
+              ContentHeading('Serviços'),
+              const SizedBox(height: 3.0),
+              ContentText("$servico"),
+              const SizedBox(height: 12.0),
               Container(
                 height: 1.0,
                 color: Colors.grey[500],
               ),
-              SizedBox(height: 12.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Endereço',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              SizedBox(height: 3.0),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  '$local',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              SizedBox(height: 25.0),
+              const SizedBox(height: 12.0),
+              ContentHeading('Endereço'),
+              const SizedBox(height: 3.0),
+              ContentText('$local'),
+              const SizedBox(height: 25.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -392,8 +291,7 @@ class _VisitaFrustadaResumoState extends State<VisitaFrustadaResumo> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                                builder: (context) => VisitaFrustadaAnexo()),
+                            MaterialPageRoute(builder: (context) => VisitaFrustadaAnexo()),
                           );
                         },
                       ),
@@ -401,8 +299,7 @@ class _VisitaFrustadaResumoState extends State<VisitaFrustadaResumo> {
                   ),
                 ],
               ),
-
-              SizedBox(height: 10.0)
+              const SizedBox(height: 10.0)
             ],
           ),
         ),
