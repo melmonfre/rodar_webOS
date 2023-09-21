@@ -30,7 +30,11 @@ class _TelaInicialState extends State<TelaInicial> {
         timer--;
         if (timer == 0) {
           setState(() {
-            getdata();
+            try {
+              getdata();
+            } catch (e) {
+              debugPrint("error on getdata of tela_inicial: $e");
+            }
           });
           timer = 10;
         }
