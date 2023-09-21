@@ -70,7 +70,7 @@ class concluivf{
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
-    final data = '{"base64":$fotos,"idsRemove":[]}';
+    final data = '{"base64":${jsonEncode(fotos)},"idsRemove":[]}';
     print(data);
     final url = Uri.parse('${Urlconst().url}ordem_servico/enviardiversasfotos/$osid');
 
