@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,6 +8,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../Constantes/Urlconst.dart';
 
 class concluivf{
+
+  Future<String> getLocation() async {
+    LocationPermission permission = await Geolocator.requestPermission();
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.low);
+
+    return "${position.latitude},${position.longitude}";
+  }
+
   concluir() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     var dadosdeslocamento = opcs.getString("dadosdeslocamento");
@@ -23,7 +32,8 @@ class concluivf{
     var pedagioTec = deslocamento['pedagio'];
     var motivoDiv = element['motivoDiv'];
     String? base64images = opcs.getString("base64vf");
-    var localGps = "${opcs.getStringList("latitude")},${opcs.getStringList("longitude")}";
+
+    var localGps = await getLocation();
 
     await enviardiversasfotosvf(osid, token, base64images);
 
