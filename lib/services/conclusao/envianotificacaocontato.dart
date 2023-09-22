@@ -35,11 +35,11 @@ class envianot {
 
     final res = await http.post(url, headers: headers, body: data);
     final status = res.statusCode;
-    if (status != 200) throw Exception('http.post error: statusCode= $status');
-
-    print(res.reasonPhrase);
-    print(res.request);
-    print(res.headers);
-    print(res.body);
+    // if (status != 200) throw Exception('http.post error: statusCode= $status');
+    //
+    // print(res.reasonPhrase);
+    // print(res.request);
+    // print(res.headers);
+    // print(res.body);
   }
 }
