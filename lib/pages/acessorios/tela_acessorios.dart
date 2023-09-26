@@ -242,9 +242,8 @@ class _AcessoriosState extends State<Acessorios> {
       ac["localInstalacao"] = upAcessorio?["localInstalacao"] ?? "";
       ac["localInstalacaoTec"] = upAcessorio?["localInstalacao"] ?? "";
     }
-    
 
-    opcs.setString("${os}@AcessoriosAEnviar", jsonEncode(acessorios));
+    await opcs.setString("${os}@AcessoriosAEnviar", jsonEncode(acessorios));
 
     debugPrint("acessorios salvos em ${os}@AcessoriosAEnviar");
   }

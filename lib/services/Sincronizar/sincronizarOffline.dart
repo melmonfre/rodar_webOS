@@ -403,6 +403,10 @@ class syncoff {
       'Authorization': 'Bearer $token',
     };
     final data = await opcs.getString("${osid}@OSaFinalizardata");
+
+    debugPrint("data sent to the sincronizacaoordemservico:");
+    debugPrint(data);
+    
     print(data);
     final url = Uri.parse(
         '${Urlconst().url}ordem_servico/sincronizacaoordemservico/$osid');
