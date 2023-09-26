@@ -6,18 +6,21 @@ import 'package:rodarwebos/services/OS/ConcluirOS.dart';
 import 'package:rodarwebos/widgets/foto_assinatura/imagem.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../services/conclusao/confirmacaopresencial.dart';
+import '../../services/conclusao/envianotificacaocontato.dart';
+import '../../services/conclusao/enviardocumentopresencial.dart';
+import '../../services/conclusao/reenviarconfirmacao.dart';
+
 class TelaColetarAssinaturaResponsavel extends StatefulWidget {
   @override
-  _TelaColetarAssinaturaResponsavelState createState() =>
-      _TelaColetarAssinaturaResponsavelState();
+  _TelaColetarAssinaturaResponsavelState createState() => _TelaColetarAssinaturaResponsavelState();
 }
 
-class _TelaColetarAssinaturaResponsavelState
-    extends State<TelaColetarAssinaturaResponsavel> {
+class _TelaColetarAssinaturaResponsavelState extends State<TelaColetarAssinaturaResponsavel> {
   salvanocache() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     var assinatura = opcs.getString("base64assinatura");
-    opcs.setString("assinaturaresponsavel", assinatura!);
+    await opcs.setString("assinaturaresponsavel", assinatura!);
   }
 
   var os;
@@ -27,6 +30,7 @@ class _TelaColetarAssinaturaResponsavelState
     SharedPreferences opcs = await SharedPreferences.getInstance();
     json = opcs.getString("SelectedOS");
     element = jsonDecode(json);
+
     setState(() {
       os = element['id'];
     });
@@ -57,8 +61,13 @@ class _TelaColetarAssinaturaResponsavelState
           actions: <Widget>[
             TextButton(
               child: const Text('Sim'),
-              onPressed: () async {
-                await concluiOS().concluir(os);
+              onPressed: () async {    
+                concluiOS().concluir(os);
+                // envianot().enviar();
+                // reenvianot().enviar();
+                confirmacaopresencial().enviar();
+                enviardocconfirmacaopresencial().enviar();
+
                 Navigator.of(context).pop();
                 Navigator.push(
                   context,

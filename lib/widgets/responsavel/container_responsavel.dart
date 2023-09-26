@@ -190,8 +190,8 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
           actions: [
             TextButton(
               onPressed: () {
-                envianot().enviar();
-                reenvianot().enviar();
+                // envianot().enviar();
+                // reenvianot().enviar();
                 confirmacaopresencial().enviar();
                 enviardocconfirmacaopresencial().enviar();
                 concluiOS().concluir(osid);
@@ -212,12 +212,6 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
   }
 
   void coletarAssinaturaResponsavel() {
-    saveoncache();
-    envianot().enviar();
-    reenvianot().enviar();
-    confirmacaopresencial().enviar();
-    enviardocconfirmacaopresencial().enviar();
-
     //concluiOS().concluir(osid);
     Navigator.push(
       context,
