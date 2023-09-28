@@ -290,7 +290,7 @@ class syncoff {
       final email = contato['email'];
       final telefone = contato['telefone'];
 
-      jsonconclusao.notificacaoResponsavel.notificacaoResponsavel = '''
+      jsonconclusao.notificacaoResponsavel = jsonDecode('''
              {
             "id": $id,
             "nome": "$nome",
@@ -303,7 +303,7 @@ class syncoff {
             "observacaoCliente": "",
             "etapa": "ENVIO_RESPONSAVEL"
           }
-      ''';
+      ''');
     } else {
       tipoenvio = "presencial";
       jsonconclusao.presencial = true;
