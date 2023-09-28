@@ -45,6 +45,10 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
 
   List<Map<String, dynamic>> contatos = [];
 
+  criaJson() async {
+    syncoff().criarjson(osid);
+  }
+
   saveoncache() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
 
@@ -57,9 +61,8 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
       "telefone": telefone,
       "responsavelAusente": responsavelAusente
     };
-    opcs.setString("DadosContato", jsonEncode(values));
 
-    syncoff().criarjson(osid);
+    await opcs.setString("DadosContato", jsonEncode(values));
   }
 
   setContato(int contatoToSelect) {
@@ -182,6 +185,8 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
 
   void enviar() async {
     saveoncache();
+    criaJson();
+
     showDialog(
       context: context,
       builder: (context) {
@@ -212,7 +217,8 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
   }
 
   void coletarAssinaturaResponsavel() {
-    //concluiOS().concluir(osid);
+    saveoncache();
+
     Navigator.push(
       context,
       MaterialPageRoute(
