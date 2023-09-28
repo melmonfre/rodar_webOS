@@ -352,7 +352,12 @@ class syncoff {
       jsonconclusao.acessorios = Acessorios(encodedStr: "[]", osid: osid);
     }
 
-
+    jsonconclusao.assinaturaTecnico.base64 = base64;
+    jsonconclusao.assinaturaTecnico.nomeResponsavel = contato["nome"];
+    jsonconclusao.assinaturaTecnico.etapa = "ASSINATURA_RESPONSAVEL";
+    jsonconclusao.assinaturaTecnico.observacaoCliente = "";
+    jsonconclusao.assinaturaTecnico.referencia = "";
+     
     /*
     required Checkin checkin,
     required Equipamentos equipamentos,

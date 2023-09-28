@@ -11,7 +11,7 @@ class JsonConclusao {
   Dados dados;
   AssinaturaTecnico assinaturaTecnico;
   bool presencial;
-  NotificacaoResponsavel notificacaoResponsavel;
+  var notificacaoResponsavel;
   AssinaturaResponsavel confirmacaoPresencial;
   DocumentosResponsavel documentosResponsavel;
   AssinaturaResponsavel assinaturaResponsavel;
