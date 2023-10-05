@@ -123,7 +123,7 @@ class _CheckInTelaState extends State<CheckInTela> {
         if (obsadc == null || obsadc == "") {
           showErrorDialog();
         } else {
-          obscheckin(obsadc);
+          values["obsadc"] = obsadc;
           checkNavigation(json.encode(values));
         }
       } else {

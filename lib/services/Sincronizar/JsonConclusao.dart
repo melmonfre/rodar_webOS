@@ -194,15 +194,17 @@ class CheckinIten {
   int? id;
   String? descricao;
   int? situacaoAntes;
-
+  String? observacaoAntes;
   CheckinIten({
     this.id,
     this.descricao,
     this.situacaoAntes,
+    this.observacaoAntes,
   });
+  
 
   Map<String, dynamic> toJson() =>
-      {'id': id, 'descricao': descricao, 'situacaoAntes': situacaoAntes};
+      {'id': id, 'descricao': descricao, 'situacaoAntes': situacaoAntes, "observacaoAntes": observacaoAntes}..removeWhere((key, value) => key == "observacaoAntes" && (value == null || value == ""));
 }
 
 class Checkout {
@@ -216,21 +218,23 @@ class Checkout {
     this.etapa,
   });
   Map<String, dynamic> toJson() =>
-      {'itens': itens, 'localGps': localGps, 'etapa': etapa};
+      {'itens': itens, 'localGps': localGps, 'etapa': etapa, };
 }
 
 class CheckoutIten {
   int? id;
   String? descricao;
   int? situacaoDepois;
+  String? observacaoDepois;
 
   CheckoutIten({
     this.id,
     this.descricao,
     this.situacaoDepois,
+    this.observacaoDepois
   });
   Map<String, dynamic> toJson() =>
-      {'id': id, 'descricao': descricao, 'situacaoDepois': situacaoDepois};
+      {'id': id, 'descricao': descricao, 'situacaoDepois': situacaoDepois, "observacaoDepois": observacaoDepois}..removeWhere((key, value) => key == "observacaoDepois" && (value == null || value == ""));
 }
 
 class Dados {

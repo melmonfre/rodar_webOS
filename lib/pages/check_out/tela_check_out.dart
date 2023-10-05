@@ -107,7 +107,7 @@ class _CheckOutTelaState extends State<CheckOutTela> {
         "idscheckin": checklistID,
         "nomescheckin": checklistNome,
         "itenscheckin": checklistItens,
-        "obscheckin": ChecklistOBS
+        "obscheckin": ChecklistOBS,
       };
       if (selectedButton.contains("Sim")) {
         if (obsadc == null || obsadc == "") {
@@ -129,7 +129,7 @@ class _CheckOutTelaState extends State<CheckOutTela> {
             },
           );
         } else {
-          obscheckin(obsadc);
+          values["obsadc"]= obsadc;
           checkNavigation(json.encode(values));
         }
       } else {

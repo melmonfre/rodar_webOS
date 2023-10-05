@@ -99,10 +99,15 @@ class syncoff {
     var nomescheckin = datacheckin['nomescheckin'];
     var itenscheckin = datacheckin['itenscheckin'];
     var obscheckin = datacheckin['obscheckin'];
+    var obsadccheckin = datacheckin['obsadc'];
+
     var jsoncheckout = opcs.getString("checkoutitens");
     var datacheckout = jsonDecode(jsoncheckout!);
     var itenscheckout = datacheckout['itenscheckin'];
-    String? obsadc = opcs.getString("obscheckin");
+    var obsadccheckout = datacheckout['obsadc'];
+    var obscheckout = datacheckout['obscheckin'];
+
+
 
     // preenchendo check-in e check-out
     for (int i = 0; i < idcheckin.length; i++) {
@@ -110,16 +115,18 @@ class syncoff {
       listcheckin.add(CheckinIten(
           id: idcheckin[i],
           descricao: nomescheckin[i],
+          observacaoAntes: obscheckin[i],
           situacaoAntes: itenscheckin[i]));
       listcheckout.add(CheckoutIten(
           id: idcheckin[i],
+          observacaoDepois: obscheckout[i],
           descricao: nomescheckin[i],
           situacaoDepois: itenscheckout[i]));
     }
     jsonconclusao.checkin.itens = listcheckin;
     jsonconclusao.checkin.localGps = "$latitude,$longitude";
     jsonconclusao.checkin.etapa = "SERVICO_INICIADO";
-    jsonconclusao.checkin.observacao = "$obsadc";
+    jsonconclusao.checkin.observacao = "$obsadccheckin";
     jsonconclusao.checkout.itens = listcheckout;
     jsonconclusao.checkout.localGps = "$latitude,$longitude";
     jsonconclusao.checkout.etapa = "DESLOCAMENTO";
@@ -415,7 +422,7 @@ class syncoff {
 
     debugPrint("data sent to the sincronizacaoordemservico:");
     debugPrint(data);
-    
+
     final url = Uri.parse(
         '${Urlconst().url}ordem_servico/sincronizacaoordemservico/$osid');
 
