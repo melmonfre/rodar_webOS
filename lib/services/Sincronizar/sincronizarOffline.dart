@@ -175,20 +175,24 @@ class syncoff {
 
           equipamento = Equipamento.fromJson(jsonDecode(json));
         } else {
+
           try {
             json = '''
         {
           "id":${element['equipamentos'][index]['id']},
           "tipo":"MANUTENCAO",
           "tipoTec":"MANUTENCAO",
-          "equipamentoRetirado":{"id": ${eqs['EquipamentosRemovidoID']}, "codigo":"${eqs['EquipamentoRemovidoCodigo']}"},
-          "equipamentoRetiradoTec":{"id": ${eqs['EquipamentosRemovidoID']}, "codigo":"${eqs['EquipamentoRemovidoCodigo']}"},
-          "localInstalacao":"${eqs['localInstalacao']}";,
-          "localInstalacaoTec":"${eqs['localInstalacao']}";
+          "equipamento":{"id": ${eqs['EquipamentoInstaladoID']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
+          "equipamentoTec":{"id": ${eqs['EquipamentoInstaladoID']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
+          "equipamentoRetirado":{"id": ${eqs['EquipamentoInstaladoID']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
+          "equipamentoRetiradoTec":{"id": ${eqs['EquipamentoInstaladoID']}, "codigo":"${eqs['EquipamentoInstaladoCodigo']}"},
+          "localInstalacao":"${eqs['localInstalacao']}",
+          "localInstalacaoTec":"${eqs['localInstalacao']}"
         }
         ''';
             equipamento = Equipamento.fromJson(jsonDecode(json));
           } catch (e) {
+            debugPrint(e.toString());
             equipamento = null;
           }
         }
@@ -412,7 +416,6 @@ class syncoff {
     debugPrint("data sent to the sincronizacaoordemservico:");
     debugPrint(data);
     
-    print(data);
     final url = Uri.parse(
         '${Urlconst().url}ordem_servico/sincronizacaoordemservico/$osid');
 

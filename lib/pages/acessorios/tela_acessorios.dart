@@ -150,7 +150,7 @@ class AcessorioAInstalar extends StatelessWidget {
         ),
         initialValue: localInstalacao,
         onChanged: (value) {
-          localInstalacao = value;
+          setLocalInstalacao(value);
         },
       )
     ]);
