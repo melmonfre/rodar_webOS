@@ -261,11 +261,13 @@ class syncoff {
       moti = jsonDecode(mots!);
       idmotivos = moti['idsmotivos'];
       itensmotivos = moti['itensmotivos'];
+      var nomesmotivos = moti["nomesmotivos"];
+
       jsonconclusao.motivosManutencao.motivos = [];
       for (int i = 0; i < idmotivos.length; i++) {
         if (itensmotivos[i]) {
           jsonconclusao.motivosManutencao.motivos
-              ?.add(MotivoManutencao(id: idmotivos[i]));
+              ?.add(MotivoManutencao(id: idmotivos[i], descricao: nomesmotivos[i]));
         }
       }
     } catch (e) {

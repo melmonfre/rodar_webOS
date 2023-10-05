@@ -133,12 +133,7 @@ class _ContainerRelateMotivosState extends State<ContainerRelateMotivos> {
                           } else {
                             return BotaoProximo(
                               onPressed: () {
-                                Map<String, dynamic> values = {
-                                  "idsmotivos": motivosID,
-                                  "nomesmotivos": motivosnome,
-                                  "itensmotivos": motivosbool,
-                                };
-                                saveoncache(jsonEncode(values));
+                                
                                 if (!_hasSelectedCheckbox()) {
                                   showDialog(
                                       context: context,
@@ -157,6 +152,13 @@ class _ContainerRelateMotivosState extends State<ContainerRelateMotivos> {
                                         );
                                       });
                                 } else {
+                                  Map<String, dynamic> values = {
+                                    "idsmotivos": motivosID,
+                                    "nomesmotivos": motivosnome,
+                                    "itensmotivos": motivosbool,
+                                  };
+                                  saveoncache(jsonEncode(values));
+                                  
                                   //Navigator.of(context).pop();
                                   Navigator.push(
                                     context,

@@ -597,8 +597,9 @@ class MotivosManutencao {
 
 class MotivoManutencao {
   int? id;
+  String? descricao;
 
-  MotivoManutencao({this.id});
+  MotivoManutencao({this.id, this.descricao});
 
-  Map<String, dynamic> toJson() => {'id': id};
+  Map<String, dynamic> toJson() => {'id': id, 'descricao': descricao};
 }
