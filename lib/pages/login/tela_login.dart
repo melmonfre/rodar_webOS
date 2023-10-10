@@ -7,6 +7,7 @@ import 'package:loading_indicator/loading_indicator.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
 import 'package:rodarwebos/pages/tela_inicial/tela_inicial.dart';
 import 'package:rodarwebos/services/getToken.dart';
+import 'package:rodarwebos/services/validatoken.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class login extends StatefulWidget {
@@ -42,6 +43,34 @@ class _loginState extends State<login> {
             child: ListBody(
               children: <Widget>[
                 Text('Link inválido, tente novamente'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> errtoken() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Erro'),
+          content: const SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(
+                    'Link de acesso expirado, favor entrar em contato com o suporte'),
               ],
             ),
           ),
@@ -103,9 +132,14 @@ class _loginState extends State<login> {
             TextButton(
               child: const Text('concluir'),
               onPressed: () async {
+                var divid = link?.split("/auth/");
+                var token = divid?[1];
+                var valtoken = await validatoken().validar(token);
                 if (link == null ||
                     !link.toString().contains("siger.winksys.com.br")) {
                   validalink();
+                } else if (valtoken == true) {
+                  errtoken();
                 } else {
                   Navigator.of(context).pop();
                   _showSingleAnimationDialog(
@@ -345,7 +379,9 @@ class _loginState extends State<login> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: GestureDetector(
-                              onTap: () {
+                              onTap: () async {
+                                error = await validatoken()
+                                    .validabearer(ids[index]);
                                 if (error == false) {
                                   print("tap");
                                   _showSingleAnimationDialog(
@@ -354,6 +390,8 @@ class _loginState extends State<login> {
                                   getToken().sincronizar(ids[index]);
 
                                   vaiprapaginainicial();
+                                } else {
+                                  errtoken();
                                 }
                               },
                               child: Row(
