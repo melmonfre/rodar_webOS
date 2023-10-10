@@ -126,7 +126,7 @@ class syncoff {
     jsonconclusao.checkin.itens = listcheckin;
     jsonconclusao.checkin.localGps = "$latitude,$longitude";
     jsonconclusao.checkin.etapa = "SERVICO_INICIADO";
-    jsonconclusao.checkin.observacao = "$obsadccheckin";
+    jsonconclusao.checkin.observacao = obsadccheckin ?? "";
     jsonconclusao.checkout.itens = listcheckout;
     jsonconclusao.checkout.localGps = "$latitude,$longitude";
     jsonconclusao.checkout.etapa = "DESLOCAMENTO";
