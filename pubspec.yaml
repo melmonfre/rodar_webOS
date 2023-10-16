@@ -36,7 +36,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   path_provider: ^2.0.14
-  image_picker: ^0.8.7+3
+  image_picker: ^1.0.4
   image: ^4.0.15
   signature: ^5.3.2
   gallery_saver: ^2.3.2
@@ -50,9 +50,9 @@ dependencies:
   app_links: ^3.4.3
   image_to_byte: ^1.0.0
   loading_indicator: ^3.1.0
-  geolocator: ^9.0.2
+  geolocator: ^10.1.0
   flutter_datetime_picker: ^1.0.8
-  intl: ^0.17.0
+  intl: ^0.18.1
   qrscan:
   flutter_image_compress: ^2.0.4
 
