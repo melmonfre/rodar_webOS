@@ -30,7 +30,7 @@ class _CameraButtonState extends State<CameraButton> {
 
   Future<void> _takePicture(ImageSource source) async {
     final picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: source);
+    final pickedFile = await picker.pickImage(source: source);
 
     if (pickedFile != null) {
       var image = File(pickedFile.path);
