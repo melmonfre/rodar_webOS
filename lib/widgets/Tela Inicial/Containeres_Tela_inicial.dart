@@ -6,6 +6,7 @@ import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_o
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_atrasadas.dart';
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_futuras.dart';
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_hoje.dart';
+import 'package:rodarwebos/services/OS/os_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../services/getToken.dart';
@@ -21,24 +22,18 @@ int numamanha = 0;
 int numatrasadas = 0;
 
 class _FuturasState extends State<Futuras> {
-  @override
-  var empresaid;
-  List varfuturas = [];
-  var jsonfuturas;
   Future<void> getdata() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
-    empresaid = opcs.getInt("sessionid");
-    jsonfuturas = opcs.getString("${empresaid}@GetOSFuturas");
-    varfuturas = jsonDecode(jsonfuturas);
-    int numero = 0;
-    varfuturas.forEach((element) {
-      numero++;
-    });
+
+    final empresaid = opcs.getInt("sessionid");
+
+    final osService = OsService(empresaId: empresaid);
+
+    final futuras = await osService.getOsFuturas();
 
     setState(() {
-      numfuturas = numero;
+      numfuturas = futuras.length;
     });
-    //numfuturas = varfuturas.length;
   }
 
   var timer = 1;
@@ -107,23 +102,18 @@ class Amanha extends StatefulWidget {
 }
 
 class _AmanhaState extends State<Amanha> {
-  var empresaid;
-  List varamanha = [];
-  var jsonamanha;
   Future<void> getdata() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
-    empresaid = opcs.getInt("sessionid");
-    jsonamanha = opcs.getString("${empresaid}@GetOSAmanha");
-    varamanha = jsonDecode(jsonamanha);
 
-    int numero = 0;
-    varamanha.forEach((element) {
-      numero++;
-    });
+    final empresaid = opcs.getInt("sessionid");
+
+    final osService = OsService(empresaId: empresaid);
+
+    final amanha = await osService.getOsAmanha();
+
     setState(() {
-      numamanha = numero;
+      numamanha = amanha.length;
     });
-    //numamanha = varamanha.length;
   }
 
   var timer = 2;
@@ -193,26 +183,18 @@ class Hoje extends StatefulWidget {
 }
 
 class _HojeState extends State<Hoje> {
-  var empresaid;
-  List vardodia = [];
-
-  var jsondodia;
-
   Future<void> getdata() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
-    empresaid = opcs.getInt("sessionid");
-    jsondodia = opcs.getString("${empresaid}@GetOSDia");
-    vardodia = jsonDecode(jsondodia);
+    
+    final empresaid = opcs.getInt("sessionid");
 
-    int numero = 0;
-    vardodia.forEach((element) {
-      numero++;
-    });
+    final osService = OsService(empresaId: empresaid);
+
+    final hoje = await osService.getOsHoje();
+
     setState(() {
-      numdodia = numero;
+      numdodia = hoje.length;
     });
-
-    // numdodia = vardodia.length;
   }
 
   var timer = 3;
@@ -282,22 +264,18 @@ class Atrasadas extends StatefulWidget {
 }
 
 class _AtrasadasState extends State<Atrasadas> {
-  var empresaid;
-  List varatrasadas = [];
-  var jsonatrasadas;
+
   Future<void> getdata() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
-    empresaid = opcs.getInt("sessionid");
-    jsonatrasadas = opcs.getString("${empresaid}@GetOSAtrasadas");
-    varatrasadas = jsonDecode(jsonatrasadas);
-    //numatrasadas = varatrasadas.length;
+    
+    final empresaid = opcs.getInt("sessionid");
 
-    int numero = 0;
-    varatrasadas.forEach((element) {
-      numero++;
-    });
+    final osService = OsService(empresaId: empresaid);
+
+    final atrasadas = await osService.getOsAtrasadas();
+
     setState(() {
-      numatrasadas = numero;
+      numatrasadas = atrasadas.length;
     });
   }
 
