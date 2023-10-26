@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,12 +24,19 @@ class validatoken {
     };
 
     var url = Uri.parse('${Urlconst().url}usuario/info');
-    var res = await http.get(url, headers: headers);
-    print("validabearer ${res.statusCode}");
-    if (res.statusCode == 500)
-      return true; // true quando ha erro
-    else {
-      return false; // false quando não ha erro
+
+    try {
+      var res = await http.get(url, headers: headers);
+      print("validabearer ${res.statusCode}");
+      
+      if (res.statusCode == 500)
+        return true; // true quando ha erro
+      else {
+        return false; // false quando não ha erro
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      return false;
     }
   }
 }
