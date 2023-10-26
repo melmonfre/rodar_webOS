@@ -37,7 +37,7 @@ class syncoff {
         checkin: checkin,
         equipamentos: equipamentos,
         acessorios: Acessorios(encodedStr: "[]", osid: 0),
-        arquivos: arquivos, 
+        arquivos: arquivos,
         deslocamento: deslocamento,
         checkout: checkout,
         motivosManutencao: motivosManutencao,
@@ -48,14 +48,8 @@ class syncoff {
         confirmacaoPresencial: confirmacaoPresencial,
         documentosResponsavel: documentosResponsavel,
         assinaturaResponsavel: assinaturaResponsavel);
-    var telefone = Telefone(
-        id: 0,
-        tipo: 0,
-        ddi: "",
-        ddd: "",
-        numero: "",
-        obs: "",
-        telefoneCompleto: "");
+    var telefone =
+        Telefone(id: 0, tipo: 0, ddi: "", ddd: "", numero: "", obs: "", telefoneCompleto: "");
     var estado = Estado(id: 0, sigla: "", nome: "");
     var cidade = Cidade(id: 0, nome: "", estado: estado);
     var endereco = Endereco(
@@ -76,14 +70,12 @@ class syncoff {
         stringTelefone: "",
         cnpj: "");
     var pess = Pessoa(id: 0, empresa: empr);
-    var tecnico = Tecnico(
-        id: 0, pessoa: pess, valorHora: 0, kmAtendimento: 0, funcionario: true);
+    var tecnico = Tecnico(id: 0, pessoa: pess, valorHora: 0, kmAtendimento: 0, funcionario: true);
 
     var latitude;
     var longitude;
     LocationPermission permission = await Geolocator.requestPermission();
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.low);
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.low);
     latitude = position.latitude;
     longitude = position.longitude;
     var empresaid = opcs.getInt('sessionid');
@@ -106,8 +98,6 @@ class syncoff {
     var itenscheckout = datacheckout['itenscheckin'];
     var obsadccheckout = datacheckout['obsadc'];
     var obscheckout = datacheckout['obscheckin'];
-
-
 
     // preenchendo check-in e check-out
     for (int i = 0; i < idcheckin.length; i++) {
@@ -182,7 +172,6 @@ class syncoff {
 
           equipamento = Equipamento.fromJson(jsonDecode(json));
         } else {
-
           try {
             json = '''
         {
@@ -228,12 +217,8 @@ class syncoff {
     referencias.forEach((foto) {
       String? fotos = opcs.containsKey("$foto") ? opcs.getString("$foto") : "";
       print("FOTOS: $fotos");
-      files.add(Arquivo(
-          base64: fotos,
-          referencia: foto,
-          remover: 0,
-          indice: indice,
-          etapa: "FOTOS"));
+      files.add(
+          Arquivo(base64: fotos, referencia: foto, remover: 0, indice: indice, etapa: "FOTOS"));
       indice++;
     });
 
@@ -281,8 +266,7 @@ class syncoff {
     jsonconclusao.dados.etapa = "CONCLUSAO";
     jsonconclusao.dados.hodometro =
         itenscon["hodometro"] != "" ? double.parse(itenscon["hodometro"]) : 0;
-    var conclu =
-        DateFormat('dd/MM/yyyy HH:mm:ss').parse(itenscon["dataConclusao"]);
+    var conclu = DateFormat('dd/MM/yyyy HH:mm:ss').parse(itenscon["dataConclusao"]);
     jsonconclusao.dados.dataConclusaoOs =
         DateFormat('yyyy-MM-ddTHH:mm:ss.SSS-03:00').format(conclu);
     jsonconclusao.dados.observacaoOs = "${itenscon["observacoes"]}";
@@ -321,8 +305,7 @@ class syncoff {
       tipoenvio = "presencial";
       jsonconclusao.presencial = true;
       jsonconclusao.confirmacaoPresencial.etapa = "CONCLUSAO";
-      jsonconclusao.confirmacaoPresencial.id =
-          contato['id'] != "" ? int.parse(contato['id']) : 0;
+      jsonconclusao.confirmacaoPresencial.id = contato['id'] != "" ? int.parse(contato['id']) : 0;
       jsonconclusao.confirmacaoPresencial.nome = contato['nome'];
       jsonconclusao.confirmacaoPresencial.email = contato['email'];
       jsonconclusao.confirmacaoPresencial.telefone = contato['telefone'];
@@ -333,8 +316,7 @@ class syncoff {
       jsonconclusao.confirmacaoPresencial.assinatura = base64!;
       jsonconclusao.confirmacaoPresencial.observacaoCliente = "";
       jsonconclusao.assinaturaResponsavel.etapa = "ASSINATURA_RESPONSAVEL";
-      jsonconclusao.assinaturaResponsavel.id =
-          contato['id'] != "" ? int.parse(contato['id']) : 0;
+      jsonconclusao.assinaturaResponsavel.id = contato['id'] != "" ? int.parse(contato['id']) : 0;
       jsonconclusao.assinaturaResponsavel.nome = contato['nome'];
       jsonconclusao.assinaturaResponsavel.email = contato['email'];
       jsonconclusao.assinaturaResponsavel.telefone = contato['telefone'];
@@ -352,12 +334,10 @@ class syncoff {
     final acessoriosStr = opcs.getString("${osid}@AcessoriosAEnviar");
 
     if (acessoriosStr != null) {
-
       try {
         List<dynamic> acessorios = jsonDecode(acessoriosStr);
 
         jsonconclusao.acessorios = Acessorios(encodedStr: acessoriosStr, osid: osid);
-
       } catch (e) {
         debugPrint("erro ao colocar acessorios no jsonconclusao: ${e}");
       }
@@ -370,7 +350,7 @@ class syncoff {
     jsonconclusao.assinaturaTecnico.etapa = "ASSINATURA_RESPONSAVEL";
     jsonconclusao.assinaturaTecnico.observacaoCliente = "";
     jsonconclusao.assinaturaTecnico.referencia = "";
-     
+
     /*
     required Checkin checkin,
     required Equipamentos equipamentos,
@@ -425,36 +405,36 @@ class syncoff {
     debugPrint("data sent to the sincronizacaoordemservico:");
     debugPrint(data);
 
-    final url = Uri.parse(
-        '${Urlconst().url}ordem_servico/sincronizacaoordemservico/$osid');
+    final url = Uri.parse('${Urlconst().url}ordem_servico/sincronizacaoordemservico/$osid');
 
-    final res = await http.post(url, headers: headers, body: data);
-    final status = res.statusCode;
-    if (status != 200) {
-      print(res.reasonPhrase);
-      print(res.request);
-      print(res.headers);
-      print(res.body);
+    try {
+      final res = await http.post(url, headers: headers, body: data);
+      final status = res.statusCode;
+      if (status != 200) {
+        print(res.reasonPhrase);
+        print(res.request);
+        print(res.headers);
+        print(res.body);
+        throw Exception('http.post error: statusCode= $status');
+      } else {
+        print(res.reasonPhrase);
+        print(res.request);
+        print(res.headers);
+        print(res.body);
+        opcs.remove("${osid}@OSaFinalizardata");
+        List<String>? ids = opcs.getStringList("osIDaFinalizar");
+        ids?.remove(osid);
+        opcs.setStringList("osIDaFinalizar", ids!);
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+
       List<String>? ids = opcs.getStringList("osIDaFinalizar");
       if (ids == null) {
         ids = [];
         ids.add("$osid");
       }
       opcs.setStringList("osIDaFinalizar", ids);
-      print(res.reasonPhrase);
-      print(res.request);
-      print(res.headers);
-      print(res.body);
-      throw Exception('http.post error: statusCode= $status');
-    } else {
-      print(res.reasonPhrase);
-      print(res.request);
-      print(res.headers);
-      print(res.body);
-      opcs.remove("${osid}@OSaFinalizardata");
-      List<String>? ids = opcs.getStringList("osIDaFinalizar");
-      ids?.remove(osid);
-      opcs.setStringList("osIDaFinalizar", ids!);
     }
   }
 }

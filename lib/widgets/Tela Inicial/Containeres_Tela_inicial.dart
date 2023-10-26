@@ -6,9 +6,48 @@ import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_o
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_atrasadas.dart';
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_futuras.dart';
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_hoje.dart';
+import 'package:rodarwebos/services/OS/os_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../services/getToken.dart';
+
+class OsCard extends StatelessWidget {
+  Color color;
+  String text;
+  String amount;
+
+  OsCard({super.key, required this.color, required this.text, required this.amount});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 2.0),
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(9.0),
+        ),
+        color: color,
+        child: Padding(
+          padding: const EdgeInsets.all(25.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                text,
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                amount,
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class Futuras extends StatefulWidget {
   @override
@@ -21,24 +60,18 @@ int numamanha = 0;
 int numatrasadas = 0;
 
 class _FuturasState extends State<Futuras> {
-  @override
-  var empresaid;
-  List varfuturas = [];
-  var jsonfuturas;
   Future<void> getdata() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
-    empresaid = opcs.getInt("sessionid");
-    jsonfuturas = opcs.getString("${empresaid}@GetOSFuturas");
-    varfuturas = jsonDecode(jsonfuturas);
-    int numero = 0;
-    varfuturas.forEach((element) {
-      numero++;
-    });
+
+    final empresaid = opcs.getInt("sessionid");
+
+    final osService = OsService(empresaId: empresaid);
+
+    final futuras = await osService.getOsFuturas();
 
     setState(() {
-      numfuturas = numero;
+      numfuturas = futuras.length;
     });
-    //numfuturas = varfuturas.length;
   }
 
   var timer = 1;
@@ -71,32 +104,7 @@ class _FuturasState extends State<Futuras> {
           MaterialPageRoute(builder: (context) => ListaOSFuturas()),
         );
       },
-      child: Container(
-        margin: EdgeInsets.only(bottom: 2.0),
-        child: Card(
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(9.0),
-          ),
-          color: Color(0xFFA0E8A1),
-          child: Padding(
-            padding: EdgeInsets.all(25.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Futuras',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  numfuturas.toString() ?? "",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+      child: OsCard(color: const Color(0xFFA0E8A1), text: 'Futuras', amount: numfuturas.toString()),
     );
   }
 }
@@ -107,23 +115,18 @@ class Amanha extends StatefulWidget {
 }
 
 class _AmanhaState extends State<Amanha> {
-  var empresaid;
-  List varamanha = [];
-  var jsonamanha;
   Future<void> getdata() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
-    empresaid = opcs.getInt("sessionid");
-    jsonamanha = opcs.getString("${empresaid}@GetOSAmanha");
-    varamanha = jsonDecode(jsonamanha);
 
-    int numero = 0;
-    varamanha.forEach((element) {
-      numero++;
-    });
+    final empresaid = opcs.getInt("sessionid");
+
+    final osService = OsService(empresaId: empresaid);
+
+    final amanha = await osService.getOsAmanha();
+
     setState(() {
-      numamanha = numero;
+      numamanha = amanha.length;
     });
-    //numamanha = varamanha.length;
   }
 
   var timer = 2;
@@ -150,40 +153,18 @@ class _AmanhaState extends State<Amanha> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.of(context).pop();
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => ListaOSAmanha()),
-        );
-      },
-      child: Container(
-        margin: EdgeInsets.only(bottom: 2.0),
-        child: Card(
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(9.0),
-          ),
-          color: Color(0xFFFFE192),
-          child: Padding(
-            padding: EdgeInsets.all(25.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Amanhã',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  numamanha.toString() ?? "",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+        onTap: () {
+          Navigator.of(context).pop();
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ListaOSAmanha()),
+          );
+        },
+        child: OsCard(
+          text: 'Amanhã',
+          amount: numamanha.toString() ?? "",
+          color: const Color(0xFFFFE192),
+        ));
   }
 }
 
@@ -193,26 +174,18 @@ class Hoje extends StatefulWidget {
 }
 
 class _HojeState extends State<Hoje> {
-  var empresaid;
-  List vardodia = [];
-
-  var jsondodia;
-
   Future<void> getdata() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
-    empresaid = opcs.getInt("sessionid");
-    jsondodia = opcs.getString("${empresaid}@GetOSDia");
-    vardodia = jsonDecode(jsondodia);
 
-    int numero = 0;
-    vardodia.forEach((element) {
-      numero++;
-    });
+    final empresaid = opcs.getInt("sessionid");
+
+    final osService = OsService(empresaId: empresaid);
+
+    final hoje = await osService.getOsHoje();
+
     setState(() {
-      numdodia = numero;
+      numdodia = hoje.length;
     });
-
-    // numdodia = vardodia.length;
   }
 
   var timer = 3;
@@ -246,32 +219,7 @@ class _HojeState extends State<Hoje> {
           MaterialPageRoute(builder: (context) => ListaOSHoje()),
         );
       },
-      child: Container(
-        margin: EdgeInsets.only(bottom: 2.0),
-        child: Card(
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(9.0),
-          ),
-          color: Color(0xFF9CDEFF),
-          child: Padding(
-            padding: EdgeInsets.all(25.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Do dia',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  numdodia.toString() ?? "",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+      child: OsCard(color: const Color(0xFF9CDEFF), text: 'Do dia', amount: numdodia.toString()),
     );
   }
 }
@@ -282,22 +230,17 @@ class Atrasadas extends StatefulWidget {
 }
 
 class _AtrasadasState extends State<Atrasadas> {
-  var empresaid;
-  List varatrasadas = [];
-  var jsonatrasadas;
   Future<void> getdata() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
-    empresaid = opcs.getInt("sessionid");
-    jsonatrasadas = opcs.getString("${empresaid}@GetOSAtrasadas");
-    varatrasadas = jsonDecode(jsonatrasadas);
-    //numatrasadas = varatrasadas.length;
 
-    int numero = 0;
-    varatrasadas.forEach((element) {
-      numero++;
-    });
+    final empresaid = opcs.getInt("sessionid");
+
+    final osService = OsService(empresaId: empresaid);
+
+    final atrasadas = await osService.getOsAtrasadas();
+
     setState(() {
-      numatrasadas = numero;
+      numatrasadas = atrasadas.length;
     });
   }
 
@@ -332,32 +275,8 @@ class _AtrasadasState extends State<Atrasadas> {
           MaterialPageRoute(builder: (context) => ListaOSAtrasadas()),
         );
       },
-      child: Container(
-        margin: EdgeInsets.only(bottom: 2.0),
-        child: Card(
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(9.0),
-          ),
-          color: Color(0xFFE8716F),
-          child: Padding(
-            padding: EdgeInsets.all(25.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Atrasadas',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  numatrasadas.toString() ?? "",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+      child: OsCard(
+          color: const Color(0xFFE8716F), text: 'Atrasadas', amount: numatrasadas.toString()),
     );
   }
 }
@@ -412,31 +331,31 @@ class _ContainerContentState extends State<ContainerContent> {
         child: SingleChildScrollView(
           // physics: AlwaysScrollableScrollPhysics(),
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.0),
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 3.0),
+                const SizedBox(height: 3.0),
                 Container(
-                  constraints: BoxConstraints(maxHeight: 140.0),
+                  constraints: const BoxConstraints(maxHeight: 140.0),
                   child: Hoje(),
                 ),
-                SizedBox(height: 3.0),
+                const SizedBox(height: 3.0),
                 Container(
-                  constraints: BoxConstraints(maxHeight: 140.0),
+                  constraints: const BoxConstraints(maxHeight: 140.0),
                   child: Atrasadas(),
                 ),
-                SizedBox(height: 3.0),
+                const SizedBox(height: 3.0),
                 Container(
-                  constraints: BoxConstraints(maxHeight: 140.0),
+                  constraints: const BoxConstraints(maxHeight: 140.0),
                   child: Amanha(),
                 ),
-                SizedBox(height: 3.0),
+                const SizedBox(height: 3.0),
                 Container(
-                  constraints: BoxConstraints(maxHeight: 140.0),
+                  constraints: const BoxConstraints(maxHeight: 140.0),
                   child: Futuras(),
                 ),
-                SizedBox(height: 3.0),
+                const SizedBox(height: 3.0),
               ],
             ),
           ),
