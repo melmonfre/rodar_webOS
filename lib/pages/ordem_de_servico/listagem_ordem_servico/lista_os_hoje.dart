@@ -18,6 +18,7 @@ class _ListaOSHojeState extends State<ListaOSHoje> {
     empresaid = opcs.getInt("sessionid");
     json = opcs.getString("${empresaid}@GetOSDia");
     opcs.setString("SessionOS", json);
+    opcs.setString("listaGrupo", "hoje");
     print("JSON: $json");
   }
 
@@ -35,10 +36,7 @@ class _ListaOSHojeState extends State<ListaOSHoje> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => TelaInicial()),
-            );
+            Navigator.of(context).pop();
           },
         ),
         title: Text('OS Hoje'),

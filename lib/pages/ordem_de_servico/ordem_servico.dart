@@ -247,10 +247,7 @@ class _OrdemServicoState extends State<OrdemServico> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => TelaInicial()),
-            );
+            Navigator.of(context).pop();
           },
         ),
         title: const Text('Ordem de Serviço'),

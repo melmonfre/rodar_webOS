@@ -98,7 +98,6 @@ class _FuturasState extends State<Futuras> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pop();
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => ListaOSFuturas()),
@@ -154,7 +153,6 @@ class _AmanhaState extends State<Amanha> {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
-          Navigator.of(context).pop();
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => ListaOSAmanha()),
@@ -213,7 +211,6 @@ class _HojeState extends State<Hoje> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pop();
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => ListaOSHoje()),
@@ -269,7 +266,6 @@ class _AtrasadasState extends State<Atrasadas> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pop();
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => ListaOSAtrasadas()),

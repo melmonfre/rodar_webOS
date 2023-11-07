@@ -18,6 +18,7 @@ class _ListaOSAmanhaState extends State<ListaOSAmanha> {
     empresaid = opcs.getInt("sessionid");
     json = opcs.getString("${empresaid}@GetOSAmanha");
     opcs.setString("SessionOS", json);
+    opcs.setString("listaGrupo", "amanha");
     print("JSON: $json");
   }
 
@@ -35,10 +36,7 @@ class _ListaOSAmanhaState extends State<ListaOSAmanha> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => TelaInicial()),
-            );
+            Navigator.of(context).pop();
           },
         ),
         title: Text('OS Amanhã'),

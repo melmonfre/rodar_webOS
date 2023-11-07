@@ -1,9 +1,81 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:rodarwebos/services/OS/os_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../pages/ordem_de_servico/ordem_servico.dart';
+
+class ListaOsItem extends StatelessWidget {
+  final String numero;
+  final String dataAgendamento;
+  final String placa;
+  final String servico;
+  final String local;
+
+  const ListaOsItem(
+      {super.key,
+      required this.numero,
+      required this.dataAgendamento,
+      required this.placa,
+      required this.servico,
+      required this.local});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'OS: ${numero}', // Exibe o texto "OS:" seguido do valor do elemento atual da lista os
+            style: TextStyle(
+              fontSize: 15,
+              color: Colors.grey[800],
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 8.0),
+          Text(
+            'Agendamento: ${dataAgendamento}',
+            style: TextStyle(
+              fontSize: 15,
+              color: Colors.grey[800],
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 8.0),
+          Text(
+            'Placa: ${placa}',
+            style: TextStyle(
+              fontSize: 15,
+              color: Colors.grey[800],
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 8.0),
+          Text(
+            'Serviço: ${servico}',
+            style: TextStyle(
+              fontSize: 15,
+              color: Colors.grey[800],
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 8.0),
+          Text(
+            'Local: ${local}',
+            style: TextStyle(
+              fontSize: 15,
+              color: Colors.grey[800],
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 /// Classe responsável por exibir uma lista de elementos [ContainerOS].
 ///
@@ -26,89 +98,90 @@ class _ContainerOSState extends State<ContainerOS> {
   List placa = [];
   List servico = [];
   List local = [];
+  List<dynamic> ordensDeServico = [];
+  List<dynamic> ordensDeServicoLista = [];
+
   var json;
-  setossessao(osid) async {
+
+  getData() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
 
-    var osselecao = lista.firstWhere((element) => osid == element['id']);
+    final empresaid = opcs.getInt("sessionid");
 
-    lista.remove(osselecao);
+    final osService = OsService(empresaId: empresaid);
 
-    opcs.setString("SessionOS", jsonEncode(lista));
+    String? listaGrupo = opcs.getString("listaGrupo");
 
-    opcs.setString("SelectedOS", jsonEncode(osselecao));
-  }
+    switch (listaGrupo) {
+      case 'hoje':
+        ordensDeServico = await osService.getOsHoje();
+        break;
+      case 'amanha':
+        ordensDeServico = await osService.getOsAmanha();
+        break;
+      case 'atrasadas':
+        ordensDeServico = await osService.getOsAtrasadas();
+        break;
+      case 'futuras':
+        ordensDeServico = await osService.getOsFuturas();
+        break;
+      default:
+        debugPrint('INVALID listaGrupo: ${listaGrupo}');
+    }
 
-  Future<void> getdata() async {
-    SharedPreferences opcs = await SharedPreferences
-        .getInstance(); // Obtém uma instância do SharedPreferences
-    empresaid = opcs.getInt(
-        "sessionid"); // Recupera o valor associado à chave "sessionid" e armazena em empresaid
-    json = opcs.getString(
-        "SessionOS"); // Recupera o valor associado à chave "SessionOS" e armazena em json
-    lista = jsonDecode(
-        json); // Decodifica a string json em um objeto Dart e armazena em lista
-    int numero = 0; // Inicializa a variável numero com 0
+    for (var os in ordensDeServico) {
+      Map<String, dynamic> osLista = {};
 
-    lista.forEach((element) {
-      // Loop através de cada elemento da lista
-      os.add(element['id']); // Adiciona o valor da chave 'id' à lista os
-      var veiculo =
-          element['veiculo']; // Obtém o objeto veiculo do elemento atual
-      placa.add(
-          veiculo['placa']); // Adiciona o valor da chave 'placa' à lista placa
+      osLista['listaPlaca'] = os['veiculo']['placa'];
 
-      List servicos =
-          element['servicos']; // Obtém a lista de servicos do elemento atual
+      List servicos = os['servicos']; // Obtém a lista de servicos do elemento atual
       var serv; // Declaração da variável serv
+
       servicos.forEach((ser) {
-        serv = ser[
-            'servico']; // Obtém o valor da chave 'servico' de cada elemento da lista servicos
-        //print("serv $serv");
+        serv = ser['servico'];
       });
-      servico.add(serv[
-          'descricao']); // Adiciona o valor da chave 'descricao' do objeto serv à lista servico
 
-      var end =
-          element['endereco']; // Obtém o objeto endereco do elemento atual
-      var bairro =
-          end['bairro']; // Obtém o valor da chave 'bairro' do objeto end
-      var cidade =
-          end['cidade']; // Obtém o valor da chave 'cidade' do objeto end
-      local.add(
-          "${cidade['nome']}(${bairro})"); // Adiciona uma string formatada à lista local
+      osLista['listaServico'] = serv['descricao'];
 
-      var localtime = element[
-          'dataInstalacao']; // Obtém o valor da chave 'dataInstalacao' do elemento atual
-      var datahora = localtime
-          .split('T'); // Divide a string em data e hora com base no 'T'
-      var data =
-          datahora[0].split('-'); // Divide a parte de data em ano, mês e dia
-      var hora = datahora[1]
-          .split(':'); // Divide a parte de hora em hora, minuto e segundo
-      var hr = 0; // Declaração da variável hr
+      var end = os['endereco']; // Obtém o objeto endereco do elemento atual
+      var bairro = end['bairro']; // Obtém o valor da chave 'bairro' do objeto end
+      var cidade = end['cidade']; // Obtém o valor da chave 'cidade' do objeto end
+      osLista['listaLocal'] = ("${cidade['nome']} (${bairro})");
+
+      var localtime = os['dataInstalacao'];
+      var datahora = localtime.split('T');
+      var data = datahora[0].split('-');
+      var hora = datahora[1].split(':');
+      var hr = 0;
       if (int.parse(hora[0]) - 3 < 0) {
         hr = int.parse(hora[0]) - 3 + 24; // Realiza um ajuste de fuso horário
       } else {
         hr = int.parse(hora[0]) - 3;
       }
-      var agend =
-          "${data[2]}/${data[1]}/${data[0]} ${hr}:${hora[1]}"; // Formata a data e hora em uma string
-      agendamento.add(agend); // Adiciona a string formatada à lista agendamento
+      var agend = "${data[2]}/${data[1]}/${data[0]} ${hr}:${hora[1]}";
 
-      numero++; // Incrementa o valor da variável numero
-      print(numero); // Imprime o valor atual de numero
-    });
+      osLista['listaAgendamento'] = agend;
+      osLista['listaId'] = os['id'];
+
+      ordensDeServicoLista.add(osLista);
+    }
 
     setState(() {
-      num =
-          numero; // Atualiza o valor da variável num com o valor final de numero
+      ordensDeServicoLista = ordensDeServicoLista;
     });
+  }
+
+  setossessao(osid) async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+
+    var selectedOs = ordensDeServico.firstWhere((os) => osid == os['id']);
+
+    await opcs.setString("SelectedOS", jsonEncode(selectedOs));
   }
 
   @override
   void initState() {
-    getdata();
+    getData();
     super.initState();
   }
 
@@ -122,8 +195,10 @@ class _ContainerOSState extends State<ContainerOS> {
       child: Container(
         child: ListView.builder(
           padding: const EdgeInsets.all(8),
-          itemCount: num,
+          itemCount: ordensDeServico.length,
           itemBuilder: (BuildContext context, int index) {
+            final os = ordensDeServicoLista.elementAt(index);
+
             return Padding(
               padding: const EdgeInsets.only(top: 5),
               child: Container(
@@ -138,69 +213,24 @@ class _ContainerOSState extends State<ContainerOS> {
                   ),
                   child: GestureDetector(
                     onTap: () async {
-                      setossessao(os[index]);
+                      setossessao(os['listaId']);
+                      
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              OrdemServico(), // Navega para a tela OrdemServico()
+                          builder: (context) => OrdemServico(), // Navega para a tela OrdemServico()
                         ),
                       );
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'OS: ${os[index]}', // Exibe o texto "OS:" seguido do valor do elemento atual da lista os
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.grey[800],
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              SizedBox(height: 8.0),
-                              Text(
-                                'Agendamento: ${agendamento[index]}',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.grey[800],
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              SizedBox(height: 8.0),
-                              Text(
-                                'Placa: ${placa[index]}',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.grey[800],
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              SizedBox(height: 8.0),
-                              Text(
-                                'Serviço: ${servico[index]}',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.grey[800],
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              SizedBox(height: 8.0),
-                              Text(
-                                'Local: ${local[index]}',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.grey[800],
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        ListaOsItem(
+                            numero: os['listaId'].toString(),
+                            dataAgendamento: os['listaAgendamento'].toString(),
+                            placa: os['listaPlaca'].toString(),
+                            servico: os['listaServico'].toString(),
+                            local: os['listaLocal'].toString()),
                         widget.botao,
                       ],
                     ),

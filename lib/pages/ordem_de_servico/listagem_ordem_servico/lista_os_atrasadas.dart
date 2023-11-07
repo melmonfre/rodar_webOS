@@ -18,6 +18,7 @@ class _ListaOSAtrasadasState extends State<ListaOSAtrasadas> {
     empresaid = opcs.getInt("sessionid");
     json = opcs.getString("${empresaid}@GetOSAtrasadas");
     opcs.setString("SessionOS", json);
+    opcs.setString("listaGrupo", "atrasadas");
     print("JSON: $json");
   }
 
@@ -35,10 +36,7 @@ class _ListaOSAtrasadasState extends State<ListaOSAtrasadas> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => TelaInicial()),
-            );
+            Navigator.of(context).pop();
           },
         ),
         title: Text('OS Atrasadas'),
