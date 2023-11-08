@@ -12,7 +12,7 @@ class OsService {
 
     List<String> ordensAFinalizar = opcs.getStringList("osIDaFinalizar") ?? List.empty();
 
-    return ordens.where((os) => !ordensAFinalizar.contains(os['id'])).toList();
+    return ordens.where((os) => !ordensAFinalizar.contains(os['id'].toString())).toList();
   }
 
   Future<List<dynamic>> getOsFuturas({showCompleted = false}) async {

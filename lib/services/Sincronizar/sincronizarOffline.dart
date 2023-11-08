@@ -429,11 +429,9 @@ class syncoff {
     } catch (e) {
       debugPrint(e.toString());
 
-      List<String>? ids = opcs.getStringList("osIDaFinalizar");
-      if (ids == null) {
-        ids = [];
-        ids.add("$osid");
-      }
+      List<String> ids = opcs.getStringList("osIDaFinalizar") ?? [];
+
+      ids.add("$osid");
       opcs.setStringList("osIDaFinalizar", ids);
     }
   }
