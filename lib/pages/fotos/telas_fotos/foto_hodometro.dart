@@ -68,6 +68,9 @@ class _FotoHodometroState extends State<FotoHodometro> {
     print("REF ATUAL " + referenciaatual);
 
     if (referenciaIndex < referencias.length) {
+
+      // TODO: entender melhor
+
       // se ainda não estiver no fim das referencias volta para a tela de fotos do hodometro
       try {
         Navigator.of(context).pop();

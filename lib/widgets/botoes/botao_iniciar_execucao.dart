@@ -51,7 +51,6 @@ class _BotaoIniciarExecucaoServicoState
     return ElevatedButton(
       onPressed: () {
         getdata();
-        //Navigator.of(context).pop();
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => CheckInTela()),

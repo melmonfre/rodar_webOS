@@ -377,7 +377,7 @@ class _EquipamentosState extends State<Equipamentos> {
       getequipamentos().setEquipamento(equip);
     }
 
-    Navigator.of(context).pop();
+    // Navigator.of(context).pop();
 
     if (hasAccessorios) {
       Navigator.push(

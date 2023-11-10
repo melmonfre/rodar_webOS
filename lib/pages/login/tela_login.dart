@@ -69,8 +69,7 @@ class _loginState extends State<login> {
           content: const SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text(
-                    'Link de acesso expirado, favor entrar em contato com o suporte'),
+                Text('Link de acesso expirado, favor entrar em contato com o suporte'),
               ],
             ),
           ),
@@ -132,18 +131,18 @@ class _loginState extends State<login> {
             TextButton(
               child: const Text('concluir'),
               onPressed: () async {
+                if (isLoadingTelaInicial) return;
+
                 var divid = link?.split("/auth/");
                 var token = divid?[1];
                 var valtoken = await validatoken().validar(token);
-                if (link == null ||
-                    !link.toString().contains("siger.winksys.com.br")) {
+                if (link == null || !link.toString().contains("siger.winksys.com.br")) {
                   validalink();
                 } else if (valtoken == true) {
                   errtoken();
                 } else {
-                  Navigator.of(context).pop();
-                  _showSingleAnimationDialog(
-                      context, Indicator.ballSpinFadeLoader);
+                  isLoadingTelaInicial = true;
+                  
                   var linkExterno;
                   String? initialLink = link;
                   if (initialLink != null || initialLink != "") {
@@ -157,7 +156,8 @@ class _loginState extends State<login> {
                       await getToken().obter(token);
                     }
                   }
-
+                  // Navigator.of(context).pop();
+                  _showSingleAnimationDialog(context, Indicator.ballSpinFadeLoader);
                   vaiprapaginainicial();
                 }
               },
@@ -177,6 +177,7 @@ class _loginState extends State<login> {
   List Nomeempresa = [];
   bool error = false;
   _showSingleAnimationDialog(BuildContext context, Indicator indicator) {
+    debugPrint("is loading tela inicial" + isLoadingTelaInicial.toString());
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -214,8 +215,7 @@ class _loginState extends State<login> {
       Nomeempresa.add("ERRO");
       nomes.add(
           "Não há nenhuma empresa \ncadastrada, favor acessar pelo \nlink enviado pelo sistema");
-      Uint8List data =
-          (await rootBundle.load('assets/bear.png')).buffer.asUint8List();
+      Uint8List data = (await rootBundle.load('assets/bear.png')).buffer.asUint8List();
       setState(() => imagens.add(data));
     }
     print('ERROR $error');
@@ -252,12 +252,15 @@ class _loginState extends State<login> {
   }
 
   vaiprapaginainicial() async {
-    await Future.delayed(Duration(seconds: 2));
-    Navigator.of(context).pop();
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => TelaInicial()),
-    );
+    Future.delayed(const Duration(seconds: 2), () {
+      isLoadingTelaInicial = false;
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => TelaInicial()),
+      );
+    });
   }
 
   bool isButtonEnabled = true;
@@ -271,10 +274,12 @@ class _loginState extends State<login> {
   bool islogged = true;
 
   bool isLoading = false;
+
+  bool isLoadingTelaInicial = false;
+
   @override
   Future<void> geturso() async {
-    Uint8List data =
-        (await rootBundle.load('assets/bear.png')).buffer.asUint8List();
+    Uint8List data = (await rootBundle.load('assets/bear.png')).buffer.asUint8List();
     setState(() => urso = data);
   }
 
@@ -338,8 +343,7 @@ class _loginState extends State<login> {
                 ),
                 Container(
                   height: altura * .50,
-                  margin: EdgeInsets.all(altura *
-                      0.018), // Adicionando uma margem para o container
+                  margin: EdgeInsets.all(altura * 0.018), // Adicionando uma margem para o container
                   decoration: BoxDecoration(
                     //color: Colors.transparent,
                     //.withOpacity(0.7), // Definindo a cor do container
@@ -366,8 +370,7 @@ class _loginState extends State<login> {
                         return Container(
                           padding: const EdgeInsets.only(top: 5),
                           decoration: const BoxDecoration(
-                            border:
-                                Border(top: BorderSide(color: Colors.black12)),
+                            border: Border(top: BorderSide(color: Colors.black12)),
                           ),
                           child: Container(
                             height: 130,
@@ -380,15 +383,15 @@ class _loginState extends State<login> {
                             ),
                             child: GestureDetector(
                               onTap: () async {
-                                error = await validatoken()
-                                    .validabearer(ids[index]);
+                                if (isLoadingTelaInicial) return;
+
+                                error = await validatoken().validabearer(ids[index]);
+
                                 if (error == false) {
-                                  print("tap");
-                                  _showSingleAnimationDialog(
-                                      context, Indicator.ballSpinFadeLoader);
+                                  isLoadingTelaInicial = true;
+                                  _showSingleAnimationDialog(context, Indicator.ballSpinFadeLoader);
                                   setsession(ids[index]);
                                   getToken().sincronizar(ids[index]);
-
                                   vaiprapaginainicial();
                                 } else {
                                   errtoken();
@@ -399,10 +402,8 @@ class _loginState extends State<login> {
                                 // gera a linha
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        25.0, 0.0, 22.0, 0.0),
-                                    child: Image.memory(imagens[index],
-                                        width: 60, height: 60),
+                                    padding: const EdgeInsets.fromLTRB(25.0, 0.0, 22.0, 0.0),
+                                    child: Image.memory(imagens[index], width: 60, height: 60),
                                   ),
                                   // const SizedBox(width: 10.0),
                                   Column(
@@ -411,8 +412,7 @@ class _loginState extends State<login> {
                                       Padding(padding: EdgeInsets.only(top: 7)),
                                       Text(
                                         '${Nomeempresa[index]}',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
+                                        style: TextStyle(fontWeight: FontWeight.bold),
                                         textAlign: TextAlign.left,
                                         overflow: TextOverflow.ellipsis,
                                       ),
