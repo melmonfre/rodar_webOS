@@ -144,6 +144,7 @@ class RetiradaState {
       "EquipamentoInstaladoID": "",
       "EquipamentoInstaladoCodigo": "",
       "EquipamentoInstaladoDocumento": "",
+      "EquipamentoRetiradoSituacao": situacaoEquipamento == 'OK',
       "EquipamentosRemovidoID": id, // Armazena o ID do equipamento removido
       "EquipamentoRemovidoCodigo":
           codigo, // Armazena o código do equipamento removido (veículo selecionado)

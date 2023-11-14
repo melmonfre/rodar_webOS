@@ -136,6 +136,7 @@ class syncoff {
           "id":${element['equipamentos'][index]['id']},
           "tipo":"RETIRADA",
           "tipoTec":"RETIRADA",
+          "situacaoTec": ${eqs['EquipamentoRetiradoSituacao']},
           "equipamentoRetirado":{"id": ${eqs['EquipamentosRemovidoID']}, "codigo":"${eqs['EquipamentoRemovidoCodigo']}"},
           "equipamentoRetiradoTec":{"id": ${eqs['EquipamentosRemovidoID']}, "codigo":"${eqs['EquipamentoRemovidoCodigo']}"},
           "localInstalacao":"",
