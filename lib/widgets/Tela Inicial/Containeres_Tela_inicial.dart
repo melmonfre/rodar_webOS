@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_amanha.dart';
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_atrasadas.dart';
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_futuras.dart';
@@ -285,36 +286,60 @@ class ContainerContent extends StatefulWidget {
 }
 
 class _ContainerContentState extends State<ContainerContent> {
+  Timer? sincronizacaoTimer;
+  Timer? carregandoTimer;
+
+  bool carregando = false;
+  var timer = 5;
+
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
+
+  Future<void> getdata() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    var empresaid = opcs.getInt("sessionid");
+    getToken().sincronizar(empresaid);
+  }
+
+  void createTimers() {
+    sincronizacaoTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      setState(() {
+        timer--;
+        if (timer == 0) {
+          getdata();
+          timer = 5;
+        }
+      });
+    });
+
+    carregandoTimer = Timer.periodic(const Duration(milliseconds: 500), (_) async {
+      final opcs = await SharedPreferences.getInstance();
+
+      bool carregandoStorage = opcs.getBool("carregando") ?? false;
+
+      setState(() {
+        carregando = carregandoStorage;
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    debugPrint("initState called");
+    getdata();
+    createTimers();
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    sincronizacaoTimer?.cancel();
+    carregandoTimer?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-        GlobalKey<RefreshIndicatorState>();
-    Future<void> getdata() async {
-      SharedPreferences opcs = await SharedPreferences.getInstance();
-      var empresaid = opcs.getInt("sessionid");
-      getToken().sincronizar(empresaid);
-    }
-
-    @override
-    var timer = 5;
-    void _decrementCounter() {
-      Timer.periodic(const Duration(seconds: 1), (_) {
-        setState(() {
-          timer--;
-          if (timer == 0) {
-            getdata();
-            timer = 5;
-          }
-        });
-      });
-    }
-
-    void initState() {
-      getdata();
-      _decrementCounter();
-      super.initState();
-    }
-
     return Scaffold(
       body: RefreshIndicator(
         key: _refreshIndicatorKey,
@@ -352,6 +377,13 @@ class _ContainerContentState extends State<ContainerContent> {
                   child: Futuras(),
                 ),
                 const SizedBox(height: 3.0),
+                if (carregando)
+                  Center(
+                    child: Container(
+                      width: 200,
+                      child: LoadingIndicator(indicatorType: Indicator.ballSpinFadeLoader),
+                    ),
+                  ),
               ],
             ),
           ),
