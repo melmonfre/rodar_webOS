@@ -426,6 +426,8 @@ class syncoff {
         List<String>? ids = opcs.getStringList("osIDaFinalizar");
         ids?.remove(osid);
         opcs.setStringList("osIDaFinalizar", ids!);
+
+        addToListaOcultar(osid.toString());
       }
     } catch (e) {
       debugPrint(e.toString());
@@ -434,6 +436,22 @@ class syncoff {
 
       ids.add("$osid");
       opcs.setStringList("osIDaFinalizar", ids);
+
+      addToListaOcultar(osid.toString());
     }
+  }
+
+  addToListaOcultar(String osid) async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+
+    List<String> osAOcultar = opcs.getStringList('osAOcultar') ?? [];
+
+    if (osAOcultar.length > 50) {
+      osAOcultar = osAOcultar.sublist(20);
+    }
+
+    osAOcultar.add(osid);
+    
+    await opcs.setStringList("osAOcultar", osAOcultar);
   }
 }

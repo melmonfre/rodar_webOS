@@ -1,14 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:rodarwebos/services/Sincronizar/sincronizarOffline.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Constantes/Urlconst.dart';
 
-class concluivf{
-
+class concluivf {
   Future<String> getLocation() async {
     LocationPermission permission = await Geolocator.requestPermission();
     Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.low);
@@ -35,11 +36,34 @@ class concluivf{
 
     var localGps = await getLocation();
 
-    await enviardiversasfotosvf(osid, token, base64images);
 
-    await enviardeslocamentovf(osid, token, DistanciaTec, valorDeslocamentoTec, pedagioTec);
+    try {
+      await enviardiversasfotosvf(osid, token, base64images);
+      await enviardeslocamentovf(osid, token, DistanciaTec, valorDeslocamentoTec, pedagioTec);
+      await enviamotivosvf(osid, token, motivo, localGps);
+    } catch (e) {
+      debugPrint(e.toString());
+      final motivos = '{"motivo":"$motivo","localGps":"$localGps"}';
+      List<String>? ids = opcs.getStringList("osIDaFinalizarvf");
+      if (ids == null) {
+        ids = [];
+        ids.add("$osid");
+      }
+      opcs.setStringList("osIDaFinalizarvf", ids);
+      opcs.setString("${osid}@OSaFinalizarvf", motivos);
 
-    await enviamotivosvf(osid, token, motivo, localGps);
+      List<String> fotos = [];
+      fotos.add(base64images!);
+
+      final fotosJson = '{"base64":${jsonEncode(fotos)},"idsRemove":[]}';
+      opcs.setString("${osid}@OSaFinalizarvfoto", fotosJson);
+
+      final deslocamento =
+          '{"distanciaTec":$DistanciaTec,"valorDeslocamentoTec":$valorDeslocamentoTec,"pedagioTec":$pedagioTec}';
+      opcs.setString("${osid}@OSaFinalizarvfdeslocamento", deslocamento);
+
+      syncoff().addToListaOcultar(osid.toString());
+    }
   }
 
   enviamotivosvf(osid, token, motivo, localGps) async {
@@ -57,7 +81,7 @@ class concluivf{
     final status = res.statusCode;
     if (status != 200) {
       List<String>? ids = opcs.getStringList("osIDaFinalizarvf");
-      if(ids == null){
+      if (ids == null) {
         ids = [];
         ids.add("$osid");
       }
@@ -70,8 +94,7 @@ class concluivf{
     print(res.body);
   }
 
-
-  enviardiversasfotosvf(osid, token, String?image) async {
+  enviardiversasfotosvf(osid, token, String? image) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     List<String> fotos = [];
     fotos.add(image!);
@@ -102,7 +125,8 @@ class concluivf{
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
-    final data = '{"distanciaTec":$distanciaTec,"valorDeslocamentoTec":$valorDeslocamentoTec,"pedagioTec":$pedagioTec}';
+    final data =
+        '{"distanciaTec":$distanciaTec,"valorDeslocamentoTec":$valorDeslocamentoTec,"pedagioTec":$pedagioTec}';
 
     final url = Uri.parse('${Urlconst().url}ordem_servico/enviardeslocamento/$osid');
 
