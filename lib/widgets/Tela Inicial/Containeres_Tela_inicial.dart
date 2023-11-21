@@ -295,23 +295,21 @@ class _ContainerContentState extends State<ContainerContent> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
 
   Future<void> getdata() async {
+    debugPrint("getdata conteineres");
     SharedPreferences opcs = await SharedPreferences.getInstance();
     var empresaid = opcs.getInt("sessionid");
     getToken().sincronizar(empresaid);
   }
 
   void createTimers() {
-    sincronizacaoTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+    sincronizacaoTimer = Timer.periodic(const Duration(minutes: 15), (_) {
       setState(() {
-        timer--;
-        if (timer == 0) {
-          getdata();
-          timer = 5;
-        }
+        debugPrint('sincronizando containeres_tela_inicial');
+        getdata();
       });
     });
 
-    carregandoTimer = Timer.periodic(const Duration(milliseconds: 500), (_) async {
+    carregandoTimer = Timer.periodic(const Duration(milliseconds: 1000), (_) async {
       final opcs = await SharedPreferences.getInstance();
 
       bool carregandoStorage = opcs.getBool("carregando") ?? false;
@@ -324,7 +322,6 @@ class _ContainerContentState extends State<ContainerContent> {
 
   @override
   void initState() {
-    debugPrint("initState called");
     getdata();
     createTimers();
 

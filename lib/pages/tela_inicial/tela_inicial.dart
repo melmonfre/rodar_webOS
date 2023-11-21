@@ -13,9 +13,11 @@ class TelaInicial extends StatefulWidget {
 }
 
 class _TelaInicialState extends State<TelaInicial> {
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      GlobalKey<RefreshIndicatorState>();
+  Timer? sincronizacaoTimer;
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
+
   Future<void> getdata() async {
+    debugPrint("getdata tela_inicial");
     SharedPreferences opcs = await SharedPreferences.getInstance();
     opcs.setInt('indiceatual', 0);
     var empresaid = opcs.getInt("sessionid");
@@ -25,27 +27,28 @@ class _TelaInicialState extends State<TelaInicial> {
   @override
   var timer = 1;
   void _decrementCounter() {
-    Timer.periodic(const Duration(seconds: 1), (_) {
-      try {
-        timer--;
-        if (timer == 0) {
-          setState(() {
-            try {
-              getdata();
-            } catch (e) {
-              debugPrint("error on getdata of tela_inicial: $e");
-            }
-          });
-          timer = 10;
+    sincronizacaoTimer = Timer.periodic(const Duration(minutes: 15), (_) {
+      setState(() {
+        try {
+          getdata();
+        } catch (e) {
+          debugPrint("error on getdata of tela_inicial: $e");
         }
-      } catch (e) {}
+      });
     });
   }
 
   void initState() {
+    debugPrint("initState called tela_inicial");
     getdata();
     _decrementCounter();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    sincronizacaoTimer?.cancel();
+    super.dispose();
   }
 
   @override

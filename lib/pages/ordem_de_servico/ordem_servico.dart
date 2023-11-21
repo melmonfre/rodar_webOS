@@ -87,6 +87,45 @@ class _OrdemServicoState extends State<OrdemServico> {
 
   List<dynamic> acessorios = [];
 
+  Future<bool> verificarEquipamentos() async {
+    bool isEquipamentoValido = true;
+
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    final json = opcs.getString("SelectedOS");
+    final os = jsonDecode(json!);
+
+    final clienteId = os["veiculo"]["cliente"]["id"];
+    String? equipamentosClienteStr = opcs.getString("${clienteId}@EquipamentosCliente");
+    List<dynamic>? equipamentosCliente;
+
+    try {
+      equipamentosCliente = jsonDecode(equipamentosClienteStr!);
+    } catch (e) {
+      equipamentosCliente = null;
+    }
+
+    List<dynamic> eq = element['equipamentos'];
+    eq.forEach((equip) {
+      var codigo;
+
+      try {
+        if (equip['equipamento'] != null) {
+          var equipamento = equip['equipamento'];
+          codigo = equipamento["codigo"];
+        } else {
+          var equipamentoRetirado = equip['equipamentoRetirado'];
+          codigo = equipamentoRetirado["codigo"];
+        }
+      } catch (e) {
+        if (equipamentosCliente == null || equipamentosCliente.isEmpty) {
+          isEquipamentoValido = false;
+        }
+      }
+    });
+
+    return isEquipamentoValido;
+  }
+
   Future<void> getdata() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     json = opcs.getString("SelectedOS");
@@ -131,6 +170,29 @@ class _OrdemServicoState extends State<OrdemServico> {
     }
 
     var eq = element['equipamentos'];
+
+    bool isEquipamentoValido = await verificarEquipamentos();
+    if (!isEquipamentoValido) {
+      // ignore: use_build_context_synchronously
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Aviso'),
+            content: const Text('Equipamento inválido.'),
+            actions: [
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     eq.forEach((equip) {
       if (equip["tipo"] != null) {
         tiposervico = "$tiposervico \n ${equip["tipo"]}";
@@ -147,23 +209,7 @@ class _OrdemServicoState extends State<OrdemServico> {
           codigo = equipamentoRetirado["codigo"];
         }
       } catch (e) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Aviso'),
-              content: const Text('Equipamento inválido.'),
-              actions: [
-                TextButton(
-                  child: const Text('OK'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          },
-        );
+        codigo = "A selecionar";
       }
 
       codequip = "$codequip \n ${codigo}";
@@ -351,15 +397,20 @@ class _OrdemServicoState extends State<OrdemServico> {
                     ),
                     const SizedBox(height: 12.0),
                     SectionHeading(text: 'Acessórios'),
-                    for (final ac in acessorios) Column(
-                      children: [
-                        ContextText("Acessório: ${ac['nomeAcessorio']}"),
-                        ContextText("Qnt.: ${ac['quantidade'].toInt()}"),
-                        if (ac['quantidadeRetirada'] != null && ac['quantidadeRetirada'] > 0) ContextText("Qnt. Retirada: ${ac['quantidadeRetirada'].toInt()}"),
-                        if (ac['localInstalacao'] != null) ContextText("Local de Instalação: ${ac['localInstalacao']}"),
-                        const SizedBox(height: 12,)
-                      ],
-                    ),
+                    for (final ac in acessorios)
+                      Column(
+                        children: [
+                          ContextText("Acessório: ${ac['nomeAcessorio']}"),
+                          ContextText("Qnt.: ${ac['quantidade'].toInt()}"),
+                          if (ac['quantidadeRetirada'] != null && ac['quantidadeRetirada'] > 0)
+                            ContextText("Qnt. Retirada: ${ac['quantidadeRetirada'].toInt()}"),
+                          if (ac['localInstalacao'] != null)
+                            ContextText("Local de Instalação: ${ac['localInstalacao']}"),
+                          const SizedBox(
+                            height: 12,
+                          )
+                        ],
+                      ),
                   ],
                 ),
 

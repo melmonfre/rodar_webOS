@@ -60,6 +60,9 @@ class _loginState extends State<login> {
   }
 
   Future<void> errtoken() async {
+    setState(() {
+      isLoadingTelaInicial = false;
+    });
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -132,33 +135,41 @@ class _loginState extends State<login> {
               child: const Text('concluir'),
               onPressed: () async {
                 if (isLoadingTelaInicial) return;
-
-                var divid = link?.split("/auth/");
-                var token = divid?[1];
-                var valtoken = await validatoken().validar(token);
-                if (link == null || !link.toString().contains("siger.winksys.com.br")) {
-                  validalink();
-                } else if (valtoken == true) {
-                  errtoken();
-                } else {
-                  isLoadingTelaInicial = true;
-                  
-                  var linkExterno;
-                  String? initialLink = link;
-                  if (initialLink != null || initialLink != "") {
-                    linkExterno = initialLink;
-                    if (linkExterno != null || linkExterno != "") {
-                      var divid = linkExterno?.split("/auth/");
-                      print(divid);
-                      var token = divid?[1];
-                      print('Link externo: $linkExterno');
-                      print('token $token');
-                      await getToken().obter(token);
+                
+                setState(() {
+                  isLoadingTelaInicial = true;  
+                });
+                
+                try {
+                  var divid = link?.split("/auth/");
+                  var token = divid?[1];
+                  var valtoken = await validatoken().validar(token);
+                  if (link == null || !link.toString().contains("siger.winksys.com.br")) {
+                    validalink();
+                  } else if (valtoken == true) {
+                    errtoken();
+                  } else {
+                    var linkExterno;
+                    String? initialLink = link;
+                    if (initialLink != null || initialLink != "") {
+                      linkExterno = initialLink;
+                      if (linkExterno != null || linkExterno != "") {
+                        var divid = linkExterno?.split("/auth/");
+                        print(divid);
+                        var token = divid?[1];
+                        print('Link externo: $linkExterno');
+                        print('token $token');
+                        await getToken().obter(token);
+                      }
                     }
+                    // Navigator.of(context).pop();
+                    _showSingleAnimationDialog(context, Indicator.ballSpinFadeLoader);
+                    vaiprapaginainicial();
                   }
-                  // Navigator.of(context).pop();
-                  _showSingleAnimationDialog(context, Indicator.ballSpinFadeLoader);
-                  vaiprapaginainicial();
+                } catch (e) {
+                  debugPrint(e.toString());
+                  isLoadingTelaInicial = false;
+                  rethrow;
                 }
               },
             ),
@@ -253,7 +264,9 @@ class _loginState extends State<login> {
 
   vaiprapaginainicial() async {
     Future.delayed(const Duration(seconds: 2), () {
-      isLoadingTelaInicial = false;
+      setState(() {
+        isLoadingTelaInicial = false;
+      });
       Navigator.of(context).pop();
       Navigator.of(context).pop();
       Navigator.push(
@@ -385,10 +398,13 @@ class _loginState extends State<login> {
                               onTap: () async {
                                 if (isLoadingTelaInicial) return;
 
+                                setState(() {
+                                  isLoadingTelaInicial = true;
+                                });
+
                                 error = await validatoken().validabearer(ids[index]);
 
                                 if (error == false) {
-                                  isLoadingTelaInicial = true;
                                   _showSingleAnimationDialog(context, Indicator.ballSpinFadeLoader);
                                   setsession(ids[index]);
                                   getToken().sincronizar(ids[index]);

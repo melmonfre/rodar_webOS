@@ -59,11 +59,13 @@ class getToken {
       String futuras = await GetOSFuturas().obter(empresaid);
       String equiptecnico = await getequiptec().obter(empresaid);
 
-      opcs.setString("${empresaid}@GetOSAmanha", amanha);
-      opcs.setString("${empresaid}@GetOSAtrasadas", atrasadas);
-      opcs.setString("${empresaid}@GetOSDia", dodia);
-      opcs.setString("${empresaid}@GetOSFuturas", futuras);
-      opcs.setString("${empresaid}@getequiptec", equiptecnico);
+      await opcs.setString("${empresaid}@GetOSAmanha", amanha);
+      await opcs.setString("${empresaid}@GetOSAtrasadas", atrasadas);
+      await opcs.setString("${empresaid}@GetOSDia", dodia);
+      await opcs.setString("${empresaid}@GetOSFuturas", futuras);
+      await opcs.setString("${empresaid}@getequiptec", equiptecnico);
+
+      await getequiptec().obterClienteIter(empresaid);
 
       await checklist(empresaid, dodia);
       await checklist(empresaid, amanha);
