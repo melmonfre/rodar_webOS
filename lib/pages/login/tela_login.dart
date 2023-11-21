@@ -10,6 +10,36 @@ import 'package:rodarwebos/services/getToken.dart';
 import 'package:rodarwebos/services/validatoken.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+class FullPageLoadingIndicator extends StatelessWidget {
+  List<Color> colors;
+  Indicator indicatorType;
+
+  FullPageLoadingIndicator({super.key, required this.colors, required this.indicatorType});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(color: Colors.white),
+      child: Center(
+        child: SizedBox(
+          width: 225,
+          child: LoadingIndicator(
+              indicatorType: indicatorType,
+              colors: colors,
+              strokeWidth: 4.0,
+              backgroundColor: Colors.white,
+
+              /// Optional, Background of the widget
+              pathBackgroundColor: Colors.white
+
+              /// Optional, the stroke backgroundColor
+              ),
+        ),
+      ),
+    );
+  }
+}
+
 class login extends StatefulWidget {
   var token;
   login(this.token, {Key? key}) : super(key: key);
@@ -135,11 +165,11 @@ class _loginState extends State<login> {
               child: const Text('concluir'),
               onPressed: () async {
                 if (isLoadingTelaInicial) return;
-                
+
                 setState(() {
-                  isLoadingTelaInicial = true;  
+                  isLoadingTelaInicial = true;
                 });
-                
+
                 try {
                   var divid = link?.split("/auth/");
                   var token = divid?[1];
@@ -194,17 +224,10 @@ class _loginState extends State<login> {
         MaterialPageRoute(
             fullscreenDialog: false,
             builder: (ctx) {
-              return LoadingIndicator(
-                  indicatorType: indicator,
-                  colors: _kDefaultRainbowColors,
-                  strokeWidth: 4.0,
-                  backgroundColor: Colors.white,
-
-                  /// Optional, Background of the widget
-                  pathBackgroundColor: Colors.white
-
-                  /// Optional, the stroke backgroundColor
-                  );
+              return FullPageLoadingIndicator(
+                colors: _kDefaultRainbowColors,
+                indicatorType: indicator,
+              );
             }));
   }
 
