@@ -421,7 +421,6 @@ class _CheckOutTelaState extends State<CheckOutTela> {
       );
     } else {
       opcs.setString("checkoutitens", jsoncheckin);
-      //Navigator.of(context).pop();
       if (ismanut) {
         Navigator.push(
           context,

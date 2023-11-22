@@ -29,10 +29,12 @@ class FormFieldLabel extends StatelessWidget {
 class InstalacaoState {
   EquipamentosChangeNotifier notifierInstance;
 
-  int id;
-  String codigo;
-  String documento;
+  int? id;
+  String? codigo;
+  String? documento;
   String localInstalacao;
+
+  List<dynamic> equipamentosCliente = [];
 
   InstalacaoState(this.notifierInstance,
       {required this.id,
@@ -43,7 +45,7 @@ class InstalacaoState {
   List<String> selectCodigos = [];
 
   bool isValid() {
-    return localInstalacao != "";
+    return codigo != null && localInstalacao != "";
   }
 
   Map<String, dynamic> getEquipamento() {
@@ -58,11 +60,37 @@ class InstalacaoState {
       "control": "INSTALACAO",
     };
 
+    if (id == null) {
+      try {
+        final eqp = equipamentosCliente.firstWhere((eqp) => eqp["codigo"] == codigo);
+        equipamento["EquipamentoInstaladoID"] = eqp["id"];
+        equipamento["EquipamentoInstaladoCodigo"] = eqp["codigo"];
+        equipamento["EquipamentoInstaladoDocumento"] = eqp["documento"];
+      } catch (e) {
+        debugPrint(e.toString());
+        debugPrintStack();
+      }
+    }
+
     return equipamento;
   }
 
   getData() async {
-    selectCodigos = [codigo];
+    if (id == null) {
+      SharedPreferences opcs = await SharedPreferences.getInstance();
+      final selectedOs = jsonDecode(opcs.getString("SelectedOS")!);
+
+      dynamic equipamentosClienteStr =
+          opcs.getString("${selectedOs["veiculo"]["cliente"]["id"]}@EquipamentosCliente");
+      equipamentosCliente = jsonDecode(equipamentosClienteStr);
+
+      equipamentosCliente.forEach((eqp) {
+        selectCodigos.add(eqp["codigo"]);
+      });
+    } else {
+      selectCodigos.add(codigo ?? "");
+    }
+
     notifierInstance.notifyListeners();
   }
 }
@@ -70,10 +98,12 @@ class InstalacaoState {
 class ManutencaoState {
   EquipamentosChangeNotifier notifierInstance;
 
-  int id;
-  String codigo;
-  String documento;
+  int? id;
+  String? codigo;
+  String? documento;
   String localInstalacao;
+
+  List<dynamic> equipamentosCliente = [];
 
   ManutencaoState(this.notifierInstance,
       {required this.id,
@@ -86,12 +116,25 @@ class ManutencaoState {
   List<String> selectCodigos = [];
 
   getData() async {
-    selectCodigos = [codigo];
+    if (id == null) {
+      SharedPreferences opcs = await SharedPreferences.getInstance();
+      final selectedOs = jsonDecode(opcs.getString("SelectedOS")!);
+
+      dynamic equipamentosClienteStr =
+          opcs.getString("${selectedOs["veiculo"]["cliente"]["id"]}@EquipamentosCliente");
+      equipamentosCliente = jsonDecode(equipamentosClienteStr);
+
+      equipamentosCliente.forEach((eqp) {
+        selectCodigos.add(eqp["codigo"]);
+      });
+    } else {
+      selectCodigos.add(codigo ?? "");
+    }
     notifierInstance.notifyListeners();
   }
 
   bool isValid() {
-    return localInstalacao != "";
+    return codigo != null && localInstalacao != "";
   }
 
   Map<String, dynamic> getEquipamento() {
@@ -99,13 +142,24 @@ class ManutencaoState {
       "EquipamentoInstaladoID": id,
       "EquipamentoInstaladoCodigo": codigo,
       "EquipamentoInstaladoDocumento": documento,
-      "EquipamentosRemovidoID": "", // Armazena o ID do equipamento removido
-      "EquipamentoRemovidoCodigo":
-          "", // Armazena o código do equipamento removido (veículo selecionado)
+      "EquipamentosRemovidoID": "",
+      "EquipamentoRemovidoCodigo": "",
       "EquipamentoRemovidoDocumento": "",
-      "localInstalacao": localInstalacao, // Armazena o local de instalação selecionado
+      "localInstalacao": localInstalacao,
       "control": "MANUTENCAO",
     };
+
+    if (id == null) {
+      try {
+        final eqp = equipamentosCliente.firstWhere((eqp) => eqp["codigo"] == codigo);
+        equipamento["EquipamentoInstaladoID"] = eqp["id"];
+        equipamento["EquipamentoInstaladoCodigo"] = eqp["codigo"];
+        equipamento["EquipamentoInstaladoDocumento"] = eqp["documento"];
+      } catch (e) {
+        debugPrint(e.toString());
+        debugPrintStack();
+      }
+    }
 
     return equipamento;
   }
@@ -114,10 +168,12 @@ class ManutencaoState {
 class RetiradaState {
   EquipamentosChangeNotifier instanceNotifier;
 
-  int id;
-  String codigo;
-  String documento;
+  int? id;
+  String? codigo;
+  String? documento;
   String localInstalacao;
+
+  List<dynamic> equipamentosCliente = [];
 
   RetiradaState(this.instanceNotifier,
       {required this.id,
@@ -131,12 +187,25 @@ class RetiradaState {
   List<String> selectCodigo = [];
 
   getData() async {
-    selectCodigo = [codigo];
+    if (id == null) {
+      SharedPreferences opcs = await SharedPreferences.getInstance();
+      final selectedOs = jsonDecode(opcs.getString("SelectedOS")!);
+
+      dynamic equipamentosClienteStr =
+          opcs.getString("${selectedOs["veiculo"]["cliente"]["id"]}@EquipamentosCliente");
+      equipamentosCliente = jsonDecode(equipamentosClienteStr);
+
+      equipamentosCliente.forEach((eqp) {
+        selectCodigo.add(eqp["codigo"]);
+      });
+    } else {
+      selectCodigo.add(codigo ?? "");
+    }
     instanceNotifier.notifyListeners();
   }
 
   bool isValid() {
-    return situacaoEquipamento != null;
+    return codigo != null && situacaoEquipamento != null;
   }
 
   Map<String, dynamic> getEquipamento() {
@@ -144,13 +213,25 @@ class RetiradaState {
       "EquipamentoInstaladoID": "",
       "EquipamentoInstaladoCodigo": "",
       "EquipamentoInstaladoDocumento": "",
-      "EquipamentosRemovidoID": id, // Armazena o ID do equipamento removido
-      "EquipamentoRemovidoCodigo":
-          codigo, // Armazena o código do equipamento removido (veículo selecionado)
+      "EquipamentoRetiradoSituacao": situacaoEquipamento == 'OK',
+      "EquipamentosRemovidoID": id,
+      "EquipamentoRemovidoCodigo": codigo,
       "EquipamentoRemovidoDocumento": documento,
-      "localInstalacao": localInstalacao, // Armazena o local de instalação selecionado
+      "localInstalacao": localInstalacao,
       "control": "RETIRADA",
     };
+
+    if (id == null) {
+      try {
+        final eqp = equipamentosCliente.firstWhere((eqp) => eqp["codigo"] == codigo);
+        equipamento["EquipamentosRemovidoID"] = eqp["id"];
+        equipamento["EquipamentoRemovidoCodigo"] = eqp["codigo"];
+        equipamento["EquipamentoRemovidoDocumento"] = eqp["documento"];
+      } catch (e) {
+        debugPrint(e.toString());
+        debugPrintStack();
+      }
+    }
 
     return equipamento;
   }
@@ -159,15 +240,17 @@ class RetiradaState {
 class TrocaState {
   EquipamentosChangeNotifier notifierInstance;
 
-  int id;
-  String codigo;
-  String documento;
+  int? id;
+  String? codigo;
+  String? documento;
 
-  int idRemovido;
-  String codigoRemovido;
-  String documentoRemovido;
+  int? idRemovido;
+  String? codigoRemovido;
+  String? documentoRemovido;
 
   String localInstalacao;
+
+  List<dynamic> equipamentosCliente = [];
 
   TrocaState(this.notifierInstance,
       {required this.id,
@@ -186,7 +269,7 @@ class TrocaState {
   var situequip;
 
   bool isValid() {
-    return situacaoEquipamento != null && localInstalacao != "";
+    return codigo != null && codigoRemovido != null && situacaoEquipamento != null && localInstalacao != "";
   }
 
   Map<String, dynamic> getEquipamento() {
@@ -202,12 +285,65 @@ class TrocaState {
       "control": "TROCA",
     };
 
+    if (id == null) {
+      try {
+        final eqp = equipamentosCliente.firstWhere((eqp) => eqp["codigo"] == codigo);
+        equipamento["EquipamentoInstaladoID"] = eqp["id"];
+        equipamento["EquipamentoInstaladoCodigo"] = eqp["codigo"];
+        equipamento["EquipamentoInstaladoDocumento"] = eqp["documento"];
+      } catch (e) {
+        debugPrint(e.toString());
+        debugPrintStack();
+      }
+    }
+
+    if (idRemovido == null) {
+      try {
+        final eqp = equipamentosCliente.firstWhere((eqp) => eqp["codigo"] == codigoRemovido);
+        equipamento["EquipamentosRemovidoID"] = eqp["id"];
+        equipamento["EquipamentoRemovidoCodigo"] = eqp["codigo"];
+        equipamento["EquipamentoRemovidoDocumento"] = eqp["documento"];
+      } catch (e) {
+        debugPrint(e.toString());
+        debugPrintStack();
+      }
+    }
+
     return equipamento;
   }
 
   getData() async {
-    selectCodigo = [codigo];
-    selectCodigoRemovido = [codigoRemovido];
+    if (codigo == null) {
+      SharedPreferences opcs = await SharedPreferences.getInstance();
+      final selectedOs = jsonDecode(opcs.getString("SelectedOS")!);
+
+      dynamic equipamentosClienteStr =
+          opcs.getString("${selectedOs["veiculo"]["cliente"]["id"]}@EquipamentosCliente");
+      equipamentosCliente = jsonDecode(equipamentosClienteStr);
+
+      equipamentosCliente.forEach((eqp) {
+        selectCodigo.add(eqp["codigo"]);
+      });
+    } else {
+      selectCodigo = [codigo!];
+    }
+
+    if (codigoRemovido == null) {
+      if (equipamentosCliente.isEmpty) {
+        SharedPreferences opcs = await SharedPreferences.getInstance();
+        final selectedOs = jsonDecode(opcs.getString("SelectedOS")!);
+
+        dynamic equipamentosClienteStr =
+            opcs.getString("${selectedOs["veiculo"]["cliente"]["id"]}@EquipamentosCliente");
+        equipamentosCliente = jsonDecode(equipamentosClienteStr);
+      }
+
+      equipamentosCliente.forEach((eqp) {
+        selectCodigoRemovido.add(eqp["codigo"]);
+      });
+    } else {
+      selectCodigoRemovido = [codigoRemovido!];
+    }
 
     notifierInstance.notifyListeners();
   }
@@ -234,22 +370,28 @@ class EquipamentosChangeNotifier extends ChangeNotifier {
 
       if (tipo == "INSTALACAO") {
         final eqp = equipamento["equipamento"] ?? equipamento["equipamentoRetirado"];
+        // final eqp = null;
+        bool eqpIsNull = eqp == null;
         final localInstalacao = equipamento["localInstalacao"] ?? "";
         final state = InstalacaoState(this,
-            id: eqp["id"],
-            codigo: eqp["codigo"],
-            documento: eqp["documento"],
+            id: eqpIsNull ? null : eqp["id"],
+            codigo: eqpIsNull ? null : eqp?["codigo"],
+            documento: eqpIsNull ? null : eqp?["documento"],
             localInstalacao: localInstalacao);
 
         state.getData();
         instalacoes.add(state);
       } else if (tipo == "MANUTENCAO") {
         final eqp = equipamento["equipamento"] ?? equipamento["equipamentoRetirado"];
+        // final eqp = null;
         final localInstalacao = equipamento["localInstalacao"] ?? "";
+
+        bool eqpIsNull = eqp == null;
+
         final state = ManutencaoState(this,
-            id: eqp["id"],
-            codigo: eqp["codigo"],
-            documento: eqp["documento"],
+            id: eqpIsNull ? null : eqp["id"],
+            codigo: eqpIsNull ? null : eqp["codigo"],
+            documento: eqpIsNull ? null : eqp["documento"],
             localInstalacao: localInstalacao);
 
         state.getData();
@@ -257,27 +399,36 @@ class EquipamentosChangeNotifier extends ChangeNotifier {
       } else if (tipo == "TROCA") {
         final eqp = equipamento["equipamento"];
         final eqpRetirado = equipamento["equipamentoRetirado"];
+
+        // final eqp = null;
+        // final eqpRetirado = null;
+
+        bool isEqpNull = eqp == null;
+        bool isEqpRetiradoNull = eqpRetirado == null;
+
         final localInstalacao = equipamento["localInstalacao"] ?? "";
 
         final state = TrocaState(this,
-            codigo: eqp["codigo"],
-            codigoRemovido: eqpRetirado["codigo"],
-            documento: eqp["documento"],
-            documentoRemovido: eqpRetirado["documento"],
-            id: eqp["id"],
-            idRemovido: eqpRetirado["id"],
+            codigo: isEqpNull ? null : eqp["codigo"],
+            codigoRemovido: isEqpRetiradoNull ? null : eqpRetirado["codigo"],
+            documento: isEqpNull ? null : eqp["documento"],
+            documentoRemovido: isEqpRetiradoNull ? null : eqpRetirado["documento"],
+            id: isEqpNull ? null : eqp["id"],
+            idRemovido: isEqpRetiradoNull ? null : eqpRetirado["id"],
             localInstalacao: localInstalacao);
 
         state.getData();
         trocas.add(state);
       } else if (tipo == "RETIRADA") {
         final eqp = equipamento["equipamentoRetirado"];
+        // final eqp = null;
         final localInstalacao = equipamento["localInstalacao"] ?? "";
+        bool eqpIsNull = eqp == null;
 
         final state = RetiradaState(this,
-            id: eqp["id"],
-            codigo: eqp["codigo"],
-            documento: eqp["documento"],
+            id: eqpIsNull ? null : eqp["id"],
+            codigo: eqpIsNull ? null : eqp["codigo"],
+            documento: eqpIsNull ? null : eqp["documento"],
             localInstalacao: localInstalacao);
         state.getData();
 
@@ -377,7 +528,7 @@ class _EquipamentosState extends State<Equipamentos> {
       getequipamentos().setEquipamento(equip);
     }
 
-    Navigator.of(context).pop();
+    // Navigator.of(context).pop();
 
     if (hasAccessorios) {
       Navigator.push(

@@ -136,6 +136,7 @@ class syncoff {
           "id":${element['equipamentos'][index]['id']},
           "tipo":"RETIRADA",
           "tipoTec":"RETIRADA",
+          "situacaoTec": ${eqs['EquipamentoRetiradoSituacao']},
           "equipamentoRetirado":{"id": ${eqs['EquipamentosRemovidoID']}, "codigo":"${eqs['EquipamentoRemovidoCodigo']}"},
           "equipamentoRetiradoTec":{"id": ${eqs['EquipamentosRemovidoID']}, "codigo":"${eqs['EquipamentoRemovidoCodigo']}"},
           "localInstalacao":"",
@@ -407,6 +408,8 @@ class syncoff {
 
     final url = Uri.parse('${Urlconst().url}ordem_servico/sincronizacaoordemservico/$osid');
 
+    addToListaOcultar(osid.toString());
+
     try {
       final res = await http.post(url, headers: headers, body: data);
       final status = res.statusCode;
@@ -429,12 +432,24 @@ class syncoff {
     } catch (e) {
       debugPrint(e.toString());
 
-      List<String>? ids = opcs.getStringList("osIDaFinalizar");
-      if (ids == null) {
-        ids = [];
-        ids.add("$osid");
-      }
+      List<String> ids = opcs.getStringList("osIDaFinalizar") ?? [];
+
+      ids.add("$osid");
       opcs.setStringList("osIDaFinalizar", ids);
     }
+  }
+
+  addToListaOcultar(String osid) async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+
+    List<String> osAOcultar = opcs.getStringList('osAOcultar') ?? [];
+
+    if (osAOcultar.length > 50) {
+      osAOcultar = osAOcultar.sublist(20);
+    }
+
+    osAOcultar.add(osid);
+    
+    await opcs.setStringList("osAOcultar", osAOcultar);
   }
 }

@@ -18,6 +18,7 @@ class _ListaOSFuturasState extends State<ListaOSFuturas> {
     empresaid = opcs.getInt("sessionid");
     json = opcs.getString("${empresaid}@GetOSFuturas");
     opcs.setString("SessionOS", json);
+    opcs.setString("listaGrupo", "futuras");
     print("JSON: $json");
   }
 
@@ -35,10 +36,7 @@ class _ListaOSFuturasState extends State<ListaOSFuturas> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => TelaInicial()),
-            );
+            Navigator.of(context).pop();
           },
         ),
         title: Text('OS Futuras'),

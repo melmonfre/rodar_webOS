@@ -28,6 +28,11 @@ class ContainerResponsavel extends StatefulWidget {
 }
 
 class _ContainerResponsavelState extends State<ContainerResponsavel> {
+  bool? hasAcessorios;
+  bool? hasManutencao;
+  bool? responsavelIsNotAusente;
+  bool hasLoaded = false;
+
   String motivoDivergencia = '';
   String? nome;
   String? email;
@@ -57,8 +62,8 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
     Map<String, dynamic> values = {
       "id": id,
       "nome": nome,
-      "email": email,
-      "telefone": telefone,
+      "email": email ?? "",
+      "telefone": telefone ?? "",
       "responsavelAusente": responsavelAusente
     };
 
@@ -94,6 +99,10 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
     json = opcs.getString("SelectedOS");
     element = jsonDecode(json);
     var sContatos = element['contatos'];
+
+    hasAcessorios = await getHasAcessorios();
+    hasManutencao = await getHasManutencao();
+    responsavelIsNotAusente = await getResponsavelIsNotAusente();
 
     setState(() {
       try {
@@ -141,7 +150,7 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
         coletarAssinaturaResponsavel();
       }
     } else {
-      if (nome == null || nome == "")  {
+      if (nome == null || nome == "") {
         showDialog(
           context: context,
           builder: (context) {
@@ -159,9 +168,7 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
             );
           },
         );
-      } else
-
-      {
+      } else {
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -183,10 +190,65 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
     }
   }
 
+  Future<bool> getHasAcessorios() async {
+    try {
+      SharedPreferences opcs = await SharedPreferences.getInstance();
+      final json = opcs.getString("SelectedOS");
+      final element = jsonDecode(json!);
+      List<dynamic> acessorios = element["acessorios"];
+      return acessorios.isNotEmpty;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> getHasManutencao() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+
+    final json = opcs.getString("SelectedOS");
+
+    final element = jsonDecode(json!);
+
+    bool ismanut = false;
+    try {
+      List<dynamic> equipamentos = element["equipamentos"];
+      equipamentos?.forEach((equipamento) {
+        final tipo = equipamento["tipo"];
+
+        if (tipo == "MANUTENCAO") {
+          ismanut = true;
+        }
+      });
+    } catch (e) {
+      debugPrint("erro isManut: $e");
+    }
+
+    return ismanut;
+  }
+
+  Future<bool> getResponsavelIsNotAusente() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+
+    final contato = opcs.getString("DadosContato");
+
+    try {
+      final dadosContato = jsonDecode(contato!);
+
+      if (dadosContato['responsavelAusente'] == true) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return true;
+    }
+  }
+
   void enviar() async {
-    saveoncache();
+    await saveoncache();
     criaJson();
 
+    // ignore: use_build_context_synchronously
     showDialog(
       context: context,
       builder: (context) {
@@ -201,12 +263,42 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                 enviardocconfirmacaopresencial().enviar();
                 concluiOS().concluir(osid);
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => TelaInicial(),
-                  ),
-                );
+                Navigator.of(context).pop(); // fechar dialog
+
+                Future.delayed(Duration.zero, () {
+                  // Navigator.of(context).pop(); // 1 overview
+                  // Navigator.of(context).pop(); // 2 checking
+                  // Navigator.of(context).pop(); // 3 equipamentos
+
+                  // if (hasAcessorios == true) Navigator.of(context).pop(); // 4 acessorios
+
+                  // Navigator.of(context).pop(); // 5 foto hodometro
+                  // Navigator.of(context).pop(); // 6 foto instalacao
+                  // Navigator.of(context).pop(); // 7 foto equipamento
+                  // Navigator.of(context).pop(); // 8 deslocamento
+                  // Navigator.of(context).pop(); // 9 checkout
+
+                  // if (hasManutencao == true) Navigator.of(context).pop(); // 10 motivos
+
+                  // Navigator.of(context).pop(); // 11 conclusao
+                  // Navigator.of(context).pop(); // 12 confirmacao dados
+                  // Navigator.of(context).pop(); // 13 primeira assinatura
+                  // Navigator.of(context).pop(); // 14 responsavel
+
+                  // if (responsavelAusente == false)
+                  //   Navigator.of(context).pop(); // 15 segunda assinatura
+
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => TelaInicial()),
+                      (Route<dynamic> route) => false);
+
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => TelaInicial(),
+                  //   ),
+                  // );
+                });
               },
               child: Text('OK'),
             ),
@@ -228,6 +320,8 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
   }
 
   bool validateEmail(String? email) {
+    if (!responsavelAusente) return true;
+
     final emailRegExp = RegExp(
       r'^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$',
     );
@@ -235,6 +329,7 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
     if (email == null || email.isEmpty || !emailRegExp.hasMatch(email)) {
       return false;
     }
+
     return true;
   }
 
@@ -319,7 +414,7 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
                     ),
                     InputText(
                       key: Key("$contatoSelecionadoIndex@email"),
-                      labelText: 'Email *',
+                      labelText: 'Email ${responsavelAusente ? '*' : ''}',
                       initialValue: email,
                       onChanged: (String? value) {
                         setState(() {

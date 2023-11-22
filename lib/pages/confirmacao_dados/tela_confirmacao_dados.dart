@@ -664,7 +664,6 @@ class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
               ),
               SizedBox(height: 20.0),
               BotaoConfirmar(onPressed: () {
-                //Navigator.of(context).pop();
                 Navigator.push(
                   context,
                   MaterialPageRoute(

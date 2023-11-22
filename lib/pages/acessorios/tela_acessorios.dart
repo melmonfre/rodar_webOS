@@ -252,7 +252,7 @@ class _AcessoriosState extends State<Acessorios> {
     if (isAllValid()) {
       saveAcessorios();
 
-      Navigator.of(context).pop();
+      // Navigator.of(context).pop();
 
       Navigator.push(
         context,

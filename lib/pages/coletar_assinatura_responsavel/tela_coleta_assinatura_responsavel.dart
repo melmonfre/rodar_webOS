@@ -17,6 +17,11 @@ class TelaColetarAssinaturaResponsavel extends StatefulWidget {
 }
 
 class _TelaColetarAssinaturaResponsavelState extends State<TelaColetarAssinaturaResponsavel> {
+  bool? hasAcessorios;
+  bool? hasManutencao;
+  bool? responsavelIsNotAusente;
+  bool hasLoaded = false;
+
   salvanocache() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     var assinatura = opcs.getString("base64assinatura");
@@ -31,8 +36,13 @@ class _TelaColetarAssinaturaResponsavelState extends State<TelaColetarAssinatura
     json = opcs.getString("SelectedOS");
     element = jsonDecode(json);
 
+    hasAcessorios = await getHasAcessorios();
+    hasManutencao = await getHasManutencao();
+    responsavelIsNotAusente = await getResponsavelIsNotAusente();
+
     setState(() {
       os = element['id'];
+      hasLoaded = true;
     });
   }
 
@@ -40,6 +50,60 @@ class _TelaColetarAssinaturaResponsavelState extends State<TelaColetarAssinatura
     try {
       salvanocache();
     } catch (e) {}
+  }
+
+  Future<bool> getHasAcessorios() async {
+    try {
+      SharedPreferences opcs = await SharedPreferences.getInstance();
+      final json = opcs.getString("SelectedOS");
+      final element = jsonDecode(json!);
+      List<dynamic> acessorios = element["acessorios"];
+      return acessorios.isNotEmpty;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> getHasManutencao() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+
+    final json = opcs.getString("SelectedOS");
+
+    final element = jsonDecode(json!);
+
+    bool ismanut = false;
+    try {
+      List<dynamic> equipamentos = element["equipamentos"];
+      equipamentos?.forEach((equipamento) {
+        final tipo = equipamento["tipo"];
+
+        if (tipo == "MANUTENCAO") {
+          ismanut = true;
+        }
+      });
+    } catch (e) {
+      debugPrint("erro isManut: $e");
+    }
+
+    return ismanut;
+  }
+
+  Future<bool> getResponsavelIsNotAusente() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+
+    final contato = opcs.getString("DadosContato");
+
+    try {
+      final dadosContato = jsonDecode(contato!);
+
+      if (dadosContato['responsavelAusente'] == true) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return true;
+    }
   }
 
   Future<void> validafim() async {
@@ -61,18 +125,44 @@ class _TelaColetarAssinaturaResponsavelState extends State<TelaColetarAssinatura
           actions: <Widget>[
             TextButton(
               child: const Text('Sim'),
-              onPressed: () async {    
+              onPressed: () async {
                 concluiOS().concluir(os);
                 // envianot().enviar();
                 // reenvianot().enviar();
                 confirmacaopresencial().enviar();
                 enviardocconfirmacaopresencial().enviar();
 
-                Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => TelaInicial()),
-                );
+                // Navigator.of(context).pop(); // fechar dialog
+
+                // Navigator.of(context).pop(); // 1 overview
+                // Navigator.of(context).pop(); // 2 checking
+                // Navigator.of(context).pop(); // 3 equipamentos
+
+                // if (hasAcessorios == true) Navigator.of(context).pop(); // 4 acessorios
+
+                // Navigator.of(context).pop(); // 5 foto hodometro
+                // Navigator.of(context).pop(); // 6 foto instalacao
+                // Navigator.of(context).pop(); // 7 foto equipamento
+                // Navigator.of(context).pop(); // 8 deslocamento
+                // Navigator.of(context).pop(); // 9 checkout
+
+                // if (hasManutencao == true) Navigator.of(context).pop(); // 10 motivos
+
+                // Navigator.of(context).pop(); // 11 conclusao
+                // Navigator.of(context).pop(); // 12 confirmacao dados
+                // Navigator.of(context).pop(); // 13 primeira assinatura
+                // Navigator.of(context).pop(); // 14 responsavel
+
+                // if (responsavelIsNotAusente == true) Navigator.of(context).pop(); // 15 segunda assinatura
+
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => TelaInicial()),
+                    (Route<dynamic> route) => false);
+
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => TelaInicial()),
+                // );
               },
             ),
             TextButton(

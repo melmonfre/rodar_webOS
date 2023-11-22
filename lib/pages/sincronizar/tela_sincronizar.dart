@@ -22,13 +22,13 @@ class _TelaSincronizarState extends State<TelaSincronizar> {
 
     vfafinalizar?.forEach((osid) {
       setState(() {
-        countafinalizar ++;
+        countvf ++;
       });
 
     });
     afinalizar?.forEach((osid) {
       setState(() {
-        countvf ++;
+        countafinalizar ++;
       });
 
     });

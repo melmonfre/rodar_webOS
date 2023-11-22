@@ -317,6 +317,7 @@ class Equipamento {
   EquipamentoTec? equipamentoRetiradoTec;
   String? localInstalacao;
   String? localInstalacaoTec;
+  bool? situacaoTec;
 
   Equipamento(
       {this.id,
@@ -345,8 +346,10 @@ class Equipamento {
         equipamentoRetiradoTec = json.containsKey('equipamentoRetiradoTec')
             ? EquipamentoTec.fromJson(json['equipamentoRetiradoTec'])
             : null,
+        situacaoTec = json["situacaoTec"] ?? null,
         localInstalacao = json['localInstalacao'],
         localInstalacaoTec = json['localInstalacaoTec'];
+        
 
   // fromJson(Map<String, dynamic> json) {
   //   id = json['id'];
@@ -371,6 +374,11 @@ class Equipamento {
     data['equipamentoRetiradoTec'] = this.equipamentoRetiradoTec;
     data['localInstalacao'] = this.localInstalacao;
     data['localInstalacaoTec'] = this.localInstalacaoTec;
+
+    if (situacaoTec != null) {
+      data['situacaoTec'] = this.situacaoTec;
+    }
+
     return data;
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:rodarwebos/Constantes/Urlconst.dart';
 import 'package:rodarwebos/services/OS/GetMotivosOS.dart';
@@ -23,20 +24,19 @@ class getToken {
 
     var url = Uri.parse('${Urlconst().url}token/codigo/${token}');
     var res = await http.get(url);
-    if (res.statusCode != 200)
-      throw Exception('http.get error: statusCode= ${res.statusCode}');
+    if (res.statusCode != 200) throw Exception('http.get error: statusCode= ${res.statusCode}');
     retorno = jsonDecode(res.body);
     bearer = retorno['token'];
     var dados = await GetDadoslogin().fazlogin(bearer);
     var data = jsonDecode(dados);
-    var emp =data['empresa'];
+    var emp = data['empresa'];
     var empresa = jsonEncode(emp);
     setempresas(empresa);
     var empresaid = emp['id'];
     opcs.setInt("sessionid", empresaid);
 
     opcs.setString("${empresaid}@token", bearer);
-   sincronizar(empresaid);
+    sincronizar(empresaid);
     opcs.setString("${empresaid}@login", dados);
 
     return ("Sucesso");
@@ -45,24 +45,39 @@ class getToken {
   sincronizar(empresaid) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
 
-    String amanha = await GetOSAmanha().obter(empresaid);
-    String atrasadas = await GetOSAtrasadas().obter(empresaid);
-    String dodia = await GetOSDia().obter(empresaid);
-    String futuras = await GetOSFuturas().obter(empresaid);
-    String equiptecnico = await getequiptec().obter(empresaid);
+    debugPrint("sincronizando...");
 
-    opcs.setString("${empresaid}@GetOSAmanha", amanha);
-    opcs.setString("${empresaid}@GetOSAtrasadas", atrasadas);
-    opcs.setString("${empresaid}@GetOSDia", dodia);
-    opcs.setString("${empresaid}@GetOSFuturas", futuras);
-    opcs.setString("${empresaid}@getequiptec", equiptecnico);
+    // await opcs.setBool("carregando", true);
 
-    checklist(empresaid ,dodia);
-    checklist(empresaid, amanha);
-    checklist(empresaid, atrasadas);
-    checklist(empresaid, futuras);
+    try {
+      String amanha = await GetOSAmanha().obter(empresaid);
+
+      await opcs.setBool("carregando", true);
+
+      String atrasadas = await GetOSAtrasadas().obter(empresaid);
+      String dodia = await GetOSDia().obter(empresaid);
+      String futuras = await GetOSFuturas().obter(empresaid);
+      String equiptecnico = await getequiptec().obter(empresaid);
+
+      await opcs.setString("${empresaid}@GetOSAmanha", amanha);
+      await opcs.setString("${empresaid}@GetOSAtrasadas", atrasadas);
+      await opcs.setString("${empresaid}@GetOSDia", dodia);
+      await opcs.setString("${empresaid}@GetOSFuturas", futuras);
+      await opcs.setString("${empresaid}@getequiptec", equiptecnico);
+
+      await getequiptec().obterClienteIter(empresaid);
+
+      await checklist(empresaid, dodia);
+      await checklist(empresaid, amanha);
+      await checklist(empresaid, atrasadas);
+      await checklist(empresaid, futuras);
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+
+    await opcs.setBool("carregando", false);
   }
-  
+
   zerarcache(empresaid) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     opcs.setString("${empresaid}@GetOSAmanha", "");
@@ -71,37 +86,40 @@ class getToken {
     opcs.setString("${empresaid}@GetOSFuturas", "");
     opcs.setString("${empresaid}@getequiptec", "");
   }
-  checklist( empresaid, nf) async {
+
+  checklist(empresaid, nf) async {
     var osid;
     var check;
     var motivos;
     var nota = jsonDecode(nf);
     var notinha;
     try {
-      notinha = nota [0];
-      osid = notinha ['id'];
+      notinha = nota[0];
+      osid = notinha['id'];
       SharedPreferences opcs = await SharedPreferences.getInstance();
-      try{
+      try {
         check = await GetChecklistOS().obter(empresaid, osid);
-        if(check != null){
+        if (check != null) {
           opcs.setString("${osid}@checklist", check);
         }
-      } catch(e) {
+      } catch (e) {
         check = await GetChecklistOS().obter(empresaid, osid);
         opcs.setString("${osid}@checklist", check);
       }
-      try{
+      try {
         motivos = await GetMotivosOS().obter(empresaid, osid);
-        if(motivos != null){
+        if (motivos != null) {
           opcs.setString("${osid}@motivos", motivos);
         }
-      } catch(e) {
+      } catch (e) {
         motivos = await GetMotivosOS().obter(empresaid, osid);
         opcs.setString("${osid}@motivos", motivos);
       }
-    } catch(e){
+    } catch (e) {
+      // rethrow;
     }
   }
+
   getempresas() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     List<String>? listaempresas = opcs.getStringList("empresas");

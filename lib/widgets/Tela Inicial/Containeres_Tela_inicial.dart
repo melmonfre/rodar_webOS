@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_amanha.dart';
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_atrasadas.dart';
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_futuras.dart';
@@ -74,17 +75,10 @@ class _FuturasState extends State<Futuras> {
     });
   }
 
-  var timer = 1;
   void _decrementCounter() {
-    Timer.periodic(const Duration(seconds: 1), (_) {
+    Timer.periodic(const Duration(milliseconds: 1100), (_) {
       try {
-        setState(() {
-          timer--;
-          if (timer == 0) {
-            getdata();
-            timer = 5;
-          }
-        });
+        getdata();
       } catch (e) {}
     });
   }
@@ -98,7 +92,6 @@ class _FuturasState extends State<Futuras> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pop();
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => ListaOSFuturas()),
@@ -129,17 +122,10 @@ class _AmanhaState extends State<Amanha> {
     });
   }
 
-  var timer = 2;
   void _decrementCounter() {
-    Timer.periodic(const Duration(seconds: 1), (_) {
+    Timer.periodic(const Duration(seconds: 900), (_) {
       try {
-        setState(() {
-          timer--;
-          if (timer == 0) {
-            getdata();
-            timer = 5;
-          }
-        });
+        getdata();
       } catch (e) {}
     });
   }
@@ -154,7 +140,6 @@ class _AmanhaState extends State<Amanha> {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
-          Navigator.of(context).pop();
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => ListaOSAmanha()),
@@ -188,17 +173,10 @@ class _HojeState extends State<Hoje> {
     });
   }
 
-  var timer = 3;
   void _decrementCounter() {
-    Timer.periodic(const Duration(seconds: 1), (_) {
+    Timer.periodic(const Duration(milliseconds: 1200), (_) {
       try {
-        setState(() {
-          timer--;
-          if (timer == 0) {
-            getdata();
-            timer = 5;
-          }
-        });
+        getdata();
       } catch (e) {}
     });
   }
@@ -213,7 +191,6 @@ class _HojeState extends State<Hoje> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pop();
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => ListaOSHoje()),
@@ -244,17 +221,10 @@ class _AtrasadasState extends State<Atrasadas> {
     });
   }
 
-  var timer = 4;
   void _decrementCounter() {
     Timer.periodic(const Duration(seconds: 1), (_) {
       try {
-        setState(() {
-          timer--;
-          if (timer == 0) {
-            getdata();
-            timer = 5;
-          }
-        });
+        getdata();
       } catch (e) {}
     });
   }
@@ -269,7 +239,6 @@ class _AtrasadasState extends State<Atrasadas> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pop();
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => ListaOSAtrasadas()),
@@ -289,36 +258,57 @@ class ContainerContent extends StatefulWidget {
 }
 
 class _ContainerContentState extends State<ContainerContent> {
+  Timer? sincronizacaoTimer;
+  Timer? carregandoTimer;
+
+  bool carregando = false;
+  var timer = 5;
+
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
+
+  Future<void> getdata() async {
+    debugPrint("getdata conteineres");
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    var empresaid = opcs.getInt("sessionid");
+    getToken().sincronizar(empresaid);
+  }
+
+  void createTimers() {
+    sincronizacaoTimer = Timer.periodic(const Duration(minutes: 15), (_) {
+      setState(() {
+        debugPrint('sincronizando containeres_tela_inicial');
+        getdata();
+      });
+    });
+
+    carregandoTimer = Timer.periodic(const Duration(milliseconds: 1000), (_) async {
+      final opcs = await SharedPreferences.getInstance();
+
+      bool carregandoStorage = opcs.getBool("carregando") ?? false;
+
+      setState(() {
+        carregando = carregandoStorage;
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    getdata();
+    createTimers();
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    sincronizacaoTimer?.cancel();
+    carregandoTimer?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-        GlobalKey<RefreshIndicatorState>();
-    Future<void> getdata() async {
-      SharedPreferences opcs = await SharedPreferences.getInstance();
-      var empresaid = opcs.getInt("sessionid");
-      getToken().sincronizar(empresaid);
-    }
-
-    @override
-    var timer = 5;
-    void _decrementCounter() {
-      Timer.periodic(const Duration(seconds: 1), (_) {
-        setState(() {
-          timer--;
-          if (timer == 0) {
-            getdata();
-            timer = 5;
-          }
-        });
-      });
-    }
-
-    void initState() {
-      getdata();
-      _decrementCounter();
-      super.initState();
-    }
-
     return Scaffold(
       body: RefreshIndicator(
         key: _refreshIndicatorKey,
@@ -326,10 +316,11 @@ class _ContainerContentState extends State<ContainerContent> {
         backgroundColor: Color(0xFF26738e),
         strokeWidth: 4.0,
         onRefresh: () async {
-          return Future<void>.delayed(const Duration(seconds: 5));
+          if (!carregando) getdata();
+          // return Future<void>.delayed(const Duration(seconds: 5));
         },
         child: SingleChildScrollView(
-          // physics: AlwaysScrollableScrollPhysics(),
+          physics: carregando ? null : const AlwaysScrollableScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: Column(
@@ -356,6 +347,13 @@ class _ContainerContentState extends State<ContainerContent> {
                   child: Futuras(),
                 ),
                 const SizedBox(height: 3.0),
+                if (carregando)
+                  Center(
+                    child: Container(
+                      width: 200,
+                      child: LoadingIndicator(indicatorType: Indicator.ballSpinFadeLoader),
+                    ),
+                  ),
               ],
             ),
           ),

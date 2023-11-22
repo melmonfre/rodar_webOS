@@ -31,6 +31,21 @@ class _VisitaFrustadaMotivoState extends State<VisitaFrustadaMotivo> {
     getdata();
     super.initState();
   }
+
+  addToListaOcultar(String osid) async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+
+    List<String> osAOcultar = opcs.getStringList('osAOcultar') ?? [];
+
+    if (osAOcultar.length > 50) {
+      osAOcultar = osAOcultar.sublist(20);
+    }
+
+    osAOcultar.add(osid);
+    
+    await opcs.setStringList("osAOcultar", osAOcultar);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,7 +112,7 @@ class _VisitaFrustadaMotivoState extends State<VisitaFrustadaMotivo> {
                       alignment: Alignment.center,
                       padding: EdgeInsets.all(16.0),
                       child: BotaoEnviar(
-                        onPressed: () {
+                        onPressed: () async {
                           concluivf().concluir();
                           Fluttertoast.showToast(
                             msg: 'Enviado com sucesso',
@@ -105,6 +120,9 @@ class _VisitaFrustadaMotivoState extends State<VisitaFrustadaMotivo> {
                             gravity: ToastGravity.BOTTOM,
                           );
 
+                          await addToListaOcultar(osid.toString());
+
+                          // ignore: use_build_context_synchronously
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
