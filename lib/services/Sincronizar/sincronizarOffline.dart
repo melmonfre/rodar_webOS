@@ -408,6 +408,8 @@ class syncoff {
 
     final url = Uri.parse('${Urlconst().url}ordem_servico/sincronizacaoordemservico/$osid');
 
+    addToListaOcultar(osid.toString());
+
     try {
       final res = await http.post(url, headers: headers, body: data);
       final status = res.statusCode;
@@ -426,8 +428,6 @@ class syncoff {
         List<String>? ids = opcs.getStringList("osIDaFinalizar");
         ids?.remove(osid);
         opcs.setStringList("osIDaFinalizar", ids!);
-
-        addToListaOcultar(osid.toString());
       }
     } catch (e) {
       debugPrint(e.toString());
@@ -436,8 +436,6 @@ class syncoff {
 
       ids.add("$osid");
       opcs.setStringList("osIDaFinalizar", ids);
-
-      addToListaOcultar(osid.toString());
     }
   }
 

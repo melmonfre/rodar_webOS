@@ -78,7 +78,7 @@ class _TelaColetarAssinaturaResponsavelState extends State<TelaColetarAssinatura
         final tipo = equipamento["tipo"];
 
         if (tipo == "MANUTENCAO") {
-            ismanut = true;
+          ismanut = true;
         }
       });
     } catch (e) {
@@ -101,7 +101,6 @@ class _TelaColetarAssinaturaResponsavelState extends State<TelaColetarAssinatura
       } else {
         return false;
       }
-
     } catch (e) {
       return true;
     }
@@ -133,28 +132,32 @@ class _TelaColetarAssinaturaResponsavelState extends State<TelaColetarAssinatura
                 confirmacaopresencial().enviar();
                 enviardocconfirmacaopresencial().enviar();
 
-                Navigator.of(context).pop(); // fechar dialog
+                // Navigator.of(context).pop(); // fechar dialog
 
-                Navigator.of(context).pop(); // 1 overview
-                Navigator.of(context).pop(); // 2 checking
-                Navigator.of(context).pop(); // 3 equipamentos
+                // Navigator.of(context).pop(); // 1 overview
+                // Navigator.of(context).pop(); // 2 checking
+                // Navigator.of(context).pop(); // 3 equipamentos
 
-                if (hasAcessorios == true) Navigator.of(context).pop(); // 4 acessorios
+                // if (hasAcessorios == true) Navigator.of(context).pop(); // 4 acessorios
 
-                Navigator.of(context).pop(); // 5 foto hodometro
-                Navigator.of(context).pop(); // 6 foto instalacao
-                Navigator.of(context).pop(); // 7 foto equipamento
-                Navigator.of(context).pop(); // 8 deslocamento
-                Navigator.of(context).pop(); // 9 checkout
+                // Navigator.of(context).pop(); // 5 foto hodometro
+                // Navigator.of(context).pop(); // 6 foto instalacao
+                // Navigator.of(context).pop(); // 7 foto equipamento
+                // Navigator.of(context).pop(); // 8 deslocamento
+                // Navigator.of(context).pop(); // 9 checkout
 
-                if (hasManutencao == true) Navigator.of(context).pop(); // 10 motivos
+                // if (hasManutencao == true) Navigator.of(context).pop(); // 10 motivos
 
-                Navigator.of(context).pop(); // 11 conclusao
-                Navigator.of(context).pop(); // 12 confirmacao dados
-                Navigator.of(context).pop(); // 13 primeira assinatura
-                Navigator.of(context).pop(); // 14 responsavel
+                // Navigator.of(context).pop(); // 11 conclusao
+                // Navigator.of(context).pop(); // 12 confirmacao dados
+                // Navigator.of(context).pop(); // 13 primeira assinatura
+                // Navigator.of(context).pop(); // 14 responsavel
 
-                if (responsavelIsNotAusente == true) Navigator.of(context).pop(); // 15 segunda assinatura
+                // if (responsavelIsNotAusente == true) Navigator.of(context).pop(); // 15 segunda assinatura
+
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => TelaInicial()),
+                    (Route<dynamic> route) => false);
 
                 // Navigator.push(
                 //   context,

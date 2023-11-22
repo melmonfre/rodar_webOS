@@ -75,17 +75,10 @@ class _FuturasState extends State<Futuras> {
     });
   }
 
-  var timer = 1;
   void _decrementCounter() {
-    Timer.periodic(const Duration(seconds: 1), (_) {
+    Timer.periodic(const Duration(milliseconds: 1100), (_) {
       try {
-        setState(() {
-          timer--;
-          if (timer == 0) {
-            getdata();
-            timer = 5;
-          }
-        });
+        getdata();
       } catch (e) {}
     });
   }
@@ -129,17 +122,10 @@ class _AmanhaState extends State<Amanha> {
     });
   }
 
-  var timer = 2;
   void _decrementCounter() {
-    Timer.periodic(const Duration(seconds: 1), (_) {
+    Timer.periodic(const Duration(seconds: 900), (_) {
       try {
-        setState(() {
-          timer--;
-          if (timer == 0) {
-            getdata();
-            timer = 5;
-          }
-        });
+        getdata();
       } catch (e) {}
     });
   }
@@ -187,17 +173,10 @@ class _HojeState extends State<Hoje> {
     });
   }
 
-  var timer = 3;
   void _decrementCounter() {
-    Timer.periodic(const Duration(seconds: 1), (_) {
+    Timer.periodic(const Duration(milliseconds: 1200), (_) {
       try {
-        setState(() {
-          timer--;
-          if (timer == 0) {
-            getdata();
-            timer = 5;
-          }
-        });
+        getdata();
       } catch (e) {}
     });
   }
@@ -242,17 +221,10 @@ class _AtrasadasState extends State<Atrasadas> {
     });
   }
 
-  var timer = 4;
   void _decrementCounter() {
     Timer.periodic(const Duration(seconds: 1), (_) {
       try {
-        setState(() {
-          timer--;
-          if (timer == 0) {
-            getdata();
-            timer = 5;
-          }
-        });
+        getdata();
       } catch (e) {}
     });
   }
@@ -344,10 +316,11 @@ class _ContainerContentState extends State<ContainerContent> {
         backgroundColor: Color(0xFF26738e),
         strokeWidth: 4.0,
         onRefresh: () async {
-          return Future<void>.delayed(const Duration(seconds: 5));
+          if (!carregando) getdata();
+          // return Future<void>.delayed(const Duration(seconds: 5));
         },
         child: SingleChildScrollView(
-          // physics: AlwaysScrollableScrollPhysics(),
+          physics: carregando ? null : const AlwaysScrollableScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: Column(

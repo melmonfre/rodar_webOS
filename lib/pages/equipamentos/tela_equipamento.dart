@@ -400,8 +400,8 @@ class EquipamentosChangeNotifier extends ChangeNotifier {
         final eqp = equipamento["equipamento"];
         final eqpRetirado = equipamento["equipamentoRetirado"];
 
-        //final eqp = null;
-        //final eqpRetirado = null;
+        // final eqp = null;
+        // final eqpRetirado = null;
 
         bool isEqpNull = eqp == null;
         bool isEqpRetiradoNull = eqpRetirado == null;

@@ -44,11 +44,10 @@ class concluivf {
     } catch (e) {
       debugPrint(e.toString());
       final motivos = '{"motivo":"$motivo","localGps":"$localGps"}';
-      List<String>? ids = opcs.getStringList("osIDaFinalizarvf");
-      if (ids == null) {
-        ids = [];
-        ids.add("$osid");
-      }
+      List<String> ids = opcs.getStringList("osIDaFinalizarvf") ?? [];
+
+      ids.add("$osid");
+      
       opcs.setStringList("osIDaFinalizarvf", ids);
       opcs.setString("${osid}@OSaFinalizarvf", motivos);
 

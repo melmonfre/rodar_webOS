@@ -28,11 +28,7 @@ class FullPageLoadingIndicator extends StatelessWidget {
               colors: colors,
               strokeWidth: 4.0,
               backgroundColor: Colors.white,
-
-              /// Optional, Background of the widget
               pathBackgroundColor: Colors.white
-
-              /// Optional, the stroke backgroundColor
               ),
         ),
       ),
