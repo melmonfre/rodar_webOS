@@ -25,7 +25,7 @@ class getequiptec {
       return source;
     }
   }
-  
+
   obterClienteIter(empresaid) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
 
@@ -39,19 +39,37 @@ class getequiptec {
     for (final element in [osAmanha, osAtrasadas, osDia, osFuturas]) {
       todas.addAll(element);
     }
-    
+
     for (final os in todas) {
       dynamic clienteId;
       try {
         clienteId = os["veiculo"]["cliente"]["id"];
 
         bool exists = opcs.getString("${clienteId}@EquipamentosCliente") != null;
+        String? addedOn = opcs.getString("${clienteId}@EquipamentosClienteAddedOn");
 
-        if (exists) {
-          final data = await obterCliente(empresaid, clienteId);
-          await opcs.setString("${clienteId}@EquipamentosCliente", data);
+        // verificar se a ultima atualizacao dos equipamentos do cliente é antiga
+        bool isOld = false;
+        int isOldAfterThisMuch = 15000;
+        
+        if (addedOn != null) {
+          try {
+            var difference = DateTime.now().difference(DateTime.parse(addedOn));
+            isOld = difference.inMilliseconds > isOldAfterThisMuch;
+          } catch (e) {
+            isOld = true;
+            debugPrint(e.toString());
+            debugPrintStack();
+          }
         }
 
+        if (exists || isOld) {
+          final data = await obterCliente(empresaid, clienteId);
+          await opcs.setString("${clienteId}@EquipamentosCliente", data);
+
+          String timestamp = DateTime.timestamp().toString();
+          await opcs.setString("${clienteId}@EquipamentosClienteAddedOn", timestamp);
+        }
       } catch (e) {
         debugPrint("error equipamento cliente (${clienteId}): ${e.toString()}");
         debugPrintStack();
