@@ -118,7 +118,7 @@ class getequiptec {
         opcs: opcs,
       );
 
-      sleep(const Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
 
       await _obterVeiculoIter(
         veiculoId: veiculoId,
@@ -126,7 +126,7 @@ class getequiptec {
         opcs: opcs,
       );
 
-      sleep(const Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
     }
   }
 
