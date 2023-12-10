@@ -87,6 +87,7 @@ class _OrdemServicoState extends State<OrdemServico> {
 
   List<dynamic> acessorios = [];
 
+  @Deprecated("usar _verificarEquipamentos")
   Future<bool> verificarEquipamentos() async {
     bool isEquipamentoValido = true;
 
@@ -124,6 +125,86 @@ class _OrdemServicoState extends State<OrdemServico> {
     });
 
     return isEquipamentoValido;
+  }
+
+  _mostrarAvisoDialog(String mensagem) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Aviso'),
+          content: Text(mensagem),
+          actions: [
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  _verificarEquipamentos() async {
+    int equipamentoOs = 0;
+    int equipamentoVec = 0;
+
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    final json = opcs.getString("SelectedOS");
+    final os = jsonDecode(json!);
+
+    final clienteId = os["veiculo"]["cliente"]["id"];
+    final veiculoId = os["veiculo"]["id"];
+    String? equipamentosClienteStr = opcs.getString("${clienteId}@EquipamentosCliente");
+    String? equipamentosVeiculoStr = opcs.getString("${veiculoId}@EquipamentosVeiculo");
+    List<dynamic>? equipamentosCliente;
+    List<dynamic>? equipamentosVeiculo;
+
+    try {
+      equipamentosCliente = jsonDecode(equipamentosClienteStr!);
+    } catch (e) {
+      equipamentosCliente = [];
+    }
+
+    try {
+      equipamentosVeiculo = jsonDecode(equipamentosVeiculoStr!);
+    } catch (e) {
+      equipamentosVeiculo = [];
+    }
+
+    List<dynamic> eq = element['equipamentos'];
+    eq.forEach((equip) {
+      // quando é esse tipo de equipamento, ele deve constar no estoque do tecnico
+      if (equip["tipo"] == 'TROCA' || equip["tipo"] == 'INSTALACAO') {
+        equipamentoOs += 1;
+      }
+      // quando é esse tipo de equipamento, ele deve constar no veiculo
+      if (equip["tipo"] == 'MANUTENCAO' || equip["tipo"] == 'RETIRADA') {
+        equipamentoVec += 1;
+      }
+    });
+
+    try {
+      if (equipamentosCliente!.length < equipamentoOs) {
+        _mostrarAvisoDialog(
+            'Divergência no estoque do técnico, entrar em contato com a empresa " + this.sessao.empresa.nome + "!"');
+      }
+    } catch (e) {
+      debugPrint('erro ao mostrar primeira mensagem equipamentos:');
+      debugPrint(e.toString());
+    }
+
+    try {
+      if (equipamentosVeiculo!.length < equipamentoVec) {
+        _mostrarAvisoDialog(
+            "Divergência nos equipamentos presentes no veículo, entrar em contato com a empresa  + this.sessao.empresa.nome + !");
+      }
+    } catch (e) {
+      debugPrint('erro ao mostrar segunda mensagem equipamentos:');
+      debugPrint(e.toString());
+    }
   }
 
   Future<void> getdata() async {
@@ -171,26 +252,10 @@ class _OrdemServicoState extends State<OrdemServico> {
 
     var eq = element['equipamentos'];
 
-    bool isEquipamentoValido = await verificarEquipamentos();
-    if (!isEquipamentoValido) {
-      // ignore: use_build_context_synchronously
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Aviso'),
-            content: const Text('Equipamento inválido.'),
-            actions: [
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
+    try {
+      await _verificarEquipamentos();
+    } catch (e) {
+      debugPrint("erro ao verificar equipamentos: ${e.toString()}");
     }
 
     eq.forEach((equip) {
