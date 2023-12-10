@@ -34,6 +34,8 @@ class InstalacaoState {
   String? documento;
   String localInstalacao;
 
+  String? codigoOriginal;
+
   List<dynamic> equipamentosCliente = [];
 
   InstalacaoState(this.notifierInstance,
@@ -60,7 +62,7 @@ class InstalacaoState {
       "control": "INSTALACAO",
     };
 
-    if (id == null) {
+    if (id == null || codigo != codigoOriginal) {
       try {
         final eqp = equipamentosCliente.firstWhere((eqp) => eqp["codigo"] == codigo);
         equipamento["EquipamentoInstaladoID"] = eqp["id"];
@@ -76,18 +78,21 @@ class InstalacaoState {
   }
 
   getData() async {
-    if (id == null) {
-      SharedPreferences opcs = await SharedPreferences.getInstance();
-      final selectedOs = jsonDecode(opcs.getString("SelectedOS")!);
+    codigoOriginal = codigo;
 
-      dynamic equipamentosClienteStr =
-          opcs.getString("${selectedOs["veiculo"]["cliente"]["id"]}@EquipamentosCliente");
-      equipamentosCliente = jsonDecode(equipamentosClienteStr);
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    final selectedOs = jsonDecode(opcs.getString("SelectedOS")!);
 
-      equipamentosCliente.forEach((eqp) {
-        selectCodigos.add(eqp["codigo"]);
-      });
-    } else {
+    dynamic equipamentosClienteStr =
+        opcs.getString("${selectedOs["veiculo"]["cliente"]["id"]}@EquipamentosCliente");
+    equipamentosCliente = jsonDecode(equipamentosClienteStr);
+
+    equipamentosCliente.forEach((eqp) {
+      if (eqp["codigo"] == codigo) return;
+      selectCodigos.add(eqp["codigo"]);
+    });
+
+    if (codigo != null && codigo != "") {
       selectCodigos.add(codigo ?? "");
     }
 
@@ -102,8 +107,9 @@ class ManutencaoState {
   String? codigo;
   String? documento;
   String localInstalacao;
+  String? codigoOriginal;
 
-  List<dynamic> equipamentosCliente = [];
+  List<dynamic> equipamentosVeiculo = [];
 
   ManutencaoState(this.notifierInstance,
       {required this.id,
@@ -116,20 +122,25 @@ class ManutencaoState {
   List<String> selectCodigos = [];
 
   getData() async {
-    if (id == null) {
-      SharedPreferences opcs = await SharedPreferences.getInstance();
-      final selectedOs = jsonDecode(opcs.getString("SelectedOS")!);
+    codigoOriginal = codigo;
 
-      dynamic equipamentosClienteStr =
-          opcs.getString("${selectedOs["veiculo"]["cliente"]["id"]}@EquipamentosCliente");
-      equipamentosCliente = jsonDecode(equipamentosClienteStr);
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    final selectedOs = jsonDecode(opcs.getString("SelectedOS")!);
 
-      equipamentosCliente.forEach((eqp) {
-        selectCodigos.add(eqp["codigo"]);
-      });
-    } else {
+    final opcsChave = "${selectedOs["veiculo"]["id"]}@EquipamentosVeiculo";
+    dynamic equipamentosVeiculoStr = opcs.getString(opcsChave);
+
+    equipamentosVeiculo = jsonDecode(equipamentosVeiculoStr);
+
+    equipamentosVeiculo.forEach((eqp) {
+      if (eqp["codigo"] == codigo) return;
+      selectCodigos.add(eqp["codigo"]);
+    });
+
+    if (codigo != null && codigo != "") {
       selectCodigos.add(codigo ?? "");
     }
+
     notifierInstance.notifyListeners();
   }
 
@@ -149,9 +160,9 @@ class ManutencaoState {
       "control": "MANUTENCAO",
     };
 
-    if (id == null) {
+    if (id == null || codigo != codigoOriginal) {
       try {
-        final eqp = equipamentosCliente.firstWhere((eqp) => eqp["codigo"] == codigo);
+        final eqp = equipamentosVeiculo.firstWhere((eqp) => eqp["codigo"] == codigo);
         equipamento["EquipamentoInstaladoID"] = eqp["id"];
         equipamento["EquipamentoInstaladoCodigo"] = eqp["codigo"];
         equipamento["EquipamentoInstaladoDocumento"] = eqp["documento"];
@@ -172,8 +183,9 @@ class RetiradaState {
   String? codigo;
   String? documento;
   String localInstalacao;
+  String? codigoOriginal;
 
-  List<dynamic> equipamentosCliente = [];
+  List<dynamic> equipamentosVeiculo = [];
 
   RetiradaState(this.instanceNotifier,
       {required this.id,
@@ -187,20 +199,25 @@ class RetiradaState {
   List<String> selectCodigo = [];
 
   getData() async {
-    if (id == null) {
-      SharedPreferences opcs = await SharedPreferences.getInstance();
-      final selectedOs = jsonDecode(opcs.getString("SelectedOS")!);
+    codigoOriginal = codigo;
 
-      dynamic equipamentosClienteStr =
-          opcs.getString("${selectedOs["veiculo"]["cliente"]["id"]}@EquipamentosCliente");
-      equipamentosCliente = jsonDecode(equipamentosClienteStr);
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    final selectedOs = jsonDecode(opcs.getString("SelectedOS")!);
 
-      equipamentosCliente.forEach((eqp) {
-        selectCodigo.add(eqp["codigo"]);
-      });
-    } else {
+    var opcsChave = "${selectedOs["veiculo"]["id"]}@EquipamentosVeiculo";
+    dynamic equipamentosVeiculoStr = opcs.getString(opcsChave);
+
+    equipamentosVeiculo = jsonDecode(equipamentosVeiculoStr);
+
+    equipamentosVeiculo.forEach((eqp) {
+      if (eqp["codigo"] == codigo) return;
+      selectCodigo.add(eqp["codigo"]);
+    });
+
+    if (codigo != null && codigo != "") {
       selectCodigo.add(codigo ?? "");
     }
+
     instanceNotifier.notifyListeners();
   }
 
@@ -221,9 +238,9 @@ class RetiradaState {
       "control": "RETIRADA",
     };
 
-    if (id == null) {
+    if (id == null || codigo != codigoOriginal) {
       try {
-        final eqp = equipamentosCliente.firstWhere((eqp) => eqp["codigo"] == codigo);
+        final eqp = equipamentosVeiculo.firstWhere((eqp) => eqp["codigo"] == codigo);
         equipamento["EquipamentosRemovidoID"] = eqp["id"];
         equipamento["EquipamentoRemovidoCodigo"] = eqp["codigo"];
         equipamento["EquipamentoRemovidoDocumento"] = eqp["documento"];
@@ -243,14 +260,17 @@ class TrocaState {
   int? id;
   String? codigo;
   String? documento;
+  String? codigoOriginal;
 
   int? idRemovido;
   String? codigoRemovido;
   String? documentoRemovido;
+  String? codigoRemovidoOriginal;
 
   String localInstalacao;
 
   List<dynamic> equipamentosCliente = [];
+  List<dynamic> equipamentosVeiculo = [];
 
   TrocaState(this.notifierInstance,
       {required this.id,
@@ -269,7 +289,10 @@ class TrocaState {
   var situequip;
 
   bool isValid() {
-    return codigo != null && codigoRemovido != null && situacaoEquipamento != null && localInstalacao != "";
+    return codigo != null &&
+        codigoRemovido != null &&
+        situacaoEquipamento != null &&
+        localInstalacao != "";
   }
 
   Map<String, dynamic> getEquipamento() {
@@ -285,7 +308,7 @@ class TrocaState {
       "control": "TROCA",
     };
 
-    if (id == null) {
+    if (id == null || codigo != codigoOriginal) {
       try {
         final eqp = equipamentosCliente.firstWhere((eqp) => eqp["codigo"] == codigo);
         equipamento["EquipamentoInstaladoID"] = eqp["id"];
@@ -297,7 +320,7 @@ class TrocaState {
       }
     }
 
-    if (idRemovido == null) {
+    if (idRemovido == null || codigoRemovido != codigoRemovidoOriginal) {
       try {
         final eqp = equipamentosCliente.firstWhere((eqp) => eqp["codigo"] == codigoRemovido);
         equipamento["EquipamentosRemovidoID"] = eqp["id"];
@@ -313,37 +336,41 @@ class TrocaState {
   }
 
   getData() async {
-    if (codigo == null) {
-      SharedPreferences opcs = await SharedPreferences.getInstance();
-      final selectedOs = jsonDecode(opcs.getString("SelectedOS")!);
+    codigoOriginal = codigo;
+    codigoRemovidoOriginal = codigoRemovido;
 
-      dynamic equipamentosClienteStr =
-          opcs.getString("${selectedOs["veiculo"]["cliente"]["id"]}@EquipamentosCliente");
-      equipamentosCliente = jsonDecode(equipamentosClienteStr);
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    final selectedOs = jsonDecode(opcs.getString("SelectedOS")!);
 
-      equipamentosCliente.forEach((eqp) {
-        selectCodigo.add(eqp["codigo"]);
-      });
-    } else {
-      selectCodigo = [codigo!];
+    // codigo - equipamento tecnico
+    var opcsChave = "${selectedOs["veiculo"]["cliente"]["id"]}@EquipamentosCliente";
+    dynamic equipamentosClienteStr = opcs.getString(opcsChave);
+
+    equipamentosCliente = jsonDecode(equipamentosClienteStr);
+
+    equipamentosCliente.forEach((eqp) {
+      if (eqp["codigo"] == codigo) return;
+      selectCodigo.add(eqp["codigo"]);
+    });
+
+    if (codigo != null && codigo != "") selectCodigo.add(codigo ?? "");
+    // ---
+
+    // codigo removido - equipamentos veiculo
+    var opcsChaveRemovido = "${selectedOs["veiculo"]["id"]}@EquipamentosVeiculo";
+    dynamic equipamentosVeiculoStr = opcs.getString(opcsChaveRemovido);
+
+    equipamentosVeiculo = jsonDecode(equipamentosVeiculoStr);
+
+    equipamentosVeiculo.forEach((eqp) {
+      if (eqp["codigo"] == codigoRemovido) return;
+      selectCodigoRemovido.add(eqp["codigo"]);
+    });
+
+    if (codigoRemovido != null && codigoRemovido != "") {
+      selectCodigoRemovido.add(codigoRemovido ?? "");
     }
-
-    if (codigoRemovido == null) {
-      if (equipamentosCliente.isEmpty) {
-        SharedPreferences opcs = await SharedPreferences.getInstance();
-        final selectedOs = jsonDecode(opcs.getString("SelectedOS")!);
-
-        dynamic equipamentosClienteStr =
-            opcs.getString("${selectedOs["veiculo"]["cliente"]["id"]}@EquipamentosCliente");
-        equipamentosCliente = jsonDecode(equipamentosClienteStr);
-      }
-
-      equipamentosCliente.forEach((eqp) {
-        selectCodigoRemovido.add(eqp["codigo"]);
-      });
-    } else {
-      selectCodigoRemovido = [codigoRemovido!];
-    }
+    // ---
 
     notifierInstance.notifyListeners();
   }
@@ -356,6 +383,8 @@ class EquipamentosChangeNotifier extends ChangeNotifier {
   List<TrocaState> trocas = [];
 
   List<dynamic>? equipamentos;
+
+  bool hasDuplicates = true;
 
   loadEquipamentos() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
@@ -440,12 +469,37 @@ class EquipamentosChangeNotifier extends ChangeNotifier {
   }
 
   bool isAllValid() {
+    hasDuplicates = false;
+
     final instalacaoValid = instalacoes.every((instalacao) => instalacao.isValid());
     final manutencaoValid = manutencoes.every((manutencao) => manutencao.isValid());
     final retiradaValid = retiradas.every((retirada) => retirada.isValid());
     final trocaValid = trocas.every((troca) => troca.isValid());
 
-    return instalacaoValid && manutencaoValid && retiradaValid && trocaValid;
+    final allValid = instalacaoValid && manutencaoValid && retiradaValid && trocaValid;
+
+    if (!allValid) return false;
+
+    final instalacaoHasDuplicates =
+        instalacoes.length != instalacoes.map((e) => e.codigo).toSet().toList().length;
+
+    final manutencaoHasDuplicates =
+        manutencoes.length != manutencoes.map((e) => e.codigo).toSet().toList().length;
+
+    final retiradaHasDuplicates =
+        retiradas.length != retiradas.map((e) => e.codigo).toSet().toList().length;
+
+    final trocaHasDuplicates = trocas.length !=
+        trocas.map((e) => "${e.codigo}${e.codigoRemovido}").toSet().toList().length;
+
+    hasDuplicates = instalacaoHasDuplicates ||
+        manutencaoHasDuplicates ||
+        retiradaHasDuplicates ||
+        trocaHasDuplicates;
+
+    if (hasDuplicates) return false;
+
+    return true;
   }
 }
 
@@ -619,7 +673,10 @@ class _EquipamentosState extends State<Equipamentos> {
                           builder: (context) {
                             return AlertDialog(
                               title: const Text('Erro'),
-                              content: const Text('Por favor, preencha todas as respostas.'),
+                              content: state.hasDuplicates
+                                  ? const Text(
+                                      'Há equipamentos duplicados. Verifique e tente novamente.')
+                                  : const Text('Por favor, preencha todas as respostas.'),
                               actions: [
                                 TextButton(
                                   child: const Text('OK'),
