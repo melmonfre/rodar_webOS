@@ -46,9 +46,7 @@ class getToken {
     SharedPreferences opcs = await SharedPreferences.getInstance();
 
     debugPrint("sincronizando...");
-
-    // await opcs.setBool("carregando", true);
-
+    
     try {
       String amanha = await GetOSAmanha().obter(empresaid);
 
