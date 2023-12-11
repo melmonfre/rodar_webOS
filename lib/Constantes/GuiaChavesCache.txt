@@ -50,3 +50,6 @@ ${osid}@AcessoriosAEnviar // acessorios da OS
 osAOcultar // lista de ids das ordens de servico ja completadas
 ${clienteId}@EquipamentosCliente // equipamentos do cliente e tecnico, a partir do id do cliente de cada OS
 ${clienteId}@EquipamentosClienteAddedOn // data da ultima atualizacao da chave acima
+
+${veiculoId}@EquipamentosVeiculo // equipamentos do veiculo do tecnico, a partir do id do veiculo de cada OS
+${veiculoId}@EquipamentosVeiculoAddedOn // data da ultima atualizacao da chave acima
