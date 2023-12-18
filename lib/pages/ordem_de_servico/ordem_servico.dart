@@ -189,7 +189,7 @@ class _OrdemServicoState extends State<OrdemServico> {
     try {
       if (equipamentosCliente!.length < equipamentoOs) {
         _mostrarAvisoDialog(
-            'Divergência no estoque do técnico, entrar em contato com a empresa " + this.sessao.empresa.nome + "!"');
+            'Divergência no estoque do técnico, entrar em contato com a empresa!');
       }
     } catch (e) {
       debugPrint('erro ao mostrar primeira mensagem equipamentos:');
@@ -237,8 +237,13 @@ class _OrdemServicoState extends State<OrdemServico> {
     var emp = epss['empresa'];
     empresa = emp['nome'];
     var tel = emp['telefones'];
-    var numtel = tel[0];
-    telefone = numtel['numero'];
+    try {
+      var numtel = tel[0];
+      telefone = numtel['numero'];
+    } catch (e) {
+      debugPrint('nenhum telefone');
+      telefone = '';
+    }
     var cont = element['contatos'];
     try {
       var contacto = cont[0];
