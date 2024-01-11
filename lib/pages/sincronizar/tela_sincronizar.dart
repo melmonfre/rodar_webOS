@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rodarwebos/services/debug_service.dart';
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,22 +23,22 @@ class _TelaSincronizarState extends State<TelaSincronizar> {
 
     vfafinalizar?.forEach((osid) {
       setState(() {
-        countvf ++;
+        countvf++;
       });
-
     });
     afinalizar?.forEach((osid) {
       setState(() {
-        countafinalizar ++;
+        countafinalizar++;
       });
-
     });
   }
-@override
+
+  @override
   void initState() {
     getdata();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     var variaveis = VariaveisResumo();
@@ -51,11 +52,36 @@ class _TelaSincronizarState extends State<TelaSincronizar> {
           },
         ),
         title: Text('Sincronizar'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.more_vert),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return SimpleDialog(
+                    title: Text('Opções'),
+                    children: <Widget>[
+                      SimpleDialogOption(
+                        onPressed: () {
+                          DebugService.saveOrdensASincronizarToDownloads(
+                              context);
+                        },
+                        child: Text('Exportar ordens de serviço a sicronizar'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 2.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center, // Centraliza os elementos verticalmente
+          mainAxisAlignment:
+              MainAxisAlignment.center, // Centraliza os elementos verticalmente
           children: [
             SizedBox(height: 16.0),
             // Container com texto
@@ -106,7 +132,8 @@ class _BotaoSincronizarState extends State<_BotaoSincronizar> {
             shadowColor: Colors.black.withOpacity(0.2), // Cor da sombra
             elevation: 4.0, // Elevação da sombra
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5.0), // Border radius do botão
+              borderRadius:
+                  BorderRadius.circular(5.0), // Border radius do botão
             ),
           ),
           child: Text(
