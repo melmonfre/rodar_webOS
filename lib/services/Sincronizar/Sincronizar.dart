@@ -1,14 +1,18 @@
 import 'dart:convert';
 
 import 'package:rodarwebos/services/Sincronizar/sincronizarOffline.dart';
+import 'package:rodarwebos/services/debug_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../../Constantes/Urlconst.dart';
 
-class SincronizarOS{
+class SincronizarOS {
   sincronize() async {
+    await DebugService.removeDuplicatesIdsAFinalizar();
+
     SharedPreferences opcs = await SharedPreferences.getInstance();
     List<String>? ids = opcs.getStringList('osIDaFinalizar');
+
     ids?.forEach((osid) {
       syncoff().enviar(osid);
     });
@@ -22,8 +26,8 @@ class SincronizarOS{
       body = opcs.getString("${osid}@OSaFinalizarvf");
       enviamotivosvf(body, osid);
     });
-
   }
+
   enviardeslocamento(osid, body) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     var empresaid = opcs.getInt('sessionid');
@@ -35,12 +39,14 @@ class SincronizarOS{
     };
     var data = body;
 
-    final url = Uri.parse('${Urlconst().url}ordem_servico/enviardeslocamento/$osid');
+    final url =
+        Uri.parse('${Urlconst().url}ordem_servico/enviardeslocamento/$osid');
 
     final res = await http.post(url, headers: headers, body: data);
     final status = res.statusCode;
     if (status != 200) {
-      throw Exception('enviardeslocamento http.post error: statusCode= $status');
+      throw Exception(
+          'enviardeslocamento http.post error: statusCode= $status');
     } else {
       List<String>? ids = opcs.getStringList("osIDaFinalizarvf");
       ids?.remove(osid);
@@ -49,6 +55,7 @@ class SincronizarOS{
     }
     print(res.body);
   }
+
   enviardiversasfotosvf(body, osid) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     var empresaid = opcs.getInt('sessionid');
@@ -58,9 +65,10 @@ class SincronizarOS{
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
-    var data = body ;
+    var data = body;
 
-    final url = Uri.parse('${Urlconst().url}ordem_servico/enviardiversasfotos/$osid');
+    final url =
+        Uri.parse('${Urlconst().url}ordem_servico/enviardiversasfotos/$osid');
 
     final res = await http.post(url, headers: headers, body: data);
     final status = res.statusCode;
@@ -84,7 +92,8 @@ class SincronizarOS{
       'Authorization': 'Bearer $token',
     };
     var data = body;
-    final url = Uri.parse('${Urlconst().url}ordem_servico/enviarmotivovf/$osid');
+    final url =
+        Uri.parse('${Urlconst().url}ordem_servico/enviarmotivovf/$osid');
 
     final res = await http.post(url, headers: headers, body: data);
     final status = res.statusCode;
@@ -96,9 +105,6 @@ class SincronizarOS{
       ids?.remove(osid);
       opcs.setStringList("osIDaFinalizarvf", ids!);
       print(res.body);
-
     }
-
   }
 }
-

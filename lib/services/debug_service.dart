@@ -20,6 +20,8 @@ class DebugService {
   }
 
   static void saveOrdensASincronizarToDownloads(BuildContext context) async {
+    await removeDuplicatesIdsAFinalizar();
+
     SharedPreferences opcs = await SharedPreferences.getInstance();
     List<String>? ids = opcs.getStringList('osIDaFinalizar');
 
@@ -130,5 +132,23 @@ class DebugService {
         name: filename,
         bytes: Uint8List.fromList(content.codeUnits),
         mimeType: MimeType.text);
+  }
+
+  static removeDuplicatesIdsAFinalizar() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+
+    List<String>? ids = opcs.getStringList('osIDaFinalizar');
+    if (ids != null) {
+      ids = ids.toSet().toList();
+      await opcs.setStringList("osIDaFinalizar", ids);
+    }
+
+    List<String>? idsVF = opcs.getStringList("osIDaFinalizarvf");
+    if (idsVF != null) {
+      idsVF = idsVF.toSet().toList();
+      await opcs.setStringList("osIDaFinalizarvf", idsVF);
+    }
+
+    debugPrint('removidos: ids a finalizar duplicados.');
   }
 }
