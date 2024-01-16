@@ -14,7 +14,8 @@ class FullPageLoadingIndicator extends StatelessWidget {
   List<Color> colors;
   Indicator indicatorType;
 
-  FullPageLoadingIndicator({super.key, required this.colors, required this.indicatorType});
+  FullPageLoadingIndicator(
+      {super.key, required this.colors, required this.indicatorType});
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +29,7 @@ class FullPageLoadingIndicator extends StatelessWidget {
               colors: colors,
               strokeWidth: 4.0,
               backgroundColor: Colors.white,
-              pathBackgroundColor: Colors.white
-              ),
+              pathBackgroundColor: Colors.white),
         ),
       ),
     );
@@ -98,7 +98,8 @@ class _loginState extends State<login> {
           content: const SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('Link de acesso expirado, favor entrar em contato com o suporte'),
+                Text(
+                    'Link de acesso expirado, favor entrar em contato com o suporte'),
               ],
             ),
           ),
@@ -170,7 +171,8 @@ class _loginState extends State<login> {
                   var divid = link?.split("/auth/");
                   var token = divid?[1];
                   var valtoken = await validatoken().validar(token);
-                  if (link == null || !link.toString().contains("siger.winksys.com.br")) {
+                  if (link == null ||
+                      !link.toString().contains("siger.winksys.com.br")) {
                     validalink();
                   } else if (valtoken == true) {
                     errtoken();
@@ -189,12 +191,43 @@ class _loginState extends State<login> {
                       }
                     }
                     // Navigator.of(context).pop();
-                    _showSingleAnimationDialog(context, Indicator.ballSpinFadeLoader);
+                    _showSingleAnimationDialog(
+                        context, Indicator.ballSpinFadeLoader);
                     vaiprapaginainicial();
                   }
                 } catch (e) {
                   debugPrint(e.toString());
                   isLoadingTelaInicial = false;
+
+                  final errorMessage = e
+                          .toString()
+                          .contains('Failed host lookup')
+                      ? 'Por favor, verifique sua conexão com a internet.'
+                      : 'Algo deu errado. Por favor, verifique novamente o link.';
+
+                  // ignore: use_build_context_synchronously
+                  await showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Erro'),
+                          content: SingleChildScrollView(
+                            child: ListBody(
+                              children: <Widget>[
+                                Text(errorMessage),
+                              ],
+                            ),
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              child: const Text('OK'),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      });
                   rethrow;
                 }
               },
@@ -245,7 +278,8 @@ class _loginState extends State<login> {
       Nomeempresa.add("ERRO");
       nomes.add(
           "Não há nenhuma empresa \ncadastrada, favor acessar pelo \nlink enviado pelo sistema");
-      Uint8List data = (await rootBundle.load('assets/bear.png')).buffer.asUint8List();
+      Uint8List data =
+          (await rootBundle.load('assets/bear.png')).buffer.asUint8List();
       setState(() => imagens.add(data));
     }
     print('ERROR $error');
@@ -311,7 +345,8 @@ class _loginState extends State<login> {
 
   @override
   Future<void> geturso() async {
-    Uint8List data = (await rootBundle.load('assets/bear.png')).buffer.asUint8List();
+    Uint8List data =
+        (await rootBundle.load('assets/bear.png')).buffer.asUint8List();
     setState(() => urso = data);
   }
 
@@ -375,7 +410,8 @@ class _loginState extends State<login> {
                 ),
                 Container(
                   height: altura * .50,
-                  margin: EdgeInsets.all(altura * 0.018), // Adicionando uma margem para o container
+                  margin: EdgeInsets.all(altura *
+                      0.018), // Adicionando uma margem para o container
                   decoration: BoxDecoration(
                     //color: Colors.transparent,
                     //.withOpacity(0.7), // Definindo a cor do container
@@ -402,7 +438,8 @@ class _loginState extends State<login> {
                         return Container(
                           padding: const EdgeInsets.only(top: 5),
                           decoration: const BoxDecoration(
-                            border: Border(top: BorderSide(color: Colors.black12)),
+                            border:
+                                Border(top: BorderSide(color: Colors.black12)),
                           ),
                           child: Container(
                             height: 130,
@@ -421,10 +458,12 @@ class _loginState extends State<login> {
                                   isLoadingTelaInicial = true;
                                 });
 
-                                error = await validatoken().validabearer(ids[index]);
+                                error = await validatoken()
+                                    .validabearer(ids[index]);
 
                                 if (error == false) {
-                                  _showSingleAnimationDialog(context, Indicator.ballSpinFadeLoader);
+                                  _showSingleAnimationDialog(
+                                      context, Indicator.ballSpinFadeLoader);
                                   setsession(ids[index]);
                                   getToken().sincronizar(ids[index]);
                                   vaiprapaginainicial();
@@ -437,8 +476,10 @@ class _loginState extends State<login> {
                                 // gera a linha
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.fromLTRB(25.0, 0.0, 22.0, 0.0),
-                                    child: Image.memory(imagens[index], width: 60, height: 60),
+                                    padding: const EdgeInsets.fromLTRB(
+                                        25.0, 0.0, 22.0, 0.0),
+                                    child: Image.memory(imagens[index],
+                                        width: 60, height: 60),
                                   ),
                                   // const SizedBox(width: 10.0),
                                   Column(
@@ -447,7 +488,8 @@ class _loginState extends State<login> {
                                       Padding(padding: EdgeInsets.only(top: 7)),
                                       Text(
                                         '${Nomeempresa[index]}',
-                                        style: TextStyle(fontWeight: FontWeight.bold),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
                                         textAlign: TextAlign.left,
                                         overflow: TextOverflow.ellipsis,
                                       ),
