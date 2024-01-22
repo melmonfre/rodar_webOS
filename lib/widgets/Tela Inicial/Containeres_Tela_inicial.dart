@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_amanha.dart';
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_atrasadas.dart';
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_futuras.dart';
@@ -17,7 +18,11 @@ class OsCard extends StatelessWidget {
   String text;
   String amount;
 
-  OsCard({super.key, required this.color, required this.text, required this.amount});
+  OsCard(
+      {super.key,
+      required this.color,
+      required this.text,
+      required this.amount});
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +41,13 @@ class OsCard extends StatelessWidget {
             children: [
               Text(
                 text,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               Text(
                 amount,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
               ),
             ],
           ),
@@ -61,6 +68,8 @@ int numamanha = 0;
 int numatrasadas = 0;
 
 class _FuturasState extends State<Futuras> {
+  Timer? counter;
+
   Future<void> getdata() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
 
@@ -76,9 +85,10 @@ class _FuturasState extends State<Futuras> {
   }
 
   void _decrementCounter() {
-    Timer.periodic(const Duration(milliseconds: 1100), (_) {
+    counter = Timer.periodic(const Duration(milliseconds: 1100), (_) {
       try {
         getdata();
+        debugPrint('getting count futuras...');
       } catch (e) {}
     });
   }
@@ -89,6 +99,13 @@ class _FuturasState extends State<Futuras> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    debugPrint("dispose timer");
+    counter?.cancel();
+  }
+
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
@@ -97,7 +114,10 @@ class _FuturasState extends State<Futuras> {
           MaterialPageRoute(builder: (context) => ListaOSFuturas()),
         );
       },
-      child: OsCard(color: const Color(0xFFA0E8A1), text: 'Futuras', amount: numfuturas.toString()),
+      child: OsCard(
+          color: const Color(0xFFA0E8A1),
+          text: 'Futuras',
+          amount: numfuturas.toString()),
     );
   }
 }
@@ -108,6 +128,7 @@ class Amanha extends StatefulWidget {
 }
 
 class _AmanhaState extends State<Amanha> {
+  Timer? counter;
   Future<void> getdata() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
 
@@ -123,8 +144,10 @@ class _AmanhaState extends State<Amanha> {
   }
 
   void _decrementCounter() {
-    Timer.periodic(const Duration(seconds: 900), (_) {
+    counter = Timer.periodic(const Duration(seconds: 900), (_) {
       try {
+        debugPrint('getting count amanha...');
+
         getdata();
       } catch (e) {}
     });
@@ -134,6 +157,13 @@ class _AmanhaState extends State<Amanha> {
     getdata();
     _decrementCounter();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    debugPrint("dispose timer");
+    counter?.cancel();
   }
 
   @override
@@ -159,6 +189,8 @@ class Hoje extends StatefulWidget {
 }
 
 class _HojeState extends State<Hoje> {
+  Timer? counter;
+
   Future<void> getdata() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
 
@@ -174,8 +206,9 @@ class _HojeState extends State<Hoje> {
   }
 
   void _decrementCounter() {
-    Timer.periodic(const Duration(milliseconds: 1200), (_) {
+    counter = Timer.periodic(const Duration(milliseconds: 1200), (_) {
       try {
+        debugPrint('getting count hoje...');
         getdata();
       } catch (e) {}
     });
@@ -188,6 +221,13 @@ class _HojeState extends State<Hoje> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    debugPrint("dispose timer");
+    counter?.cancel();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
@@ -196,7 +236,10 @@ class _HojeState extends State<Hoje> {
           MaterialPageRoute(builder: (context) => ListaOSHoje()),
         );
       },
-      child: OsCard(color: const Color(0xFF9CDEFF), text: 'Do dia', amount: numdodia.toString()),
+      child: OsCard(
+          color: const Color(0xFF9CDEFF),
+          text: 'Do dia',
+          amount: numdodia.toString()),
     );
   }
 }
@@ -207,6 +250,8 @@ class Atrasadas extends StatefulWidget {
 }
 
 class _AtrasadasState extends State<Atrasadas> {
+  Timer? counter;
+
   Future<void> getdata() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
 
@@ -222,8 +267,9 @@ class _AtrasadasState extends State<Atrasadas> {
   }
 
   void _decrementCounter() {
-    Timer.periodic(const Duration(seconds: 1), (_) {
+    counter = Timer.periodic(const Duration(seconds: 1), (_) {
       try {
+        debugPrint('getting count atrasadas...');
         getdata();
       } catch (e) {}
     });
@@ -236,6 +282,13 @@ class _AtrasadasState extends State<Atrasadas> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    debugPrint("dispose timer");
+    counter?.cancel();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
@@ -245,7 +298,9 @@ class _AtrasadasState extends State<Atrasadas> {
         );
       },
       child: OsCard(
-          color: const Color(0xFFE8716F), text: 'Atrasadas', amount: numatrasadas.toString()),
+          color: const Color(0xFFE8716F),
+          text: 'Atrasadas',
+          amount: numatrasadas.toString()),
     );
   }
 }
@@ -264,7 +319,8 @@ class _ContainerContentState extends State<ContainerContent> {
   bool carregando = false;
   var timer = 5;
 
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
 
   Future<void> getdata() async {
     debugPrint("getdata conteineres");
@@ -281,7 +337,8 @@ class _ContainerContentState extends State<ContainerContent> {
       });
     });
 
-    carregandoTimer = Timer.periodic(const Duration(milliseconds: 1000), (_) async {
+    carregandoTimer =
+        Timer.periodic(const Duration(milliseconds: 1000), (_) async {
       final opcs = await SharedPreferences.getInstance();
 
       bool carregandoStorage = opcs.getBool("carregando") ?? false;
@@ -296,14 +353,18 @@ class _ContainerContentState extends State<ContainerContent> {
   void initState() {
     getdata();
     createTimers();
-
     super.initState();
+
+    Permission.storage.request().then((value) {
+      debugPrint('storage permission request result: ' + value.toString());
+    });
   }
 
   @override
   void dispose() {
     sincronizacaoTimer?.cancel();
     carregandoTimer?.cancel();
+    debugPrint("dispose timer principal");
     super.dispose();
   }
 
@@ -351,7 +412,8 @@ class _ContainerContentState extends State<ContainerContent> {
                   Center(
                     child: Container(
                       width: 200,
-                      child: LoadingIndicator(indicatorType: Indicator.ballSpinFadeLoader),
+                      child: LoadingIndicator(
+                          indicatorType: Indicator.ballSpinFadeLoader),
                     ),
                   ),
               ],

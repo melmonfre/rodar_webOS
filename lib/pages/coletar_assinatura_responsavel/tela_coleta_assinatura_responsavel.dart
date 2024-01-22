@@ -13,10 +13,12 @@ import '../../services/conclusao/reenviarconfirmacao.dart';
 
 class TelaColetarAssinaturaResponsavel extends StatefulWidget {
   @override
-  _TelaColetarAssinaturaResponsavelState createState() => _TelaColetarAssinaturaResponsavelState();
+  _TelaColetarAssinaturaResponsavelState createState() =>
+      _TelaColetarAssinaturaResponsavelState();
 }
 
-class _TelaColetarAssinaturaResponsavelState extends State<TelaColetarAssinaturaResponsavel> {
+class _TelaColetarAssinaturaResponsavelState
+    extends State<TelaColetarAssinaturaResponsavel> {
   bool? hasAcessorios;
   bool? hasManutencao;
   bool? responsavelIsNotAusente;

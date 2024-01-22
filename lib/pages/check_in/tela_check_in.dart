@@ -37,7 +37,8 @@ class _CheckInTelaState extends State<CheckInTela> {
 
   void getLocation() async {
     LocationPermission permission = await Geolocator.requestPermission();
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.low);
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.medium);
     print(position.latitude);
     print(position.longitude);
     setState(() {
@@ -97,7 +98,8 @@ class _CheckInTelaState extends State<CheckInTela> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Campos não preenchidos'),
-          content: const Text('Por favor, preencha todos os campos de observação adicional.'),
+          content: const Text(
+              'Por favor, preencha todos os campos de observação adicional.'),
           actions: <Widget>[
             TextButton(
               child: const Text('Fechar'),
@@ -189,7 +191,9 @@ class _CheckInTelaState extends State<CheckInTela> {
                                           onChanged: (value) {
                                             setState(() {
                                               print(value);
-                                              if (checklistItens.asMap().containsKey(index)) {
+                                              if (checklistItens
+                                                  .asMap()
+                                                  .containsKey(index)) {
                                                 checklistItens[index] =
                                                     value; // Atualiza o valor selecionado
                                               } else {
@@ -210,7 +214,9 @@ class _CheckInTelaState extends State<CheckInTela> {
                                           onChanged: (value) {
                                             setState(() {
                                               print(value);
-                                              if (checklistItens.asMap().containsKey(index)) {
+                                              if (checklistItens
+                                                  .asMap()
+                                                  .containsKey(index)) {
                                                 checklistItens[index] =
                                                     value; // Atualiza o valor selecionado
                                               } else {
@@ -231,7 +237,9 @@ class _CheckInTelaState extends State<CheckInTela> {
                                           onChanged: (value) {
                                             setState(() {
                                               print(value);
-                                              if (checklistItens.asMap().containsKey(index)) {
+                                              if (checklistItens
+                                                  .asMap()
+                                                  .containsKey(index)) {
                                                 checklistItens[index] =
                                                     value; // Atualiza o valor selecionado
                                               } else {
@@ -372,7 +380,8 @@ class _CheckInTelaState extends State<CheckInTela> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Aviso'),
-            content: Text('Por favor, preencha todas as opções antes de prosseguir.'),
+            content: Text(
+                'Por favor, preencha todas as opções antes de prosseguir.'),
             actions: [
               TextButton(
                 child: Text('OK'),

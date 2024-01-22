@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/services/debug_service.dart';
 import 'package:rodarwebos/widgets/ordem_servico/variaveis_resumo_os.dart';
@@ -21,22 +23,33 @@ class _TelaSincronizarState extends State<TelaSincronizar> {
     var vfafinalizar = opcs.getStringList('osIDaFinalizarvf');
     var afinalizar = opcs.getStringList('osIDaFinalizar');
 
-    vfafinalizar?.forEach((osid) {
-      setState(() {
-        countvf++;
-      });
-    });
-    afinalizar?.forEach((osid) {
-      setState(() {
-        countafinalizar++;
-      });
+    setState(() {
+      debugPrint('atualizando contagem...');
+      countvf = vfafinalizar?.length ?? 0;
+      countafinalizar = afinalizar?.length ?? 0;
     });
   }
 
-  @override
+  Timer? counter;
+
+  void _decrementCounter() {
+    counter = Timer.periodic(const Duration(milliseconds: 1100), (_) {
+      try {
+        getdata();
+      } catch (e) {}
+    });
+  }
+
   void initState() {
     getdata();
+    _decrementCounter();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    counter?.cancel();
   }
 
   @override
@@ -67,7 +80,34 @@ class _TelaSincronizarState extends State<TelaSincronizar> {
                           DebugService.saveOrdensASincronizarToDownloads(
                               context);
                         },
-                        child: Text('Exportar ordens de serviço a sicronizar'),
+                        child: const Text(
+                            'Exportar ordens de serviço a sicronizar'),
+                      ),
+                      SimpleDialogOption(
+                        onPressed: () {
+                          DebugService.limparListaDeOrdensOcultas();
+
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Sucesso'),
+                                content: const Text('Lista removida.'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: const Text('OK'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        child: const Text(
+                            'Limpar lista de ordens de serviço ocultas'),
                       ),
                     ],
                   );
@@ -117,15 +157,29 @@ class _BotaoSincronizar extends StatefulWidget {
 }
 
 class _BotaoSincronizarState extends State<_BotaoSincronizar> {
+  bool isSyncing = false;
+
   @override
   Widget build(BuildContext context) {
     return Center(
       child: SizedBox(
         width: MediaQuery.of(context).size.width - 20.0,
         child: ElevatedButton(
-          onPressed: () {
-            SincronizarOS().sincronize();
-          },
+          onPressed: isSyncing
+              ? null
+              : () async {
+                  setState(() {
+                    isSyncing = true;
+                  });
+
+                  try {
+                    await SincronizarOS().sincronize();
+                  } catch (e) {}
+
+                  setState(() {
+                    isSyncing = false;
+                  });
+                },
           style: ElevatedButton.styleFrom(
             padding: EdgeInsets.symmetric(vertical: 12.0),
             primary: Color(0xFF00204E), // Cor do botão
@@ -137,7 +191,7 @@ class _BotaoSincronizarState extends State<_BotaoSincronizar> {
             ),
           ),
           child: Text(
-            'Sincronizar',
+            isSyncing ? 'Sincronizando...' : 'Sincronizar',
             style: TextStyle(
               color: Colors.white, // Cor do texto
               fontSize: 17.0,

@@ -37,7 +37,7 @@ class _ImagemState extends State<Imagem> {
     setState(() {
       data = result;
     });
-    _salvarImagemNaGaleria(result);
+    // _salvarImagemNaGaleria(result);
     await createbase64(result);
   }
 

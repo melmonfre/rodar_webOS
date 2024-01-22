@@ -151,4 +151,9 @@ class DebugService {
 
     debugPrint('removidos: ids a finalizar duplicados.');
   }
+
+  static limparListaDeOrdensOcultas() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    await opcs.setStringList("osAOcultar", []);
+  }
 }

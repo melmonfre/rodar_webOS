@@ -12,7 +12,9 @@ import '../../Constantes/Urlconst.dart';
 class concluivf {
   Future<String> getLocation() async {
     LocationPermission permission = await Geolocator.requestPermission();
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.low);
+    Position position = (await Geolocator.getLastKnownPosition()) ??
+        await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.medium);
 
     return "${position.latitude},${position.longitude}";
   }
@@ -36,10 +38,10 @@ class concluivf {
 
     var localGps = await getLocation();
 
-
     try {
       await enviardiversasfotosvf(osid, token, base64images);
-      await enviardeslocamentovf(osid, token, DistanciaTec, valorDeslocamentoTec, pedagioTec);
+      await enviardeslocamentovf(
+          osid, token, DistanciaTec, valorDeslocamentoTec, pedagioTec);
       await enviamotivosvf(osid, token, motivo, localGps);
     } catch (e) {
       debugPrint(e.toString());
@@ -47,7 +49,7 @@ class concluivf {
       List<String> ids = opcs.getStringList("osIDaFinalizarvf") ?? [];
 
       ids.add("$osid");
-      
+
       opcs.setStringList("osIDaFinalizarvf", ids);
       opcs.setString("${osid}@OSaFinalizarvf", motivos);
 
@@ -74,7 +76,8 @@ class concluivf {
     };
     var data = '{"motivo":"$motivo","localGps":"$localGps"}';
 
-    final url = Uri.parse('${Urlconst().url}ordem_servico/enviarmotivovf/$osid');
+    final url =
+        Uri.parse('${Urlconst().url}ordem_servico/enviarmotivovf/$osid');
 
     final res = await http.post(url, headers: headers, body: data);
     final status = res.statusCode;
@@ -104,7 +107,8 @@ class concluivf {
     };
     final data = '{"base64":${jsonEncode(fotos)},"idsRemove":[]}';
     print(data);
-    final url = Uri.parse('${Urlconst().url}ordem_servico/enviardiversasfotos/$osid');
+    final url =
+        Uri.parse('${Urlconst().url}ordem_servico/enviardiversasfotos/$osid');
 
     final res = await http.post(url, headers: headers, body: data);
     final status = res.statusCode;
@@ -112,12 +116,14 @@ class concluivf {
       opcs.setString("${osid}@OSaFinalizarvfoto", data);
       print("RESPOSTA: ${res}");
       print("RESPOSTA ${res.body}");
-      throw Exception('enviardiversasfotosvf http.post error: statusCode= $status');
+      throw Exception(
+          'enviardiversasfotosvf http.post error: statusCode= $status');
     }
     print(res.body);
   }
 
-  enviardeslocamentovf(osid, token, distanciaTec, valorDeslocamentoTec, pedagioTec) async {
+  enviardeslocamentovf(
+      osid, token, distanciaTec, valorDeslocamentoTec, pedagioTec) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     final headers = {
       'Accept': 'application/json',
@@ -127,13 +133,15 @@ class concluivf {
     final data =
         '{"distanciaTec":$distanciaTec,"valorDeslocamentoTec":$valorDeslocamentoTec,"pedagioTec":$pedagioTec}';
 
-    final url = Uri.parse('${Urlconst().url}ordem_servico/enviardeslocamento/$osid');
+    final url =
+        Uri.parse('${Urlconst().url}ordem_servico/enviardeslocamento/$osid');
 
     final res = await http.post(url, headers: headers, body: data);
     final status = res.statusCode;
     if (status != 200) {
       opcs.setString("${osid}@OSaFinalizarvfdeslocamento", data);
-      throw Exception('enviardeslocamentovf http.post error: statusCode= $status');
+      throw Exception(
+          'enviardeslocamentovf http.post error: statusCode= $status');
     }
     print(res.body);
   }

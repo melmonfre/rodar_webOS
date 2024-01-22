@@ -31,8 +31,9 @@ class _ContainerDeslocamentoState extends State<ContainerDeslocamento> {
   var longitude;
   var osid;
   void getLocation() async {
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.low);
+    Position position = (await Geolocator.getLastKnownPosition()) ??
+        await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.medium);
     print(position.latitude);
     print(position.longitude);
     setState(() {

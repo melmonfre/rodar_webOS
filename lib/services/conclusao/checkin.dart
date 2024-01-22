@@ -14,7 +14,7 @@ class enviacheckin {
     var longitude;
     LocationPermission permission = await Geolocator.requestPermission();
     Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.low);
+        desiredAccuracy: LocationAccuracy.medium);
     latitude = position.latitude;
     longitude = position.longitude;
     var empresaid = opcs.getInt('sessionid');

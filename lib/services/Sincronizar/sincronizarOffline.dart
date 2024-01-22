@@ -48,8 +48,14 @@ class syncoff {
         confirmacaoPresencial: confirmacaoPresencial,
         documentosResponsavel: documentosResponsavel,
         assinaturaResponsavel: assinaturaResponsavel);
-    var telefone =
-        Telefone(id: 0, tipo: 0, ddi: "", ddd: "", numero: "", obs: "", telefoneCompleto: "");
+    var telefone = Telefone(
+        id: 0,
+        tipo: 0,
+        ddi: "",
+        ddd: "",
+        numero: "",
+        obs: "",
+        telefoneCompleto: "");
     var estado = Estado(id: 0, sigla: "", nome: "");
     var cidade = Cidade(id: 0, nome: "", estado: estado);
     var endereco = Endereco(
@@ -70,14 +76,24 @@ class syncoff {
         stringTelefone: "",
         cnpj: "");
     var pess = Pessoa(id: 0, empresa: empr);
-    var tecnico = Tecnico(id: 0, pessoa: pess, valorHora: 0, kmAtendimento: 0, funcionario: true);
+    var tecnico = Tecnico(
+        id: 0, pessoa: pess, valorHora: 0, kmAtendimento: 0, funcionario: true);
 
     var latitude;
     var longitude;
     LocationPermission permission = await Geolocator.requestPermission();
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.low);
-    latitude = position.latitude;
-    longitude = position.longitude;
+    try {
+      Position? lastKnownPosition = await Geolocator.getLastKnownPosition();
+      Position position = lastKnownPosition ??
+          await Geolocator.getCurrentPosition(
+              desiredAccuracy: LocationAccuracy.high);
+      latitude = position.latitude;
+      longitude = position.longitude;
+    } catch (e) {
+      debugPrint(e.toString());
+      latitude = 0.0;
+      longitude = 0.0;
+    }
     var empresaid = opcs.getInt('sessionid');
     var token = opcs.getString("${empresaid}@token");
     var json = opcs.getString("SelectedOS");
@@ -218,8 +234,12 @@ class syncoff {
     referencias.forEach((foto) {
       String? fotos = opcs.containsKey("$foto") ? opcs.getString("$foto") : "";
       print("FOTOS: $fotos");
-      files.add(
-          Arquivo(base64: fotos, referencia: foto, remover: 0, indice: indice, etapa: "FOTOS"));
+      files.add(Arquivo(
+          base64: fotos,
+          referencia: foto,
+          remover: 0,
+          indice: indice,
+          etapa: "FOTOS"));
       indice++;
     });
 
@@ -252,8 +272,8 @@ class syncoff {
       jsonconclusao.motivosManutencao.motivos = [];
       for (int i = 0; i < idmotivos.length; i++) {
         if (itensmotivos[i]) {
-          jsonconclusao.motivosManutencao.motivos
-              ?.add(MotivoManutencao(id: idmotivos[i], descricao: nomesmotivos[i]));
+          jsonconclusao.motivosManutencao.motivos?.add(
+              MotivoManutencao(id: idmotivos[i], descricao: nomesmotivos[i]));
         }
       }
     } catch (e) {
@@ -267,7 +287,8 @@ class syncoff {
     jsonconclusao.dados.etapa = "CONCLUSAO";
     jsonconclusao.dados.hodometro =
         itenscon["hodometro"] != "" ? double.parse(itenscon["hodometro"]) : 0;
-    var conclu = DateFormat('dd/MM/yyyy HH:mm:ss').parse(itenscon["dataConclusao"]);
+    var conclu =
+        DateFormat('dd/MM/yyyy HH:mm:ss').parse(itenscon["dataConclusao"]);
     jsonconclusao.dados.dataConclusaoOs =
         DateFormat('yyyy-MM-ddTHH:mm:ss.SSS-03:00').format(conclu);
     jsonconclusao.dados.observacaoOs = "${itenscon["observacoes"]}";
@@ -306,7 +327,8 @@ class syncoff {
       tipoenvio = "presencial";
       jsonconclusao.presencial = true;
       jsonconclusao.confirmacaoPresencial.etapa = "CONCLUSAO";
-      jsonconclusao.confirmacaoPresencial.id = contato['id'] != "" ? int.parse(contato['id']) : 0;
+      jsonconclusao.confirmacaoPresencial.id =
+          contato['id'] != "" ? int.parse(contato['id']) : 0;
       jsonconclusao.confirmacaoPresencial.nome = contato['nome'];
       jsonconclusao.confirmacaoPresencial.email = contato['email'];
       jsonconclusao.confirmacaoPresencial.telefone = contato['telefone'];
@@ -317,7 +339,8 @@ class syncoff {
       jsonconclusao.confirmacaoPresencial.assinatura = base64!;
       jsonconclusao.confirmacaoPresencial.observacaoCliente = "";
       jsonconclusao.assinaturaResponsavel.etapa = "ASSINATURA_RESPONSAVEL";
-      jsonconclusao.assinaturaResponsavel.id = contato['id'] != "" ? int.parse(contato['id']) : 0;
+      jsonconclusao.assinaturaResponsavel.id =
+          contato['id'] != "" ? int.parse(contato['id']) : 0;
       jsonconclusao.assinaturaResponsavel.nome = contato['nome'];
       jsonconclusao.assinaturaResponsavel.email = contato['email'];
       jsonconclusao.assinaturaResponsavel.telefone = contato['telefone'];
@@ -338,7 +361,8 @@ class syncoff {
       try {
         List<dynamic> acessorios = jsonDecode(acessoriosStr);
 
-        jsonconclusao.acessorios = Acessorios(encodedStr: acessoriosStr, osid: osid);
+        jsonconclusao.acessorios =
+            Acessorios(encodedStr: acessoriosStr, osid: osid);
       } catch (e) {
         debugPrint("erro ao colocar acessorios no jsonconclusao: ${e}");
       }
@@ -406,7 +430,8 @@ class syncoff {
     debugPrint("data sent to the sincronizacaoordemservico:");
     debugPrint(data);
 
-    final url = Uri.parse('${Urlconst().url}ordem_servico/sincronizacaoordemservico/$osid');
+    final url = Uri.parse(
+        '${Urlconst().url}ordem_servico/sincronizacaoordemservico/$osid');
 
     addToListaOcultar(osid.toString());
 
@@ -426,7 +451,7 @@ class syncoff {
         print(res.body);
         opcs.remove("${osid}@OSaFinalizardata");
         List<String>? ids = opcs.getStringList("osIDaFinalizar");
-        ids?.remove(osid);
+        ids?.remove(osid.toString());
         opcs.setStringList("osIDaFinalizar", ids!);
       }
     } catch (e) {
@@ -434,8 +459,13 @@ class syncoff {
 
       List<String> ids = opcs.getStringList("osIDaFinalizar") ?? [];
 
-      ids.add("$osid");
+      if (!ids.contains("$osid")) {
+        ids.add("$osid");
+      }
+
       opcs.setStringList("osIDaFinalizar", ids);
+
+      rethrow;
     }
   }
 
@@ -449,7 +479,7 @@ class syncoff {
     }
 
     osAOcultar.add(osid);
-    
+
     await opcs.setStringList("osAOcultar", osAOcultar);
   }
 }
