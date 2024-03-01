@@ -8,6 +8,7 @@ import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_o
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_atrasadas.dart';
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_futuras.dart';
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_hoje.dart';
+import 'package:rodarwebos/pages/os_em_execucao.dart';
 import 'package:rodarwebos/services/OS/os_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,14 +16,13 @@ import '../../services/getToken.dart';
 
 class OsCard extends StatelessWidget {
   Color color;
+  Color? textColor;
+
   String text;
   String amount;
 
   OsCard(
-      {super.key,
-      required this.color,
-      required this.text,
-      required this.amount});
+      {super.key, required this.color, required this.text, required this.amount, this.textColor});
 
   @override
   Widget build(BuildContext context) {
@@ -41,13 +41,11 @@ class OsCard extends StatelessWidget {
             children: [
               Text(
                 text,
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: textColor),
               ),
               Text(
                 amount,
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400, color: textColor),
               ),
             ],
           ),
@@ -88,7 +86,7 @@ class _FuturasState extends State<Futuras> {
     counter = Timer.periodic(const Duration(milliseconds: 1100), (_) {
       try {
         getdata();
-        debugPrint('getting count futuras...');
+        // debugPrint('getting count futuras...');
       } catch (e) {}
     });
   }
@@ -114,10 +112,7 @@ class _FuturasState extends State<Futuras> {
           MaterialPageRoute(builder: (context) => ListaOSFuturas()),
         );
       },
-      child: OsCard(
-          color: const Color(0xFFA0E8A1),
-          text: 'Futuras',
-          amount: numfuturas.toString()),
+      child: OsCard(color: const Color(0xFFA0E8A1), text: 'Futuras', amount: numfuturas.toString()),
     );
   }
 }
@@ -146,7 +141,7 @@ class _AmanhaState extends State<Amanha> {
   void _decrementCounter() {
     counter = Timer.periodic(const Duration(seconds: 900), (_) {
       try {
-        debugPrint('getting count amanha...');
+        // debugPrint('getting count amanha...');
 
         getdata();
       } catch (e) {}
@@ -208,7 +203,7 @@ class _HojeState extends State<Hoje> {
   void _decrementCounter() {
     counter = Timer.periodic(const Duration(milliseconds: 1200), (_) {
       try {
-        debugPrint('getting count hoje...');
+        // debugPrint('getting count hoje...');
         getdata();
       } catch (e) {}
     });
@@ -236,10 +231,7 @@ class _HojeState extends State<Hoje> {
           MaterialPageRoute(builder: (context) => ListaOSHoje()),
         );
       },
-      child: OsCard(
-          color: const Color(0xFF9CDEFF),
-          text: 'Do dia',
-          amount: numdodia.toString()),
+      child: OsCard(color: const Color(0xFF9CDEFF), text: 'Do dia', amount: numdodia.toString()),
     );
   }
 }
@@ -269,7 +261,7 @@ class _AtrasadasState extends State<Atrasadas> {
   void _decrementCounter() {
     counter = Timer.periodic(const Duration(seconds: 1), (_) {
       try {
-        debugPrint('getting count atrasadas...');
+        // debugPrint('getting count atrasadas...');
         getdata();
       } catch (e) {}
     });
@@ -298,9 +290,7 @@ class _AtrasadasState extends State<Atrasadas> {
         );
       },
       child: OsCard(
-          color: const Color(0xFFE8716F),
-          text: 'Atrasadas',
-          amount: numatrasadas.toString()),
+          color: const Color(0xFFE8716F), text: 'Atrasadas', amount: numatrasadas.toString()),
     );
   }
 }
@@ -319,8 +309,9 @@ class _ContainerContentState extends State<ContainerContent> {
   bool carregando = false;
   var timer = 5;
 
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      GlobalKey<RefreshIndicatorState>();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
+
+  var selectedOs;
 
   Future<void> getdata() async {
     debugPrint("getdata conteineres");
@@ -337,8 +328,7 @@ class _ContainerContentState extends State<ContainerContent> {
       });
     });
 
-    carregandoTimer =
-        Timer.periodic(const Duration(milliseconds: 1000), (_) async {
+    carregandoTimer = Timer.periodic(const Duration(milliseconds: 1000), (_) async {
       final opcs = await SharedPreferences.getInstance();
 
       bool carregandoStorage = opcs.getBool("carregando") ?? false;
@@ -349,10 +339,26 @@ class _ContainerContentState extends State<ContainerContent> {
     });
   }
 
+  void getSelectedOs() async {
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+
+    try {
+      final json = opcs.getString("SelectedOS");
+      final os = jsonDecode(json!);
+
+      setState(() {
+        selectedOs = os["id"];
+      });
+    } catch (e) {
+      // nenhuma os selecionada
+    }
+  }
+
   @override
   void initState() {
     getdata();
     createTimers();
+    getSelectedOs();
     super.initState();
 
     Permission.storage.request().then((value) {
@@ -388,6 +394,21 @@ class _ContainerContentState extends State<ContainerContent> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 3.0),
+                if (selectedOs != null) GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => OsEmExecucao()),
+                    );
+                  },
+                  child: OsCard(
+                    textColor: const Color.fromARGB(255, 255, 255, 255),
+                    color: Theme.of(context).primaryColor,
+                    text: 'Continuar OS ${selectedOs.toString()}',
+                    amount: '',
+                  ),
+                ),
+                const SizedBox(height: 3.0),
                 Container(
                   constraints: const BoxConstraints(maxHeight: 140.0),
                   child: Hoje(),
@@ -412,8 +433,7 @@ class _ContainerContentState extends State<ContainerContent> {
                   Center(
                     child: Container(
                       width: 200,
-                      child: LoadingIndicator(
-                          indicatorType: Indicator.ballSpinFadeLoader),
+                      child: LoadingIndicator(indicatorType: Indicator.ballSpinFadeLoader),
                     ),
                   ),
               ],
