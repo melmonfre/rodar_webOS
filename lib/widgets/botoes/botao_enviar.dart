@@ -22,7 +22,7 @@ class _BotaoEnviarState extends State<BotaoEnviar> {
           onPressed: widget.onPressed,
           style: ElevatedButton.styleFrom(
             padding: EdgeInsets.symmetric(vertical: 12.0),
-            primary: Color(0xFF00204E), // Cor do botão
+            foregroundColor: Color(0xFF00204E), // Cor do botão
             shadowColor: Colors.black.withOpacity(0.2), // Cor da sombra
             elevation: 4.0, // Elevação da sombra
             shape: RoundedRectangleBorder(

@@ -57,7 +57,7 @@ class _BotaoIniciarExecucaoServicoState
         );
       },
       style: ElevatedButton.styleFrom(
-        primary: Color(0xFF00204E), // Cor do botão
+        foregroundColor: Color(0xFF00204E), // Cor do botão
         shadowColor: Colors.black.withOpacity(0.2), // Cor da sombra
         elevation: 4.0, // Elevação da sombra
         shape: RoundedRectangleBorder(
