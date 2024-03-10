@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rodarwebos/models/selected_os_model.dart';
 import 'package:rodarwebos/pages/acessorios/tela_acessorios.dart';
 import 'package:rodarwebos/pages/check_in/tela_check_in.dart';
 import 'package:rodarwebos/pages/check_out/tela_check_out.dart';
@@ -60,41 +62,41 @@ class Etapa extends StatelessWidget {
   }
 }
 
-class OsEmExecucao extends StatefulWidget {
+class OsEmExecucao extends ConsumerStatefulWidget {
   const OsEmExecucao({super.key});
 
   @override
-  State<OsEmExecucao> createState() => _OsEmExecucaoState();
+  ConsumerState<OsEmExecucao> createState() => _OsEmExecucaoState();
 }
 
-class _OsEmExecucaoState extends State<OsEmExecucao> {
-  List<EtapaItem> etapas = [
-    EtapaItem(name: "Check-in", etapaWidget: CheckInTela.new, isDone: true),
-    EtapaItem(name: "Equipamentos", etapaWidget: Equipamentos.new, isDone: true),
-    EtapaItem(name: "Acessórios", etapaWidget: Acessorios.new, isDone: true),
-    EtapaItem(name: "Fotos", etapaWidget: CheckInTela.new, isDone: false),
-    EtapaItem(name: "Deslocamento", etapaWidget: TelaDeslocamento.new, isDone: false),
-    EtapaItem(name: "Check-out", etapaWidget: CheckOutTela.new, isDone: false),
-    EtapaItem(name: "Conclusão", etapaWidget: TelaConclusao.new, isDone: false),
-    EtapaItem(name: "Responsável", etapaWidget: TelaResponsavel.new, isDone: false),
-  ];
+class _OsEmExecucaoState extends ConsumerState<OsEmExecucao> {
+  // List<EtapaItem> etapas = [
+  //   EtapaItem(name: "Check-in", etapaWidget: CheckInTela.new, isDone: true),
+  //   EtapaItem(name: "Equipamentos", etapaWidget: Equipamentos.new, isDone: true),
+  //   EtapaItem(name: "Acessórios", etapaWidget: Acessorios.new, isDone: true),
+  //   EtapaItem(name: "Fotos", etapaWidget: CheckInTela.new, isDone: false),
+  //   EtapaItem(name: "Deslocamento", etapaWidget: TelaDeslocamento.new, isDone: false),
+  //   EtapaItem(name: "Check-out", etapaWidget: CheckOutTela.new, isDone: false),
+  //   EtapaItem(name: "Conclusão", etapaWidget: TelaConclusao.new, isDone: false),
+  //   EtapaItem(name: "Responsável", etapaWidget: TelaResponsavel.new, isDone: false),
+  // ];
 
-  var idOs;
+  // var idOs;
 
-  void loadEtapas() async {
-    SharedPreferences opcs = await SharedPreferences.getInstance();
+  // void loadEtapas() async {
+  //   SharedPreferences opcs = await SharedPreferences.getInstance();
 
-    final json = opcs.getString("SelectedOS");
-    final os = jsonDecode(json!);
+  //   final json = opcs.getString("SelectedOS");
+  //   final os = jsonDecode(json!);
 
-    setState(() {
-      idOs = os["id"];
-    });
-  }
+  //   setState(() {
+  //     idOs = os["id"];
+  //   });
+  // }
 
   @override
   void initState() {
-    loadEtapas();
+    // loadEtapas();
     super.initState();
   }
 
@@ -109,12 +111,12 @@ class _OsEmExecucaoState extends State<OsEmExecucao> {
             Navigator.of(context).pop();
           },
         ),
-        title: Text('Continuar OS ${(idOs ?? "").toString()}'),
+        title: Text('Continuar OS ${ref.watch(selectedOsProvider).osId.toString()}'),
       ),
       body: Container(
         child: Column(
           children: [
-            ...etapas.map((ei) => Etapa(
+            ...ref.watch(selectedOsProvider).getEtapas().map((ei) => Etapa(
                   text: ei.name,
                   isDone: ei.isDone,
                   widget: ei.etapaWidget,

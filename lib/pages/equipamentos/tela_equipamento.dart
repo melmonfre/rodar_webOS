@@ -1,9 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rodarwebos/models/selected_os_model.dart';
+// import 'package:provider/provider.dart';
 import 'package:rodarwebos/pages/acessorios/tela_acessorios.dart';
 import 'package:rodarwebos/services/GetEquipamento.dart';
+import 'package:rodarwebos/tools/tools.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -376,6 +379,10 @@ class TrocaState {
   }
 }
 
+final equipamentosProvider = ChangeNotifierProvider<EquipamentosChangeNotifier>((ref) {
+  return EquipamentosChangeNotifier();
+});
+
 class EquipamentosChangeNotifier extends ChangeNotifier {
   List<InstalacaoState> instalacoes = [];
   List<ManutencaoState> manutencoes = [];
@@ -391,6 +398,11 @@ class EquipamentosChangeNotifier extends ChangeNotifier {
     opcs.setStringList("EQProcess", []);
     final json = opcs.getString("SelectedOS");
     final element = jsonDecode(json!);
+
+    instalacoes = [];
+    manutencoes = [];
+    retiradas = [];
+    trocas = [];
 
     equipamentos = element["equipamentos"];
 
@@ -503,12 +515,12 @@ class EquipamentosChangeNotifier extends ChangeNotifier {
   }
 }
 
-class Equipamentos extends StatefulWidget {
+class Equipamentos extends ConsumerStatefulWidget {
   @override
   _EquipamentosState createState() => _EquipamentosState();
 }
 
-class _EquipamentosState extends State<Equipamentos> {
+class _EquipamentosState extends ConsumerState<Equipamentos> {
   var control = ""; // Definindo o tipo de tela
   var json;
   var element;
@@ -552,10 +564,11 @@ class _EquipamentosState extends State<Equipamentos> {
   @override
   void initState() {
     getdata();
+    ref.read(equipamentosProvider).loadEquipamentos();
     super.initState();
   }
 
-  irProximo(EquipamentosChangeNotifier state) {
+  irProximo(EquipamentosChangeNotifier state) async {
     List<Map<String, dynamic>> equipamentos = [];
 
     state.manutencoes.forEach((st) {
@@ -582,13 +595,22 @@ class _EquipamentosState extends State<Equipamentos> {
       getequipamentos().setEquipamento(equip);
     }
 
+    SharedPreferences opcs = await SharedPreferences.getInstance();
+    
+    await opcs.setStringList(
+        buildStorageKeyString(ref.read(selectedOsProvider).osId, Etapa.EQUIPAMENTOS.key),
+        equipamentos.map((e) => jsonEncode(e)).toList());
+
+    ref.read(selectedOsProvider).updateEtapasState();
+
     // Navigator.of(context).pop();
 
     if (hasAccessorios) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Acessorios()),
-      );
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => Acessorios()),
+      // );
+      Navigator.pop(context);
     } else {
       Navigator.push(
         context,
@@ -599,116 +621,113 @@ class _EquipamentosState extends State<Equipamentos> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (context) {
-          final changeNotifierInstance = EquipamentosChangeNotifier();
-          changeNotifierInstance.loadEquipamentos();
-          return changeNotifierInstance;
-        },
-        child: Scaffold(
-          appBar: AppBar(
-            centerTitle: true,
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            title: Text('Equipamentos'),
-          ),
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 2.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    alignment: Alignment.center,
-                    child: Text(
-                      "$os", // Exibe o valor da variável "os"
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: Text('Equipamentos'),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 2.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                alignment: Alignment.center,
+                child: Text(
+                  "$os", // Exibe o valor da variável "os"
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
-
-                  Consumer<EquipamentosChangeNotifier>(builder: (context, state, child) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children:
-                          state.manutencoes.map((e) => ContainerManutencao(state: e)).toList(),
-                    );
-                  }),
-
-                  Consumer<EquipamentosChangeNotifier>(builder: (context, state, child) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: state.retiradas.map((e) => ContainerRetirada(state: e)).toList(),
-                    );
-                  }), // Exibe o widget ContainerRetirada
-
-                  Consumer<EquipamentosChangeNotifier>(builder: (context, state, child) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children:
-                          state.instalacoes.map((e) => ContainerInstalacao(state: e)).toList(),
-                    );
-                  }),
-
-                  Consumer<EquipamentosChangeNotifier>(builder: (context, state, child) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: state.trocas.map((e) => ContainerTroca(state: e)).toList(),
-                    );
-                  }),
-
-                  Consumer<EquipamentosChangeNotifier>(builder: (context, state, child) {
-                    return BotaoProximo(onPressed: () {
-                      if (state.isAllValid()) {
-                        irProximo(state);
-                      } else {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: const Text('Erro'),
-                              content: state.hasDuplicates
-                                  ? const Text(
-                                      'Há equipamentos duplicados. Verifique e tente novamente.')
-                                  : const Text('Por favor, preencha todas as respostas.'),
-                              actions: [
-                                TextButton(
-                                  child: const Text('OK'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      }
-                    });
-                  })
-                ],
+                ),
               ),
-            ),
+
+              Consumer(builder: (context, ref, _) {
+                final state = ref.watch(equipamentosProvider);
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: state.manutencoes.map((e) => ContainerManutencao(state: e)).toList(),
+                );
+              }),
+
+              Consumer(builder: (context, ref, _) {
+                final state = ref.watch(equipamentosProvider);
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: state.retiradas.map((e) => ContainerRetirada(state: e)).toList(),
+                );
+              }), // Exibe o widget ContainerRetirada
+
+              Consumer(builder: (context, ref, _) {
+                final state = ref.watch(equipamentosProvider);
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: state.instalacoes.map((e) => ContainerInstalacao(state: e)).toList(),
+                );
+              }),
+
+              Consumer(builder: (context, ref, _) {
+                final state = ref.watch(equipamentosProvider);
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: state.trocas.map((e) => ContainerTroca(state: e)).toList(),
+                );
+              }),
+
+              Consumer(builder: (context, ref, _) {
+                final state = ref.watch(equipamentosProvider);
+                return BotaoProximo(onPressed: () {
+                  if (state.isAllValid()) {
+                    irProximo(state);
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text('Erro'),
+                          content: state.hasDuplicates
+                              ? const Text(
+                                  'Há equipamentos duplicados. Verifique e tente novamente.')
+                              : const Text('Por favor, preencha todas as respostas.'),
+                          actions: [
+                            TextButton(
+                              child: const Text('OK'),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                });
+              })
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
 
-class ContainerRetirada extends StatefulWidget {
+class ContainerRetirada extends ConsumerStatefulWidget {
   RetiradaState state;
 
   ContainerRetirada({super.key, required this.state});
 
   @override
-  State<ContainerRetirada> createState() => _ContainerRetiradaState(state: state);
+  ConsumerState<ContainerRetirada> createState() => _ContainerRetiradaState(state: state);
 }
 
-class _ContainerRetiradaState extends State<ContainerRetirada> {
+class _ContainerRetiradaState extends ConsumerState<ContainerRetirada> {
   RetiradaState state;
 
   _ContainerRetiradaState({required this.state});
@@ -720,7 +739,7 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
 
   @override
   Widget build(BuildContext context) {
-    final wholeState = Provider.of<EquipamentosChangeNotifier>(context);
+    // final wholeState = ref.watch(equipamentosProvider);
 
     return Padding(
       padding: EdgeInsets.all(16.0),
@@ -801,16 +820,16 @@ class _ContainerRetiradaState extends State<ContainerRetirada> {
   }
 }
 
-class ContainerManutencao extends StatefulWidget {
+class ContainerManutencao extends ConsumerStatefulWidget {
   ManutencaoState state;
 
   ContainerManutencao({super.key, required this.state});
 
   @override
-  State<ContainerManutencao> createState() => _ContainerManutencaoState(state: state);
+  ConsumerState<ContainerManutencao> createState() => _ContainerManutencaoState(state: state);
 }
 
-class _ContainerManutencaoState extends State<ContainerManutencao> {
+class _ContainerManutencaoState extends ConsumerState<ContainerManutencao> {
   ManutencaoState state;
 
   _ContainerManutencaoState({required this.state});
@@ -888,15 +907,15 @@ class _ContainerManutencaoState extends State<ContainerManutencao> {
 
 //  TROCA
 
-class ContainerTroca extends StatefulWidget {
+class ContainerTroca extends ConsumerStatefulWidget {
   TrocaState state;
   ContainerTroca({super.key, required this.state});
 
   @override
-  State<ContainerTroca> createState() => _ContainerTrocaState(state: state);
+  ConsumerState<ContainerTroca> createState() => _ContainerTrocaState(state: state);
 }
 
-class _ContainerTrocaState extends State<ContainerTroca> {
+class _ContainerTrocaState extends ConsumerState<ContainerTroca> {
   TrocaState state;
 
   _ContainerTrocaState({required this.state});
@@ -907,7 +926,7 @@ class _ContainerTrocaState extends State<ContainerTroca> {
   }
 
   Widget build(BuildContext context) {
-    final wholeState = Provider.of<EquipamentosChangeNotifier>(context);
+    // final wholeState = Provider.of<EquipamentosChangeNotifier>(context);
 
     return Padding(
         padding: EdgeInsets.all(16.0),
@@ -1042,16 +1061,16 @@ class _ContainerTrocaState extends State<ContainerTroca> {
 
 // INSTALAÇÃO
 
-class ContainerInstalacao extends StatefulWidget {
+class ContainerInstalacao extends ConsumerStatefulWidget {
   InstalacaoState state;
 
   ContainerInstalacao({super.key, required this.state});
 
   @override
-  State<ContainerInstalacao> createState() => _ContainerInstalacaoState(state: state);
+  ConsumerState<ContainerInstalacao> createState() => _ContainerInstalacaoState(state: state);
 }
 
-class _ContainerInstalacaoState extends State<ContainerInstalacao> {
+class _ContainerInstalacaoState extends ConsumerState<ContainerInstalacao> {
   InstalacaoState state;
 
   _ContainerInstalacaoState({required this.state});

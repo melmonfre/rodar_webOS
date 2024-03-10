@@ -2,8 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:rodarwebos/main.dart';
+import 'package:rodarwebos/models/selected_os_model.dart';
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_amanha.dart';
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_atrasadas.dart';
 import 'package:rodarwebos/pages/ordem_de_servico/listagem_ordem_servico/lista_os_futuras.dart';
@@ -295,14 +298,14 @@ class _AtrasadasState extends State<Atrasadas> {
   }
 }
 
-class ContainerContent extends StatefulWidget {
+class ContainerContent extends ConsumerStatefulWidget {
   const ContainerContent({Key? key}) : super(key: key);
 
   @override
-  State<ContainerContent> createState() => _ContainerContentState();
+  ConsumerState<ContainerContent> createState() => _ContainerContentState();
 }
 
-class _ContainerContentState extends State<ContainerContent> {
+class _ContainerContentState extends ConsumerState<ContainerContent> {
   Timer? sincronizacaoTimer;
   Timer? carregandoTimer;
 
@@ -394,7 +397,7 @@ class _ContainerContentState extends State<ContainerContent> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 3.0),
-                if (selectedOs != null) GestureDetector(
+                if (ref.watch(selectedOsProvider).hasSelectedOs) GestureDetector(
                   onTap: () {
                     Navigator.push(
                       context,
@@ -404,7 +407,7 @@ class _ContainerContentState extends State<ContainerContent> {
                   child: OsCard(
                     textColor: const Color.fromARGB(255, 255, 255, 255),
                     color: Theme.of(context).primaryColor,
-                    text: 'Continuar OS ${selectedOs.toString()}',
+                    text: 'Continuar OS ${ref.watch(selectedOsProvider).osId}',
                     amount: '',
                   ),
                 ),

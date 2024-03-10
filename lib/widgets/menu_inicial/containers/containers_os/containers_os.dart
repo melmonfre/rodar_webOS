@@ -1,6 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rodarwebos/main.dart';
+import 'package:rodarwebos/models/selected_os_model.dart';
 import 'package:rodarwebos/services/OS/os_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -81,7 +84,7 @@ class ListaOsItem extends StatelessWidget {
 ///
 /// A classe [_ContainerOSState] é um estado associado ao widget [ContainerOS]
 /// e é responsável por construir a interface do usuário.
-class ContainerOS extends StatefulWidget {
+class ContainerOS extends ConsumerStatefulWidget {
   final Widget botao;
   ContainerOS({required this.botao, Key? key}) : super(key: key);
 
@@ -89,7 +92,7 @@ class ContainerOS extends StatefulWidget {
   _ContainerOSState createState() => _ContainerOSState();
 }
 
-class _ContainerOSState extends State<ContainerOS> {
+class _ContainerOSState extends ConsumerState<ContainerOS> {
   int num = 0;
   var empresaid;
   List lista = [];
@@ -175,6 +178,11 @@ class _ContainerOSState extends State<ContainerOS> {
     SharedPreferences opcs = await SharedPreferences.getInstance();
 
     var selectedOs = ordensDeServico.firstWhere((os) => osid == os['id']);
+
+    debugPrint('has selected os');
+    debugPrint(ref.read(selectedOsProvider).hasSelectedOs.toString());
+
+    ref.read(selectedOsProvider).setSelectedOs(selectedOs);
 
     await opcs.setString("SelectedOS", jsonEncode(selectedOs));
   }

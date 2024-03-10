@@ -3,11 +3,15 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loading_indicator/loading_indicator.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:rodarwebos/models/selected_os_model.dart';
 import 'package:rodarwebos/pages/login/tela_login.dart';
 import 'package:rodarwebos/pages/tela_inicial/tela_inicial.dart';
 import 'package:rodarwebos/widgets/drawer/drawer.dart';
 import 'package:rodarwebos/widgets/Tela%20Inicial/Containeres_Tela_inicial.dart';
+import 'package:rodarwebos/models/selected_os_model.dart';
 
 import 'link/linkexterno.dart';
 
@@ -18,9 +22,8 @@ void main() async {
   await linkHandler.initUrlLaunch();
   ByteData data = await PlatformAssetBundle().load('assets/ca/lets-encrypt-r3.pem');
   SecurityContext.defaultContext.setTrustedCertificatesBytes(data.buffer.asUint8List());
-  runApp(MyApp(linkHandler: linkHandler));
+  runApp(ProviderScope(child: MyApp(linkHandler: linkHandler)));
 }
-
 
 class MyApp extends StatefulWidget {
   final LinkHandler linkHandler;
@@ -39,7 +42,7 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     checkInitialRoute();
   }
- 
+
   Future<void> checkInitialRoute() async {
     await widget.linkHandler.initUrlLaunch();
     setState(() {

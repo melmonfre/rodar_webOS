@@ -1,21 +1,24 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:rodarwebos/models/selected_os_model.dart';
 import 'package:rodarwebos/pages/equipamentos/tela_equipamento.dart';
 import 'package:rodarwebos/services/conclusao/checkin.dart';
+import 'package:rodarwebos/tools/tools.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../services/GetEquipamento.dart';
 import '../../services/OS/GetChecklistOS.dart';
 import '../../widgets/botoes/botao_proximo.dart';
 
-class CheckInTela extends StatefulWidget {
+class CheckInTela extends ConsumerStatefulWidget {
   @override
   _CheckInTelaState createState() => _CheckInTelaState();
 }
 
-class _CheckInTelaState extends State<CheckInTela> {
+class _CheckInTelaState extends ConsumerState<CheckInTela> {
   List checklistID = [];
   List checklistNome = [];
   List checklistItens = [];
@@ -366,7 +369,12 @@ class _CheckInTelaState extends State<CheckInTela> {
 
   Future<void> checkNavigation(jsoncheckin) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
+    
     await opcs.setString("checkinitens", jsoncheckin);
+    final selectedOs = ref.read(selectedOsProvider);
+    await opcs.setString(buildStorageKeyString(selectedOs.osId, Etapa.CHECKIN.key), jsoncheckin);
+    selectedOs.updateEtapasState();
+
     enviacheckin().enviar();
     bool error = false;
     for (int i = 0; i < checklistItens.length; i++) {
@@ -394,10 +402,11 @@ class _CheckInTelaState extends State<CheckInTela> {
         },
       );
     } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Equipamentos()),
-      );
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => Equipamentos()),
+      // );
+      Navigator.pop(context);
     }
   }
 }
