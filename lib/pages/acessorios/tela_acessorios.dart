@@ -1,7 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rodarwebos/models/selected_os_model.dart';
 import 'package:rodarwebos/pages/fotos/telas_fotos/foto_hodometro.dart';
+import 'package:rodarwebos/tools/tools.dart';
 import 'package:rodarwebos/widgets/acessorios/container_acessorios.dart';
 
 import 'package:rodarwebos/widgets/acessorios/container_acessorios_instalados.dart';
@@ -157,12 +160,12 @@ class AcessorioAInstalar extends StatelessWidget {
   }
 }
 
-class Acessorios extends StatefulWidget {
+class Acessorios extends ConsumerStatefulWidget {
   @override
   _AcessoriosState createState() => _AcessoriosState();
 }
 
-class _AcessoriosState extends State<Acessorios> {
+class _AcessoriosState extends ConsumerState<Acessorios> {
   // var variaveis = VariaveisResumo();
 
   String os = "";
@@ -170,13 +173,16 @@ class _AcessoriosState extends State<Acessorios> {
   List<dynamic> aTrocar = [];
 
   getData() async {
-    SharedPreferences opcs = await SharedPreferences.getInstance();
+    // SharedPreferences opcs = await SharedPreferences.getInstance();
     // opcs.setStringList("EQProcess", []);
-    final json = opcs.getString("SelectedOS");
-    final element = jsonDecode(json!);
+    // final json = opcs.getString("SelectedOS");
+    // final element = jsonDecode(json!);
+
+    final selectedOs = ref.read(selectedOsProvider);
+    final element = selectedOs.getOs();
 
     setState(() {
-      os = element['id'].toString();
+      os = selectedOs.osId.toString();
     });
 
     List<dynamic> acessorios = element["acessorios"];
@@ -225,15 +231,14 @@ class _AcessoriosState extends State<Acessorios> {
   saveAcessorios() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
 
-    final json = opcs.getString("SelectedOS");
-    final element = jsonDecode(json!);
+    // final json = opcs.getString("SelectedOS");
+    // final element = jsonDecode(json!);
 
-    setState(() {
-      os = element['id'].toString();
-    });
+    final selectedOs = ref.read(selectedOsProvider);
+
+    final element = selectedOs.getOs();
 
     List<dynamic> acessorios = element["acessorios"];
-
     List<dynamic> allAcessorios = [aTrocar, aInstalar].expand((e) => {...e}).toList();
 
     for (var ac in acessorios) {
@@ -243,21 +248,24 @@ class _AcessoriosState extends State<Acessorios> {
       ac["localInstalacaoTec"] = upAcessorio?["localInstalacao"] ?? "";
     }
 
-    await opcs.setString("${os}@AcessoriosAEnviar", jsonEncode(acessorios));
+    await opcs.setString(buildStorageKeyString(selectedOs.osId, Etapa.ACESSORIOS.key), jsonEncode(acessorios));
+    await opcs.setString("${selectedOs.osId.toString()}@AcessoriosAEnviar", jsonEncode(acessorios));
 
-    debugPrint("acessorios salvos em ${os}@AcessoriosAEnviar");
+    selectedOs.updateEtapasState();
+
+    debugPrint("acessorios salvos em ${selectedOs.osId.toString()}@AcessoriosAEnviar");
   }
 
   irProximo() {
     if (isAllValid()) {
       saveAcessorios();
 
-      // Navigator.of(context).pop();
+      Navigator.of(context).pop();
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => FotoHodometro()),
-      );
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => FotoHodometro()),
+      // );
     } else {
       showDialog(
         context: context,

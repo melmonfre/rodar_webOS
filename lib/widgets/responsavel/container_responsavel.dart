@@ -1,11 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rodarwebos/models/selected_os_model.dart';
 import 'package:rodarwebos/pages/coletar_assinatura_responsavel/tela_coleta_assinatura_responsavel.dart';
 import 'package:rodarwebos/pages/tela_inicial/tela_inicial.dart';
 import 'package:rodarwebos/services/OS/ConcluirOS.dart';
 import 'package:rodarwebos/services/conclusao/envianotificacaocontato.dart';
 import 'package:rodarwebos/services/conclusao/reenviarconfirmacao.dart';
+import 'package:rodarwebos/tools/tools.dart';
 import 'package:rodarwebos/widgets/botoes/botao_coletar_assinatura_responsavel.dart';
 import 'package:rodarwebos/widgets/botoes/botao_enviar.dart';
 import 'package:rodarwebos/widgets/inputs/input_number.dart';
@@ -16,7 +19,7 @@ import '../../services/Sincronizar/sincronizarOffline.dart';
 import '../../services/conclusao/confirmacaopresencial.dart';
 import '../../services/conclusao/enviardocumentopresencial.dart';
 
-class ContainerResponsavel extends StatefulWidget {
+class ContainerResponsavel extends ConsumerStatefulWidget {
   final VoidCallback onPressed;
 
   const ContainerResponsavel({
@@ -27,7 +30,7 @@ class ContainerResponsavel extends StatefulWidget {
   _ContainerResponsavelState createState() => _ContainerResponsavelState();
 }
 
-class _ContainerResponsavelState extends State<ContainerResponsavel> {
+class _ContainerResponsavelState extends ConsumerState<ContainerResponsavel> {
   bool? hasAcessorios;
   bool? hasManutencao;
   bool? responsavelIsNotAusente;
@@ -68,6 +71,8 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
     };
 
     await opcs.setString("DadosContato", jsonEncode(values));
+    await opcs.setString(buildStorageKeyString(ref.read(selectedOsProvider).osId, Etapa.RESPONSAVEL.key), jsonEncode(values));
+    ref.read(selectedOsProvider).updateEtapasState();
   }
 
   setContato(int contatoToSelect) {
@@ -246,6 +251,7 @@ class _ContainerResponsavelState extends State<ContainerResponsavel> {
 
   void enviar() async {
     await saveoncache();
+    ref.read(selectedOsProvider).setSelectedOs(null);
     criaJson();
 
     // ignore: use_build_context_synchronously

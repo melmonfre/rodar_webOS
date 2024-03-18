@@ -1,7 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:rodarwebos/models/selected_os_model.dart';
+import 'package:rodarwebos/tools/tools.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:rodarwebos/widgets/inputs/input_date.dart';
 import 'package:rodarwebos/widgets/inputs/input_number.dart';
@@ -11,7 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../services/conclusao/conclusao.dart';
 
-class ContainerConclusao extends StatefulWidget {
+class ContainerConclusao extends ConsumerStatefulWidget {
   final VoidCallback onPressed;
 
   const ContainerConclusao({
@@ -22,7 +25,7 @@ class ContainerConclusao extends StatefulWidget {
   _ContainerConclusaoState createState() => _ContainerConclusaoState();
 }
 
-class _ContainerConclusaoState extends State<ContainerConclusao> {
+class _ContainerConclusaoState extends ConsumerState<ContainerConclusao> {
   var variaveis = VariaveisResumo();
   String motivoDivergencia = '';
 
@@ -67,7 +70,10 @@ class _ContainerConclusaoState extends State<ContainerConclusao> {
       "hodometro": hodometro,
     };
     var valor = json.encode(values);
-    opcs.setString("conclusaoItens", valor);
+    await opcs.setString(buildStorageKeyString(ref.read(selectedOsProvider).osId, Etapa.CONCLUSAO.key), valor);
+    await opcs.setString("conclusaoItens", valor);
+    
+    ref.read(selectedOsProvider).updateEtapasState();
   }
 
   @override

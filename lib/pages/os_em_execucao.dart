@@ -24,37 +24,49 @@ class Etapa extends StatelessWidget {
   final String text;
   final bool isDone;
   final Widget Function() widget;
+  final bool enabled;
 
-  const Etapa({super.key, required this.text, required this.isDone, required this.widget});
+  const Etapa(
+      {super.key,
+      required this.text,
+      required this.isDone,
+      required this.widget,
+      required this.enabled});
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 800,
-      child: GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => widget()),
-          );
-        },
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
-          child: Row(
-            children: [
-              Text(
-                text,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 18.0,
+    return Opacity(
+      opacity: enabled ? 1 : 0.5,
+      child: SizedBox(
+        width: 800,
+        child: GestureDetector(
+          onTap: enabled
+              ? () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => widget()),
+                  );
+                }
+              : null,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
+            child: Row(
+              children: [
+                Text(
+                  text,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18.0,
+                  ),
+                  textAlign: TextAlign.left,
                 ),
-                textAlign: TextAlign.left,
-              ),
-              const Spacer(),
-              isDone
-                  ? const Icon(Icons.check, size: 26)
-                  : const Icon(Icons.arrow_right_alt, size: 26),
-            ],
+                const Spacer(),
+                if (enabled)
+                  isDone
+                      ? const Icon(Icons.check, size: 26)
+                      : const Icon(Icons.arrow_right_alt, size: 26),
+              ],
+            ),
           ),
         ),
       ),
@@ -70,30 +82,6 @@ class OsEmExecucao extends ConsumerStatefulWidget {
 }
 
 class _OsEmExecucaoState extends ConsumerState<OsEmExecucao> {
-  // List<EtapaItem> etapas = [
-  //   EtapaItem(name: "Check-in", etapaWidget: CheckInTela.new, isDone: true),
-  //   EtapaItem(name: "Equipamentos", etapaWidget: Equipamentos.new, isDone: true),
-  //   EtapaItem(name: "Acessórios", etapaWidget: Acessorios.new, isDone: true),
-  //   EtapaItem(name: "Fotos", etapaWidget: CheckInTela.new, isDone: false),
-  //   EtapaItem(name: "Deslocamento", etapaWidget: TelaDeslocamento.new, isDone: false),
-  //   EtapaItem(name: "Check-out", etapaWidget: CheckOutTela.new, isDone: false),
-  //   EtapaItem(name: "Conclusão", etapaWidget: TelaConclusao.new, isDone: false),
-  //   EtapaItem(name: "Responsável", etapaWidget: TelaResponsavel.new, isDone: false),
-  // ];
-
-  // var idOs;
-
-  // void loadEtapas() async {
-  //   SharedPreferences opcs = await SharedPreferences.getInstance();
-
-  //   final json = opcs.getString("SelectedOS");
-  //   final os = jsonDecode(json!);
-
-  //   setState(() {
-  //     idOs = os["id"];
-  //   });
-  // }
-
   @override
   void initState() {
     // loadEtapas();
@@ -120,6 +108,7 @@ class _OsEmExecucaoState extends ConsumerState<OsEmExecucao> {
                   text: ei.name,
                   isDone: ei.isDone,
                   widget: ei.etapaWidget,
+                  enabled: ei.enabled,
                 ))
           ],
         ),

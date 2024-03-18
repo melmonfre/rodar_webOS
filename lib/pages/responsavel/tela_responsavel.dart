@@ -65,12 +65,16 @@ class _TelaResponsavelState extends State<TelaResponsavel> {
                 onPressed: () {
                   confirmacaopresencial().enviar();
                   enviardocconfirmacaopresencial().enviar();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => TelaInicial(),
-                    ),
-                  );
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => TelaInicial()),
+                    (Route<dynamic> route) => false);
+
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => TelaInicial(),
+                  //   ),
+                  // );
                 },
               )
             ],

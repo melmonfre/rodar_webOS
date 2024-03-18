@@ -1,8 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rodarwebos/models/selected_os_model.dart';
 import 'package:rodarwebos/pages/tela_inicial/tela_inicial.dart';
 import 'package:rodarwebos/services/OS/ConcluirOS.dart';
+import 'package:rodarwebos/tools/tools.dart';
 import 'package:rodarwebos/widgets/foto_assinatura/imagem.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,14 +14,14 @@ import '../../services/conclusao/envianotificacaocontato.dart';
 import '../../services/conclusao/enviardocumentopresencial.dart';
 import '../../services/conclusao/reenviarconfirmacao.dart';
 
-class TelaColetarAssinaturaResponsavel extends StatefulWidget {
+class TelaColetarAssinaturaResponsavel extends ConsumerStatefulWidget {
   @override
   _TelaColetarAssinaturaResponsavelState createState() =>
       _TelaColetarAssinaturaResponsavelState();
 }
 
 class _TelaColetarAssinaturaResponsavelState
-    extends State<TelaColetarAssinaturaResponsavel> {
+    extends ConsumerState<TelaColetarAssinaturaResponsavel> {
   bool? hasAcessorios;
   bool? hasManutencao;
   bool? responsavelIsNotAusente;
@@ -28,6 +31,8 @@ class _TelaColetarAssinaturaResponsavelState
     SharedPreferences opcs = await SharedPreferences.getInstance();
     var assinatura = opcs.getString("base64assinatura");
     await opcs.setString("assinaturaresponsavel", assinatura!);
+    await opcs.setString(buildStorageKeyString(ref.read(selectedOsProvider).osId, Etapa.RESPONSAVEL.key + "@assinaturaResponsavel"), jsonEncode(assinatura ?? ""));
+    ref.read(selectedOsProvider).updateEtapasState();
   }
 
   var os;
@@ -160,6 +165,8 @@ class _TelaColetarAssinaturaResponsavelState
                 Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (context) => TelaInicial()),
                     (Route<dynamic> route) => false);
+
+                ref.read(selectedOsProvider).setSelectedOs(null);
 
                 // Navigator.push(
                 //   context,

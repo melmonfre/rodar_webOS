@@ -1,16 +1,17 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rodarwebos/pages/confirmacao_dados/tela_confirmacao_dados_assinatura.dart';
 import 'package:rodarwebos/widgets/botoes/botao_confirmar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class TelaConfirmacaoDados extends StatefulWidget {
+class TelaConfirmacaoDados extends ConsumerStatefulWidget {
   @override
   _TelaConfirmacaoDadosState createState() => _TelaConfirmacaoDadosState();
 }
 
-class _TelaConfirmacaoDadosState extends State<TelaConfirmacaoDados> {
+class _TelaConfirmacaoDadosState extends ConsumerState<TelaConfirmacaoDados> {
   int num = 0;
 
   var element;

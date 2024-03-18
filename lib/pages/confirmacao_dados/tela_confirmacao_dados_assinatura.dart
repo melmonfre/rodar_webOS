@@ -1,23 +1,29 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rodarwebos/models/selected_os_model.dart';
 import 'package:rodarwebos/pages/responsavel/tela_responsavel.dart';
 import 'package:rodarwebos/services/conclusao/confirmaostecnicoassinatura.dart';
+import 'package:rodarwebos/tools/tools.dart';
 import 'package:rodarwebos/widgets/foto_assinatura/imagem.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class TelaConclusaoDadosAssinatura extends StatefulWidget {
+class TelaConclusaoDadosAssinatura extends ConsumerStatefulWidget {
   @override
   _TelaConclusaoDadosAssinaturaState createState() =>
       _TelaConclusaoDadosAssinaturaState();
 }
 
 class _TelaConclusaoDadosAssinaturaState
-    extends State<TelaConclusaoDadosAssinatura> {
+    extends ConsumerState<TelaConclusaoDadosAssinatura> {
   salvanocache() async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     var assinatura = opcs.getString("base64assinatura");
-    opcs.setString("assinaturaconfirmacao", assinatura!);
+    await opcs.setString(buildStorageKeyString(ref.read(selectedOsProvider).osId, Etapa.CONCLUSAO.key), assinatura ?? "");
+    await opcs.setString("assinaturaconfirmacao", assinatura!);
+    ref.read(selectedOsProvider).updateEtapasState();
+    ref.read(selectedOsProvider).setSelectedOs(null);
   }
 
   var os;
@@ -70,10 +76,15 @@ class _TelaConclusaoDadosAssinaturaState
                 onPressed: () async {
                   await salvanocache();
                   confirmassinatura().enviar();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => TelaResponsavel()),
-                  );
+
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(builder: (context) => TelaResponsavel()),
+                  // );
+
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
                 },
               )
             ],

@@ -1,18 +1,21 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rodarwebos/models/selected_os_model.dart';
 import 'package:rodarwebos/pages/conclusao/tela_conclusao.dart';
+import 'package:rodarwebos/tools/tools.dart';
 import 'package:rodarwebos/widgets/botoes/botao_proximo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../services/OS/GetMotivosOS.dart';
 
-class ContainerRelateMotivos extends StatefulWidget {
+class ContainerRelateMotivos extends ConsumerStatefulWidget {
   @override
   _ContainerRelateMotivosState createState() => _ContainerRelateMotivosState();
 }
 
-class _ContainerRelateMotivosState extends State<ContainerRelateMotivos> {
+class _ContainerRelateMotivosState extends ConsumerState<ContainerRelateMotivos> {
   List<bool> motivosbool = [];
   int tamanho = 0;
   List motivosnome = [];
@@ -159,11 +162,12 @@ class _ContainerRelateMotivosState extends State<ContainerRelateMotivos> {
                                   };
                                   saveoncache(jsonEncode(values));
                                   
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => TelaConclusao()),
-                                  );
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //       builder: (context) => TelaConclusao()),
+                                  // );
+                                  Navigator.of(context).pop();
                                 }
                               },
                             );
@@ -176,5 +180,10 @@ class _ContainerRelateMotivosState extends State<ContainerRelateMotivos> {
   Future<void> saveoncache(valor) async {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     opcs.setString("motivositens", valor);
+
+    final selectedOs = ref.read(selectedOsProvider);
+    await opcs.setString(buildStorageKeyString(selectedOs.osId, Etapa.MOTIVOS.key), valor);
+    
+    selectedOs.updateEtapasState();
   }
 }

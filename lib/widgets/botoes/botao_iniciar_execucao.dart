@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:rodarwebos/pages/check_in/tela_check_in.dart';
+import 'package:rodarwebos/pages/os_em_execucao.dart';
 import 'package:rodarwebos/services/OS/ServicoIniciado.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -53,7 +54,8 @@ class _BotaoIniciarExecucaoServicoState
         getdata();
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => CheckInTela()),
+          // MaterialPageRoute(builder: (context) => CheckInTela()),
+          MaterialPageRoute(builder: (context) => OsEmExecucao()),
         );
       },
       style: ElevatedButton.styleFrom(

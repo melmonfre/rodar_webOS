@@ -1,18 +1,21 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rodarwebos/models/selected_os_model.dart';
 import 'package:rodarwebos/pages/deslocamento/tela_deslocamento.dart';
+import 'package:rodarwebos/tools/tools.dart';
 import 'package:rodarwebos/widgets/anexos/anexo_evidencias.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../services/salvaFotos.dart';
 
-class FotoHodometro extends StatefulWidget {
+class FotoHodometro extends ConsumerStatefulWidget {
   @override
   _FotoHodometroState createState() => _FotoHodometroState();
 }
 
-class _FotoHodometroState extends State<FotoHodometro> {
+class _FotoHodometroState extends ConsumerState<FotoHodometro> {
   List<String> referencias = []; // Adicione uma lista de referências
   String referenciaatual = "";
   int indiceatual = 0;
@@ -23,23 +26,29 @@ class _FotoHodometroState extends State<FotoHodometro> {
     SharedPreferences opcs = await SharedPreferences.getInstance();
     setState(() {
       try {
-        salvarfotos().save("${referencias[indiceatual]}");
-        print("Foto ${referencias[refatu]} salva");
-      } catch (e) {}
+      salvarfotos().save("${referencias[indiceatual]}");
+
+      String? base64 = opcs.getString("base64camera");
+      opcs.setString(buildStorageKeyString(ref.read(selectedOsProvider).osId, Etapa.FOTOS.key + "@" + indiceatual.toString()), base64 ?? "");
+        
+      print("Foto ${referencias[refatu]} salva");
+    } catch (e) {}
     });
     setState(() {
       indiceatual = indiceatual + 1;
     });
-    print("INDICEATUAL $indiceatual");
+    debugPrint("INDICEATUAL $indiceatual");
     if (indiceatual >= referencias.length) {
       //Navigator.of(context).pop();
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => TelaDeslocamento(),
-        ),
-      );
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => TelaDeslocamento(),
+      //   ),
+      // );
+
       setState(() {
+        
         referenciaatual = referencias[indiceatual];
         refatu = referencias[indiceatual];
       });
@@ -86,12 +95,16 @@ class _FotoHodometroState extends State<FotoHodometro> {
       indiceatual = 0;
       // Última tela, redirecione para a próxima página
       //Navigator.of(context).pop();
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => TelaDeslocamento(),
-        ),
-      );
+      opcs.setString(buildStorageKeyString(ref.read(selectedOsProvider).osId, Etapa.FOTOS.key), referencias.length.toString());
+      ref.read(selectedOsProvider).updateEtapasState();
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => TelaDeslocamento(),
+      //   ),
+      // );
+      
+      Navigator.of(context).pop();
     }
   }
 

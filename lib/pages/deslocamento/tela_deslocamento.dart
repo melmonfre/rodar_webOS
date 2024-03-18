@@ -10,7 +10,7 @@ class TelaDeslocamento extends StatefulWidget {
 }
 
 class _TelaDeslocamentoState extends State<TelaDeslocamento> {
-  var variaveis = VariaveisResumo();
+  // var variaveis = VariaveisResumo();
 
   String motivoDivergencia = '';
 
@@ -20,16 +20,16 @@ class _TelaDeslocamentoState extends State<TelaDeslocamento> {
       appBar: AppBar(
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: Text('Deslocamento'),
+        title: const Text('Deslocamento'),
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10.0),
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -37,12 +37,12 @@ class _TelaDeslocamentoState extends State<TelaDeslocamento> {
                 titulo: "Deslocamento",
                 onPressed: () {
                   salvardeslocamento().enviar();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CheckOutTela(),
-                    ),
-                  );
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => CheckOutTela(),
+                  //   ),
+                  // );
                 },
               ),
             ],
