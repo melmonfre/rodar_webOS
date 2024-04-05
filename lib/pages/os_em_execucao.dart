@@ -65,6 +65,8 @@ class Etapa extends StatelessWidget {
                   isDone
                       ? const Icon(Icons.check, size: 26)
                       : const Icon(Icons.arrow_right_alt, size: 26),
+                if (!enabled && isDone)
+                  const Icon(Icons.check, size: 26),
               ],
             ),
           ),

@@ -206,6 +206,7 @@ class SelectedOsModel extends ChangeNotifier {
     for (EtapaItem etapa in _etapas) {
       Object? etapaObj = opcs.get(buildStorageKeyString(osId, etapa.enumValue.key));
       etapa.isDone = etapaObj != null;
+      etapa.enabled = !etapa.enabled ? false : !etapa.isDone;
     }
 
     bool isAllDone = true;
